@@ -1,0 +1,40 @@
+.navbar {
+  background-color: #fff2df;
+  padding: 1.8rem;
+  font-family: 'Arial', sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar li {
+  margin: 0 1rem;
+}
+
+.navbar a {
+  color: #4d2d00;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.navbar a:hover, .navbar a.active {
+  background-color: #d1b388;
+  color: #180e00;
+}
+
+.navbar-brand {
+  font-size: 1.8rem;
+  color: #180e00;
+  font-weight: bold;
+  margin-right: 2rem;
+}
