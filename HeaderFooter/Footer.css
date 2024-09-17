@@ -1,3 +1,7 @@
+body {
+    margin: 0;
+}
+
 .footer {
     background-color: #311d00;
     color: #fff2df;
@@ -5,7 +9,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content:center;
+    justify-content: center;
     font-family: 'Arial', sans-serif;
     box-shadow: 0 -2px 4px rgba(255, 105, 180, 0.2);
 }
@@ -45,7 +49,8 @@
     align-items: start;
 }
 
-.contact input, .contact button {
+.contact input,
+.contact button {
     margin-bottom: 10px;
     padding: 10px;
     border: 1px solid #d1b388;
@@ -76,4 +81,29 @@
 
 .contact button:hover {
     background-color: #6d4621;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .logo,
+    .location,
+    .contact {
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 0 10px;
+    }
+
+    .contact {
+        align-items: center;
+    }
+
+    .contact input,
+    .contact button {
+        width: 100%;
+        max-width: 300px;
+    }
 }

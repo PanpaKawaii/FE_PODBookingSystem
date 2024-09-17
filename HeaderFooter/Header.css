@@ -1,4 +1,11 @@
+body {
+  margin: 0;
+}
+
 .navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #fff2df;
   padding: 1.8rem;
   font-family: 'Arial', sans-serif;
@@ -27,7 +34,8 @@
   font-weight: 600;
 }
 
-.navbar a:hover, .navbar a.active {
+.navbar a:hover,
+.navbar a.active {
   background-color: #d1b388;
   color: #180e00;
 }
@@ -37,4 +45,32 @@
   color: #180e00;
   font-weight: bold;
   margin-right: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  .navbar ul {
+    margin: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navbar li {
+    margin: 0.5rem 0;
+  }
+
+  .navbar-brand {
+    margin-bottom: 1rem;
+    align-self: center;
+  }
+
+  .navbar a {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
 }
