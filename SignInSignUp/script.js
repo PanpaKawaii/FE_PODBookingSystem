@@ -11,7 +11,7 @@ document.getElementById('login').addEventListener('click', function() {
     img.classList.remove("img-right") //Add if unavailable, remove if available
     img.classList.add("img-left") //Add if unavailable, remove if available
     img.style.marginRight = '0%';
-    document.querySelector('body').style.backgroundColor = '#ffff60';
+    document.querySelector('body').style.backgroundColor = '#ffffb0';
 });
 
 function resetInputsBox1() {

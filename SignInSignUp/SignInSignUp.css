@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #ffff60;
+    background-color: #ffffb0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,7 +10,6 @@ body {
 }
 
 .container {
-    width: 800px;
     background-color: white;
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -18,6 +17,7 @@ body {
 }
 
 .card {
+    width: 800px;
     display: flex;
     position: relative;
 }
@@ -183,5 +183,23 @@ hr {
     }
     .btn-already:hover {
         background: #ffd800;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .card {
+        width: 600px;
+    }
+
+    .img-left {
+        display: none;
+    }
+
+    .img-right {
+        display: none;
+    }
+
+    #card-signin {
+        display: none;
     }
 }
