@@ -1,56 +1,75 @@
-.container {
-    background-color: rgb(244, 229, 210);
-    display: flex; /* Use flexbox for layout */
-    justify-content: space-between; /* Space between items */
+
+
+
+.slogan{
+    font-size: 85px;
+    text-align:left;
+    margin: 150px 50px 70px 50px; /* top right bottom left */
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-align: justify;
+}
+.sub-slogan{
+    font-size:40px;
+    text-align:center;
+    margin: 100px 150px 250px 150px;
+    font-family: monospace;
     
-    flex-wrap: wrap; /* Allow wrapping */
+    
 }
 
-.about-us-text {
-    flex: 1; /* Allow text to take available space */
-    margin-right: 20px; /* Add space between text and image */
+.title{
+    font-size: 40px;
+    text-align: left;
+    font-family: monospace;
+    color: #31356e;
+    margin: 0px 50px 0px 200px;
 }
 
-.about-us-img {
-    flex: 0 0 auto; /* Keep image size fixed */
+.second-title{
+    font-size: 40px;
+    text-align: left;
+    font-family: monospace;
+    color: #31356e;
+    margin-top:0;
+    margin-bottom: 10px;
 }
 
-.about-us-img img {
-    max-width: 100%; /* Ensure the image is responsive */
-    height: auto; /* Maintain aspect ratio */
+.reason-container{
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 30px;
+    margin: 30px 200px;
 }
 
-.inform {
-    width: 100%; /* Ensure inform section takes full width */
-    margin-top: 20px; /* Add space above the inform section */
+/* Định dạng cho từng lý do */
+.reason-item {
+    background-color: #b5c1c1; /* Màu xanh nhạt */
+    border-radius: 8px; /* Bo góc */
+    padding: 15px; /* Khoảng cách bên trong */
+    line-height: 2;
+    margin: 10px;
+    text-align: justify;
+}
+.community-text{
+    line-height: 2;
+    justify-content: center;
 }
 
-.location-container {
-    display: flex; /* Use flexbox for horizontal layout */
-    align-items: center; /* Center items vertically */
-    margin-top: 20px; /* Add space above the location section */
-}
-
-.location-img {
-    margin-right: 10px; /* Add space between image and text */
-}
-
-.location-img img {
-    max-width: 500px; /* Set a fixed width for the image */
-    height: auto; /* Maintain aspect ratio */
-}
-
-div.location {
-    flex: 1;
-    font-size: 30px;
-     /* Allow text to take available space */
+.community-container{
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 100px;
+    margin: 30px 200px;
+    line-height: 2;
 }
 
 .header a{
-    margin: 0 10px;
+    margin: 0 30px;
     color: #333;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 25px;
     font-weight: bold;
 
 } 
@@ -59,7 +78,7 @@ div.location {
     justify-content: center;
     margin-bottom: 20px;
     align-items: center;
-    background-color: #bd9067;
+    background-color: #83999f;
     padding: 10px;
 }
 
@@ -70,5 +89,5 @@ div.location {
     
 }
 #root{
-    background-color: rgb(244, 229, 210);
+    background-color: #eeefe9;
 }
