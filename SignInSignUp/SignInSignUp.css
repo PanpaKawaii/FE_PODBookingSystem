@@ -1,4 +1,4 @@
-body {
+.content {
     font-family: Arial, sans-serif;
     background-color: #ffffb0;
     display: flex;
@@ -9,7 +9,7 @@ body {
     transition: all 0.5s ease;
 }
 
-.container {
+.container-content {
     background-color: white;
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
