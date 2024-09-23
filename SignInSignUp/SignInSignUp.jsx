@@ -36,7 +36,7 @@ export default class SignInSignUp extends Component {
     render() {
         return (
             <div className="content">
-                <div className="container">
+                <div className="container-content">
                     <div className="card">
 
                         <div className="card-body" id="card-signin">
