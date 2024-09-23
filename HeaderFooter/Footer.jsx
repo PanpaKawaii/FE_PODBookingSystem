@@ -5,7 +5,7 @@ export default class Footer extends Component {
     render() {
         return (
             <div className='footer'>
-                <div className='container'>
+                <div className='container-footer'>
                     <div className="logo">
                         <p>POD logo</p>
                     </div>
