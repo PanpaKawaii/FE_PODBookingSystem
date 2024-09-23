@@ -14,7 +14,7 @@ body {
     box-shadow: 0 -2px 4px rgba(255, 105, 180, 0.2);
 }
 
-.container {
+.container-footer {
     display: flex;
     justify-content: space-between;
     width: 100%;
