@@ -1,6 +1,10 @@
+body {
+    margin: 0;
+}
+
 .content {
     font-family: Arial, sans-serif;
-    background-color: #ffffb0;
+    background-color: #eeefe9;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +13,7 @@
     transition: all 0.5s ease;
 }
 
-.container-content {
+.signin-signup-container {
     background-color: white;
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -199,7 +203,7 @@ hr {
         display: none;
     }
 
-    #card-signin {
+    .card-disappear {
         display: none;
     }
 }
