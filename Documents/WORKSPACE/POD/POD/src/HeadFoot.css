@@ -1,0 +1,25 @@
+.header a{
+    margin: 0 30px;
+    color: #333;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: bold;
+
+} 
+
+.header{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    align-items: center;
+    background-color: #83999f;
+    padding: 10px;
+}
+
+.header a:hover{
+    color:black;
+    text-decoration: underline;
+    border-radius: 3px; 
+    
+}
+
