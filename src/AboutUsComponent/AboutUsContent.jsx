@@ -1,14 +1,23 @@
 import React, { Component } from 'react'
 import './AboutUs.css'
 import building from './../PODimage/building.jpg'
+import videoSrc from './../PODimage/VIDEO.mp4'; // Import the video file
+
 export default class AboutUsContent extends Component {
     render() {
         return (
             <>
+            
+                <video className='fit' width="1503" height="800" autoPlay muted loop>
+                    <source src={videoSrc} type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                
+                
                 <div className='about-us-container'>
                     <div className='slogan-container'>
                         <p className='slogan'>Nơi làm việc lý tưởng cho sự sáng tạo và hiệu quả (logo)</p>
-                        <p className='sub-slogan'>Tự hào mang đến cho bạn giải pháp tối ưu để làm việc tại bất kỳ đâu, với không gian linh hoạt và dịch vụ chất lượng cao.</p>
+                        <p className='sub-slogan'>Tự hào mang đến cho bạn giải pháp tối ưu để làm việc tại bất kỳ đâu, với không giagitn linh hoạt và dịch vụ chất lượng cao.</p>
                     </div>
                     <p className='title'>Vì sao chọn InnoSpace</p>
                     <div className='reason-container'>
@@ -30,7 +39,7 @@ export default class AboutUsContent extends Component {
                         </div>
                         <div >
                             <img className='building-img' src={building} alt='location' />
-                            
+
                         </div>
                     </div>
                 </div>
