@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './AboutUs.css'
-// import building from 'C:/Users/admin/Documents/WORKSPACE/POD/POD/src/PODimage/building.jpg'
+import building from './../PODimage/building.jpg'
 export default class AboutUsContent extends Component {
     render() {
         return (
@@ -29,7 +29,7 @@ export default class AboutUsContent extends Component {
                             <p className='community-text'>InnoSpace không chỉ là một nền tảng đặt chỗ làm việc, mà còn là một cộng đồng năng động và kết nối. Chúng tôi tạo ra một môi trường nơi những cá nhân sáng tạo, các startup và doanh nghiệp nhỏ có thể gặp gỡ, chia sẻ ý tưởng và hợp tác xây dựng một cộng đồng hỗ trợ, hợp tác và thành công.</p>
                         </div>
                         <div >
-                            {/* <img className='building-img' src={building} alt='location' /> */}
+                            <img className='building-img' src={building} alt='location' />
                             
                         </div>
                     </div>
