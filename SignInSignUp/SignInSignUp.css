@@ -13,197 +13,217 @@ body {
     transition: all 0.5s ease;
 }
 
-.signin-signup-container {
-    background-color: white;
-    border-radius: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-}
+.content {
 
-.card {
-    width: 800px;
-    display: flex;
-    position: relative;
-}
-
-.card-body {
-    flex: 1;
-    width: 50%;
-    padding: 40px;
-}
-
-.title {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-}
-
-.form-input {
-    margin-bottom: 15px;
-}
-
-input {
-    width: 100%;
-    padding: 10px 10px 10px 35px;
-    box-sizing: border-box;
-    outline: none;
-    border: 1px solid #ddd;
-    border-radius: 50px;
-}
-
-.icon {
-    position: absolute;
-    margin: 8px 0px 0px 8px;
-    color: orange;
-}
-
-.form-box1 .form-input input:focus,
-.form-box1 .form-input input:focus,
-.form-box1 .form-input input:valid {
-    border: 2px solid orange;
-}
-.form-box2 .form-input input:focus,
-.form-box2 .form-input input:valid {
-    border: 2px solid #4866a8;
-}
-
-.forget-link {
-    display: block;
-    text-align: right;
-    color: #ffb200;
-    font-weight: bold;
-    text-decoration: none;
-    margin-bottom: 15px;
-}
-
-.forget-link:hover {
-    color: #ffa000;
-    text-decoration: none;
-}
-
-hr {
-    margin: 20px 0;
-    border: none;
-    border-top: 1px solid #ddd;
-}
-
-.img-left {
-    width: 50%;
-    height: 100%;
-    background: url('YellowBanana.jpg') center;
-    background-size: cover;
-    position: absolute;
-    right: 0;
-    transition: all 0.5s ease;
-}
-
-.img-right {
-    width: 50%;
-    height: 100%;
-    background: url('BlueBanana.jpg') center;
-    background-size: cover;
-    position: absolute;
-    right: 0;
-    transition: all 0.5s ease;
-}
-
-.btn {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.form-box1{
-    button[type="submit"] {
-        border: none;
-        cursor: pointer;
-        background: #fff300;
-        color: black;
-        transition: 0.5s;
+    .signin-signup-container {
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
     }
-    button[type="submit"]:hover {
-        background: #ffd800;
-    }
-    button[type="reset"],button[type="button"] {
-        border: none;
-        cursor: pointer;
-        background: #fcfcc2;
-        color: black;
-        transition: 0.5s;
-    }
-    button[type="reset"]:hover,button[type="button"]:hover {
-        background: #fafa98;
-    }
-    .btn-signup {
-        margin-top: 20px;
-        color: white !important;
-        background: #4866a8;
-        border: 0;
-        border-radius: 10px;
-        transition: 0.5s;
-    }
-    .btn-signup:hover {
-        background: #3d578f;
-    }
-}
 
-.form-box2{
-    .btn-box{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    button[type="submit"] {
-        width: 65%;
-        border: none;
-        cursor: pointer;
-        background: #4866a8;
-        color: white;
-        transition: 0.5s;
-    }
-    button[type="submit"]:hover {
-        background: #3d578f;
-    }
-    button[type="reset"],button[type="button"] {
-        width: 30%;
-        border: none;
-        cursor: pointer;
-        background: #d0d4ff;
-        color: white;
-        transition: 0.5s;
-    }
-    button[type="reset"]:hover,button[type="button"]:hover {
-        background: #b4b7fa;
-    }
-    .btn-already {
-        color: black !important;
-        background: #fff300;
-        border: 0;
-        transition: 0.5s;
-    }
-    .btn-already:hover {
-        background: #ffd800;
-    }
-}
-
-@media screen and (max-width: 768px) {
     .card {
-        width: 600px;
+        width: 800px;
+        display: flex;
+        position: relative;
+    }
+
+    .card-body {
+        flex: 1;
+        width: 50%;
+        padding: 40px;
+    }
+
+    .title {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .form-input {
+        margin-bottom: 15px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px 10px 10px 35px;
+        box-sizing: border-box;
+        outline: none;
+        border: 1px solid #ddd;
+        border-radius: 50px;
+    }
+
+    .icon {
+        position: absolute;
+        margin: 8px 0px 0px 8px;
+        color: orange;
+    }
+
+    .form-box1 .form-input input:focus,
+    .form-box1 .form-input input:focus,
+    .form-box1 .form-input input:valid {
+        border: 2px solid orange;
+    }
+
+    .form-box2 .form-input input:focus,
+    .form-box2 .form-input input:valid {
+        border: 2px solid #4866a8;
+    }
+
+    .forget-link {
+        display: block;
+        text-align: right;
+        color: #ffb200;
+        font-weight: bold;
+        text-decoration: none;
+        margin-bottom: 15px;
+    }
+
+    .forget-link:hover {
+        color: #ffa000;
+        text-decoration: none;
+    }
+
+    hr {
+        margin: 20px 0;
+        border: none;
+        border-top: 1px solid #ddd;
     }
 
     .img-left {
-        display: none;
+        width: 50%;
+        height: 100%;
+        background: url('YellowBanana.jpg') center;
+        background-size: cover;
+        position: absolute;
+        right: 0;
+        transition: all 0.5s ease;
     }
 
     .img-right {
-        display: none;
+        width: 50%;
+        height: 100%;
+        background: url('BlueBanana.jpg') center;
+        background-size: cover;
+        position: absolute;
+        right: 0;
+        transition: all 0.5s ease;
     }
 
-    .card-disappear {
-        display: none;
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .form-box1 {
+        button[type="submit"] {
+            border: none;
+            cursor: pointer;
+            background: #fff300;
+            color: black;
+            transition: 0.5s;
+        }
+
+        button[type="submit"]:hover {
+            background: #ffd800;
+        }
+
+        button[type="reset"],
+        button[type="button"] {
+            border: none;
+            cursor: pointer;
+            background: #fcfcc2;
+            color: black;
+            transition: 0.5s;
+        }
+
+        button[type="reset"]:hover,
+        button[type="button"]:hover {
+            background: #fafa98;
+        }
+
+        .btn-signup {
+            margin-top: 20px;
+            color: white !important;
+            background: #4866a8;
+            border: 0;
+            border-radius: 10px;
+            transition: 0.5s;
+        }
+
+        .btn-signup:hover {
+            background: #3d578f;
+        }
+    }
+
+    .form-box2 {
+        .btn-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button[type="submit"] {
+            width: 65%;
+            border: none;
+            cursor: pointer;
+            background: #4866a8;
+            color: white;
+            transition: 0.5s;
+        }
+
+        button[type="submit"]:hover {
+            background: #3d578f;
+        }
+
+        button[type="reset"],
+        button[type="button"] {
+            width: 30%;
+            border: none;
+            cursor: pointer;
+            background: #d0d4ff;
+            color: white;
+            transition: 0.5s;
+        }
+
+        button[type="reset"]:hover,
+        button[type="button"]:hover {
+            background: #b4b7fa;
+        }
+
+        .btn-already {
+            color: black !important;
+            background: #fff300;
+            border: 0;
+            border-radius: 10px;
+            transition: 0.5s;
+        }
+
+        .btn-already:hover {
+            background: #ffd800;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .card {
+            width: 600px;
+        }
+
+        .img-left {
+            display: none;
+        }
+
+        .img-right {
+            display: none;
+        }
+
+        .card-disappear {
+            display: none;
+        }
     }
 }
