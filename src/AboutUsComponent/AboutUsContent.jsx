@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import './AboutUs.css'
 // import building from 'C:/Users/admin/Documents/WORKSPACE/POD/POD/src/PODimage/building.jpg'
 export default class AboutUsContent extends Component {
     render() {

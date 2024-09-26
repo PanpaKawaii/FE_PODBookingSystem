@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import './HeadFoot.css'
 export default class HeaderUs extends Component {
   render() {
     return (
