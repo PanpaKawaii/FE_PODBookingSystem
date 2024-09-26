@@ -1,0 +1,57 @@
+body {
+    margin: 0;
+}
+
+.user-information {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.user-information {
+
+    .user-information-container {
+        display: flex;
+    }
+
+    .user-image {
+        padding: 150px 0;
+        background: url('YellowBanana.jpg') center;
+    }
+
+    /* .user-image {
+        width: 100%;
+        height: auto;
+    } */
+
+    .user-information-left-container {
+        width: 300px;
+        height: 80vh;
+        background-color: #ffffff;
+        padding: 20px;
+        border-right: 2px solid #cccccc;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-bottom: 10px;
+        transition: 0.5s;
+    }
+    
+    .btn:hover {
+        background: #cfcfcf;
+    }
+
+    .user-information-right-container {
+        margin: 0 auto 0 20px;
+    }
+
+    p {
+        margin: 5px 0;
+    }
+}
