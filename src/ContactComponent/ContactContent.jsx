@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 import './Contact.css'
+import service from './../PODimage/service.jpg'
 export default class ContactContent extends Component {
   render() {
     return (
       <>
-        <div className='container'>
-          <div className='contact-us'>
-            <h1>Liên hệ chúng tôi</h1>
-            <div className='text-contact'>WEBNAME luôn sẵn sàng lắng nghe câu hỏi và ý kiến đóng góp từ bạn. Chúng tôi sẽ phản hồi ngay trong 24h tiếp theo!</div>
+        <div className='contact-container'>
+          <div className='service-container'>
+            <p className='title-service'>Chúng tôi sẵn sàng lắng nghe bạn!</p>
+            <div>
+              <img className='service-img' src={service} alt='service' />
+            </div>
+          </div>
+          <div className='form-contact'>
+            <h1>Liên hệ với chúng tôi</h1>
+            <p className='text-contact'>Hãy điền vào biểu mẫu bên dưới và chúng tôi sẽ liên hệ để tìm hiểu thêm về sản phẩm và dịch vụ của chúng tôi!</p>
             <label>Họ và tên</label><br />
             <input className="text" type="text" placeholder="Nhập họ và tên của bạn" /><br />
             <label>Email</label><br />
@@ -17,15 +24,6 @@ export default class ContactContent extends Component {
             <label>Nội dung</label><br />
             <input className="text" type="text" placeholder="Mô tả vấn đề của bạn" /><br />
             <button className='submit'>Gửi</button>
-          </div>
-          <div className='inform'>
-            <p>Thông tin công ty</p>
-            <div>
-              <p>Địa chỉ: 1234 Nguyễn Văn Cừ, Quận 5, TP.HCM</p>
-              <p>Email: info@webname.com</p>
-              <p>Số điện thoại: 0123456789</p>
-            </div>
-
           </div>
         </div>
       </>

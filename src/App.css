@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 
 h1{
@@ -51,7 +51,7 @@ label{
 .submit:hover{
     background-color: #000;
     color: #fff;
-    transition: background-color 0.3s, color 0.3s; /* Added transition effect */ 
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .inform{
@@ -59,4 +59,4 @@ label{
     flex-direction: column;
     display: flex;
     justify-content:flex-end;
-}
+} */

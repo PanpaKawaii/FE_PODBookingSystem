@@ -2,10 +2,10 @@
 
 
 h1{
-    font-size: 20px;
+    
     display: flex;
     font-weight: bold;
-    color: #8e1c1c;
+    color: black;
     text-align: left;
     justify-content: left;
   
@@ -44,24 +44,42 @@ label{
     margin-top: 10px;
     background-color: #ebb48a;
     color: black;
-   
-     
-    
-    
-    
+
 }
 .submit:hover{
     background-color: #000;
     color: #fff;
     transition: background-color 0.3s, color 0.3s; /* Added transition effect */
- 
-    
-    
-    
+
 }
 .inform{
     display: flex;
     flex-direction: column;
     display: flex;
     justify-content:flex-end;
+}
+p.title-service{
+    font-size: 45px;
+    font-family: monospace;
+    color: #31356e;
+    text-align:center;
+    margin: 0 150px 10px 50px;
+}
+.contact-container{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.service-img{
+    justify-content: center;
+    display: flex;
+}
+
+.form-contact{
+    background-color: white;
+}
+
+#root{
+    background-color: #eeefe9;
 }
