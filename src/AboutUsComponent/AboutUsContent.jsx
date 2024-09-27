@@ -7,13 +7,18 @@ export default class AboutUsContent extends Component {
     render() {
         return (
             <>
-            
-                <video className='fit' width="1503" height="800" autoPlay muted loop>
-                    <source src={videoSrc} type="video/mp4" />
-                    Your browser does not support the video tag.
-                </video>
-                
-                
+
+                <div className='video-container'>
+                    <video className='fit' width="1503" height="800" autoPlay muted loop>
+                        <source src={videoSrc} type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div className='overlay-text'> {/* Thêm div này */}
+                        <h1>Tiêu đề của bạn</h1>
+                        <p>Nội dung mô tả ở đây</p>
+                    </div>
+                </div>
+
                 <div className='about-us-container'>
                     <div className='slogan-container'>
                         <p className='slogan'>Nơi làm việc lý tưởng cho sự sáng tạo và hiệu quả (logo)</p>
@@ -21,15 +26,24 @@ export default class AboutUsContent extends Component {
                     </div>
                     <p className='title'>Vì sao chọn InnoSpace</p>
                     <div className='reason-container'>
-                        <div className='reason-item'>
-                            <p>Không gian làm việc đa dạng: Đáp ứng nhu cầu đa dạng từ các sinh viên, freelancer đến doanh nghiệp nhỏ, với lựa chọn đa dạng từ phòng làm việc cá nhân đến không gian làm việc nhóm.</p>
+                        <div>
+                            <img className='building-img' src={building} alt='location' />
                         </div>
-                        <div className='reason-item'>
-                            <p>Quản lý đặt chỗ thông minh: Giao diện thân thiện, cho phép bạn dễ dàng tìm kiếm và đặt chỗ theo nhu cầu, thời gian và ngân sách.</p>
+                        <div>
+                            <div className='reason-item'>
+                                <h3>Không gian làm việc đa dạng: </h3>
+                                <p>Đáp ứng nhu cầu đa dạng từ các sinh viên, freelancer đến doanh nghiệp nhỏ, với lựa chọn đa dạng từ phòng làm việc cá nhân đến không gian làm việc nhóm.</p>
+                            </div>
+                            <div className='reason-item'>
+                                <h3>Quản lý đặt chỗ thông minh: </h3>
+                                <p>Giao diện thân thiện, cho phép bạn dễ dàng tìm kiếm và đặt chỗ theo nhu cầu, thời gian và ngân sách.</p>
+                            </div>
+                            <div className='reason-item'>
+                                <h3>Dịch vụ toàn diện: </h3>
+                                <p>Hỗ trợ quản lý lịch làm việc, thanh toán trực tuyến và cung cấp các gói dịch vụ linh hoạt kèm các tiện ích.</p>
+                            </div>
                         </div>
-                        <div className='reason-item'>
-                            <p>Dịch vụ toàn diện: Hỗ trợ quản lý lịch làm việc, thanh toán trực tuyến và cung cấp các gói dịch vụ linh hoạt kèm các tiện ích.</p>
-                        </div>
+
                     </div>
 
                     <div className='community-container'>
