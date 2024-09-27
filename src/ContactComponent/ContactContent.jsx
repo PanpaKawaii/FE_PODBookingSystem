@@ -13,6 +13,7 @@ export default class ContactContent extends Component {
             </div>
           </div>
           <div className='form-contact'>
+            <div className='form-item'>
             <h1>Liên hệ với chúng tôi</h1>
             <p className='text-contact'>Hãy điền vào biểu mẫu bên dưới và chúng tôi sẽ liên hệ để tìm hiểu thêm về sản phẩm và dịch vụ của chúng tôi!</p>
             <label>Họ và tên</label><br />
@@ -24,6 +25,7 @@ export default class ContactContent extends Component {
             <label>Nội dung</label><br />
             <input className="text" type="text" placeholder="Mô tả vấn đề của bạn" /><br />
             <button className='submit'>Gửi</button>
+            </div>
           </div>
         </div>
       </>
