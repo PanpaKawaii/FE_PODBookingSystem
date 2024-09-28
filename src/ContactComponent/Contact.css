@@ -32,7 +32,26 @@ h1{
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
 }
+label{
+    font-family: 'Roboto', sans-serif; 
+    margin-left: 10px;
+}
+.submit{
+    width: 100%;
+    height: 50px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin-top: 10px;
+    background-color: #ebb48a;
+    color: black;
 
+}
+.submit:hover{
+    background-color: #000;
+    color: #fff;
+    transition: background-color 0.3s, color 0.3s; 
+
+}
 .inform{
     display: flex;
     flex-direction: column;
@@ -40,11 +59,10 @@ h1{
     justify-content:flex-end;
 }
 p.title-service{
-    font-size: 40px;
+    font-size: 45px;
     font-family: monospace;
     color: #31356e;
     text-align:center;
-    margin: 50px 100px;
     
 }
 .contact-container{
@@ -54,6 +72,7 @@ p.title-service{
     justify-items: center;
 }
 .service-container{
+    /* justify-content: center; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -61,55 +80,15 @@ p.title-service{
 .service-img{
     display: flex;
     justify-content: center;
-    margin-bottom: 50px;
 }
 
 .form-contact{
     background-color: white;
+    margin-right: 100px;
     border-radius: 8px; 
     padding: 15px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    height: 600px;
-    margin: auto 70px;
+    height: 500px;
     
 }
 
-.form-item{
-    margin:auto auto;
-}
-
-
-.form-contact label {
-  font-weight: bold; /* Bold labels */
-  margin-top: 10px; /* Space above labels */
- 
-}
-
-.form-contact .text {
-  width: 100%; /* Full width inputs */
-  
-  margin-top: 5px; /* Space above inputs */
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 4px; /* Rounded corners for inputs */
-}
-
-.form-contact .submit {
-background-color: #31356e;
-  color: white; /* Text color */
-  padding: 10px 15px; /* Button padding */
-  border: none; /* No border */
-  border-radius: 4px; /* Rounded corners for button */
-  cursor: pointer; /* Pointer cursor on hover */
-  display: block; /* Đặt nút thành block để dễ căn giữa */
-  margin: 20px auto; /* Tạo khoảng cách trên và dưới, căn giữa theo chiều ngang */
-}
-
-.form-contact .submit:hover {
-    background-color: #000;
-    color: #fff;
-    transition: background-color 0.3s, color 0.3s; 
-}
-
-#root{
-    background-color: #eeefe9;
-}
