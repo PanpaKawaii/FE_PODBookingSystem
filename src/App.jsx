@@ -1,4 +1,4 @@
-import ContactContent from './COntactComponent/COntactContent'
+import AboutUsContent from './AboutUsComponent/AboutUsContent'
 import Header from './HeadFootComponent/Header'
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <Header></Header>
-      <ContactContent></ContactContent>
+      <AboutUsContent></AboutUsContent>
     </>
   )
 }
