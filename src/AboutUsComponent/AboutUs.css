@@ -42,12 +42,13 @@
     line-height: 2;
     margin: 10px;
     text-align: justify;
+    align-items: center;
 }
 
 img.location-img{
     width:100%;
     height:auto;
-    margin-top: 20px;
+    align-items: center;
 }
 .community-text{
     line-height: 2;

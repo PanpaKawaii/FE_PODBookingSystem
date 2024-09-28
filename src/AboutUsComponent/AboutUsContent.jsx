@@ -14,10 +14,10 @@ export default class AboutUsContent extends Component {
                         <source src={videoSrc} type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
-                    <div className='overlay-text'> 
+                    {/* <div className='overlay-text'> 
                         <h1>Tiêu đề của bạn</h1>
                         <p>Nội dung mô tả ở đây</p>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className='about-us-container'>
@@ -26,6 +26,7 @@ export default class AboutUsContent extends Component {
                         <p className='sub-slogan'>Tự hào mang đến cho bạn giải pháp tối ưu để làm việc tại bất kỳ đâu, với không giagitn linh hoạt và dịch vụ chất lượng cao.</p>
                     </div>
                     <p className='title'>Vì sao chọn InnoSpace</p>
+
                     <div className='reason-container'>
                         <div>
                             <img className='location-img' src={location} alt='location' />
