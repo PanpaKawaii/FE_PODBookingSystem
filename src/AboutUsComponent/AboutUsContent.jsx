@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './AboutUs.css'
 import building from './../PODimage/building.jpg'
+import location from './../PODimage/location.jpg'
 import videoSrc from './../PODimage/VIDEO.mp4'; // Import the video file
 
 export default class AboutUsContent extends Component {
@@ -9,11 +10,11 @@ export default class AboutUsContent extends Component {
             <>
 
                 <div className='video-container'>
-                    <video className='fit' width="1503" height="800" autoPlay muted loop>
+                    <video className='fit' width="100%" height="auto" autoPlay muted loop>
                         <source src={videoSrc} type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
-                    <div className='overlay-text'> {/* Thêm div này */}
+                    <div className='overlay-text'> 
                         <h1>Tiêu đề của bạn</h1>
                         <p>Nội dung mô tả ở đây</p>
                     </div>
@@ -27,7 +28,7 @@ export default class AboutUsContent extends Component {
                     <p className='title'>Vì sao chọn InnoSpace</p>
                     <div className='reason-container'>
                         <div>
-                            <img className='building-img' src={building} alt='location' />
+                            <img className='location-img' src={location} alt='location' />
                         </div>
                         <div>
                             <div className='reason-item'>

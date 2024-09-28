@@ -32,13 +32,7 @@
     margin-bottom: 10px;
 }
 
-.reason-container{
-    font-size: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 30px;
-    margin: 30px 200px;
-}
+
 
 
 .reason-item {
@@ -50,6 +44,11 @@
     text-align: justify;
 }
 
+img.location-img{
+    width:100%;
+    height:auto;
+    margin-top: 20px;
+}
 .community-text{
     line-height: 2;
     justify-content: center;
@@ -71,28 +70,6 @@
     
 }
 
-video.fit{
-    display: flex;
-    justify-content: center;
-    object-fit: cover; 
-}
-
-.video-container {
-    position: relative; /* Để overlay-text có thể được định vị */
-    overflow: hidden; /* Đảm bảo video không tràn ra ngoài khung */
-}
-
-.overlay-text {
-    position: absolute; /* Định vị tuyệt đối */
-    top: 50%; /* Căn giữa theo chiều dọc */
-    left: 50%; /* Căn giữa theo chiều ngang */
-    transform: translate(-50%, -50%); /* Căn giữa chính xác */
-    color: white; /* Màu chữ */
-    text-align:end; /* Căn giữa chữ */
-    background: rgba(255, 255, 255, 0.573); /* Nền mờ cho chữ */
-    padding: 20px; /* Khoảng cách bên trong */
-    border-radius: 10px;
-}
 
 
 
@@ -101,7 +78,7 @@ video.fit{
 
 .reason-container {
     display: flex; /* Use Flexbox */
-    flex-direction: column; /* Stack items vertically */
+    margin:0px 200px;
     gap: 20px; /* Space between items */
     padding: 20px; /* Padding around the container */
     background-color: #f9f9f9; /* Light background color */
