@@ -111,8 +111,10 @@ export default class SignInSignUp extends Component {
                                 </div>
                             </div>
                         </div>
-
-                        <div className='img-left' id='movingImg'></div>
+                        
+                        <div>
+                            <div className='img-left' id='movingImg'></div>
+                        </div>
 
                     </div>
                 </div>
