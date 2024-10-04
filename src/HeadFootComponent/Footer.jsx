@@ -1,8 +1,22 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Footer.css';
+// import api from '../config/axios';
+function Footer(){
+  //   const [categories, setCategories] = useState([])
 
-export default class Footer extends Component {
-    render() {
+  // const fetchCategories = async () => {
+  //   try {
+  //     const response = await api.get("categories");
+  //     console.log(response);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+    
+  // }
+  // useEffect(() => {
+  //   fetchCategories();
+  // }, [])
+    
         return (
             <div className='footer'>
                 <div className='footer-container'>
@@ -30,5 +44,7 @@ export default class Footer extends Component {
                 </div>
             </div>
         )
-    }
 }
+export default Footer
+
+
