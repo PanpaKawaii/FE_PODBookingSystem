@@ -3,81 +3,24 @@ body {
 }
 
 .header {
-    font-family: 'Arial', sans-serif;
-    background-color: #53737e;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    padding: 1.8rem;
-    position: sticky;
-    top: 0;
-}
 
-.header {
-
-    .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .navbar ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .navbar li {
-        margin: 0 1rem;
-    }
-
-    .navbar a {
-        color: #ffffff;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
+    .menu {
+        background-color: #53737e;
+        font-family: 'Arial', sans-serif;
         transition: all 0.3s ease;
-        font-weight: 600;
     }
 
-    .navbar a:hover,
-    .navbar a.active {
-        background-color: #37555f;
+    .menu ul {
+        margin: 0 20px;
     }
 
-    .navbar-brand {
-        font-size: 1.8rem;
-        color: #000000;
+    .menu a {
         font-weight: bold;
-        margin-right: 2rem;
     }
 
-    @media screen and (max-width: 768px) {
-        .navbar {
-            padding: 1rem;
-        }
-
-        .navbar ul {
-            margin: 0 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .navbar li {
-            margin: 0.5rem 0;
-        }
-
-        .navbar-brand {
-            margin-bottom: 1rem;
-            align-self: center;
-        }
-
-        .navbar a {
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
+    .brand-logo {
+        font-weight: bold;
+        margin: 0 20px;
     }
+
 }

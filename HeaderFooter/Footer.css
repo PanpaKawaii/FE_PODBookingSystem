@@ -23,14 +23,13 @@ body {
     }
 
     .footer-container p {
-        margin: 5px 0;
+        margin: 0;
     }
 
-    .footer-logo {
+    .footer-brand {
         width: 100%;
         padding: 20px;
         border: 1px solid red;
-        overflow: hidden;
         text-align: center;
     }
 
@@ -38,7 +37,6 @@ body {
         width: 100%;
         padding: 20px;
         border: 1px solid red;
-        overflow: hidden;
         text-align: center;
     }
 
@@ -46,15 +44,18 @@ body {
         width: 100%;
         padding: 20px;
         border: 1px solid red;
-        overflow: hidden;
         text-align: center;
     }
 
-    .footer-something {
+    .footer-end {
         background-color: #53737e;
         display: flex;
         justify-content: center;
         width: 100%;
+    }
+
+    .footer-end p {
+        margin: 10px;
     }
 
     @media screen and (max-width: 768px) {
@@ -64,11 +65,10 @@ body {
             max-width: 400px;
         }
 
-        .footer-logo,
+        .footer-brand,
         .footer-location,
         .footer-contact {
             width: 100%;
-            margin-bottom: 20px;
             padding: 0 40px;
         }
     }
