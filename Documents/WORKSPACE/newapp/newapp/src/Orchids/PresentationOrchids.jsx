@@ -9,9 +9,9 @@ import { ThemeContext, ThemeProvider } from './ThemeContext'
 import { Link } from 'react-router-dom'
 
 export default function PresentationOrchids({ orchidsData }) {
-    const context = useContext(ThemeContext);
-    const [showPopup, setShowPopup] = useState(false);
-    const [selectedOrchid, setSelectedOrchid] = useState(null);
+    const context = useContext(ThemeContext)
+    const [showPopup, setShowPopup] = useState(false)
+    const [selectedOrchid, setSelectedOrchid] = useState(null)
 
 
     const openPopup = (orchid) => {

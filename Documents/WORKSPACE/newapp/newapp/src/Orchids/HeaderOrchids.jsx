@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import { ThemeContext, ThemeProvider } from './ThemeContext';
 
 export default function HeaderOrchids() {
-  const context = useContext(ThemeContext);
+  const context = useContext(ThemeContext)
   return (
     <div >
 
@@ -27,8 +27,8 @@ export default function HeaderOrchids() {
             <Nav className="me-auto page">
               <Nav.Link as={Link} to="/">Home</Nav.Link>
               <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
-              <Nav.Link as={Link} to="/new">New</Nav.Link>
-              <Nav.Link as={Link} to="/about">About</Nav.Link>
+              {/* <Nav.Link as={Link} to="/new">New</Nav.Link>
+              <Nav.Link as={Link} to="/about">About</Nav.Link> */}
               <Nav.Link as={Link} to="/natural">Special</Nav.Link>
             </Nav>
             <Nav className="button">

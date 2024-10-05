@@ -110,6 +110,19 @@
   text-align: center;
   margin:auto;
 }
+
+.video{
+  width: 840px;
+  height: 472px;
+}
+
+@media screen and (max-width: 900px) {
+
+  .video{
+    width: 560px;
+    height: 315px;
+  }
+}
   
 
   

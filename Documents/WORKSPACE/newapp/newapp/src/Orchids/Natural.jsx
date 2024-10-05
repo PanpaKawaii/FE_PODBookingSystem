@@ -8,8 +8,8 @@ import { ThemeContext, ThemeProvider } from './ThemeContext'
 
 export default function Natural() {
     // Lọc ra những orchid có isSpecial=true
-    const specialOrchids = Orchids.filter(orchid => orchid.isSpecial === true);
-    const context = useContext(ThemeContext);
+    const specialOrchids = Orchids.filter(orchid => orchid.isSpecial === true)
+    const context = useContext(ThemeContext)
     return (
         <ThemeProvider>
             <div className={context.theme}>

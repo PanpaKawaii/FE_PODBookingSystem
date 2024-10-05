@@ -1,6 +1,6 @@
 import { Routes } from 'react-router-dom'
 import Contact from './Orchids/Contact'
-import About from './Orchids/About'
+// import About from './Orchids/About'
 import { Route } from 'react-router-dom'
 import HeaderOrchids from './Orchids/HeaderOrchids'
 import FooterOrchids from './Orchids/FooterOrchids'
@@ -20,7 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
+          {/* <Route path="/about" element={<About />} /> */}
           <Route path="/natural" element={<Natural/>} />
           <Route path="/orchid/:id" element={<OrchidDetail/>} />
         </Routes>
