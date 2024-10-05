@@ -1,33 +1,46 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container'
+import Button from 'react-bootstrap/Button'
+import { useContext } from 'react';
+import { ThemeContext, ThemeProvider } from './ThemeContext';
 
-export default class HeaderOrchids extends Component {
-  render() {
-    return (
-      <div >
+export default function HeaderOrchids() {
+  const context = useContext(ThemeContext);
+  return (
+    <div >
 
-        <div className='header'>
+      {/* <div className='header'>
           <Link to='/' >Home</Link>
           <Link to='/contact' >Contact</Link>
           <Link to='/new' >New</Link>
           <Link to='/about' >About</Link>
-        </div>
-
-        {/* <Navbar bg="dark" data-bs-theme="dark">
+        </div> */}
+      <ThemeProvider>
+        <Navbar className='header' bg="dark" data-bs-theme="dark">
           <Container>
-            <Navbar.Brand href="#home">Navbar</Navbar.Brand>
-            <Nav className="me-auto">
-              <Nav.Link href="/home">Home</Nav.Link>
-              <Nav.Link href="/contact">Contact</Nav.Link>
-              <Nav.Link href="/new">New</Nav.Link>
-              <Nav.Link href="/about">About</Nav.Link>
+            <Nav className="me-auto logo">
+              <Navbar.Brand as={Link} to="/">Orchid</Navbar.Brand>
             </Nav>
-          </Container>
-        </Navbar> */}
+            <Nav className="me-auto page">
+              <Nav.Link as={Link} to="/">Home</Nav.Link>
+              <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
+              <Nav.Link as={Link} to="/new">New</Nav.Link>
+              <Nav.Link as={Link} to="/about">About</Nav.Link>
+              <Nav.Link as={Link} to="/natural">Special</Nav.Link>
+            </Nav>
+            <Nav className="button">
+              <Button variant="secondary" onClick={context.toggleTheme} >{context.theme}</Button>
+            </Nav>
+          
+        </Container>
+      </Navbar>
+    </ThemeProvider>
+    </div >
+  )
 
-      </div>
-    )
-  }
 }
 
 
