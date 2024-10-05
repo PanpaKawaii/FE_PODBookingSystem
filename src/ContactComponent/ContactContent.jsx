@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-// import './Contact.css'
+import './Contact.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import service from './../PODimage/service.jpg'
 export default class ContactContent extends Component {
