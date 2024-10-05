@@ -1,0 +1,53 @@
+body {
+    margin: 0;
+}
+
+.user-information {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.user-information {
+
+    .user-information-left-container {
+        width: 342px;
+        height: 90vh;
+        background-color: #ffffff;
+        padding: 20px;
+        border-right: 2px solid #cccccc;
+    }
+
+    .user-avatar img{
+        width: 300px;
+        width: 300px;
+        object-fit: cover;
+        object-position: center;
+        overflow: hidden;
+        display: block;
+    }
+
+    .btn {
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        background: #00a0ac;
+        cursor: pointer;
+        font-weight: bold;
+        margin-bottom: 10px;
+        transition: 0.5s;
+    }
+
+    .btn:active {
+        background: #007f88;
+    }
+    
+    .btn:hover,
+    .btn:focus {
+        background: #00a0ac;
+    }
+
+    p {
+        margin: 5px 0;
+    }
+}

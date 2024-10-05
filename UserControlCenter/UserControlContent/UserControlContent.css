@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+}
+
+.user-information {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.user-information {
+
+    .user-information-container {
+        display: flex;
+    }
+
+    .user-information-right-container {
+        padding: 0 20px;
+    }
+
+    p {
+        margin: 5px 0;
+    }
+}
