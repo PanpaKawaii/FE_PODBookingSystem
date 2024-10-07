@@ -1,0 +1,10 @@
+.home {
+    height: auto;
+    width:100%;
+    display: flex;
+    background-image: url('../Admin_image/adminhome.jpg');
+    background-size: cover;
+    background-position: center;
+    
+  }
+  

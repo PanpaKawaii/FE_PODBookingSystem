@@ -1,0 +1,42 @@
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .toggle-button {
+    display: none; /* Ẩn button trên màn hình lớn */
+    margin: 10px;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .open .toggle-button {
+    display: none; /* Ẩn button khi sidebar mở */
+  }
+  
+  .closed .toggle-button {
+    display: block; /* Hiện button khi sidebar đóng */
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .sidebar-container {
+      position: relative;
+    }
+  
+    CDBSidebar {
+      display: none; /* Ẩn sidebar trên màn hình nhỏ */
+    }
+  
+    .sidebar-container.open CDBSidebar {
+      display: block; /* Hiện sidebar khi mở */
+    }
+  
+    .toggle-button {
+      display: block; /* Hiện button trên màn hình nhỏ */
+    }
+  }
+  
