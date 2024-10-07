@@ -1,0 +1,148 @@
+body {
+    margin: 0;
+}
+
+.POD-solution {
+    width: 100%;
+    background-color: #ffffff;
+}
+
+.POD-solution {
+
+    .search-container {
+        width: 100%;
+    }
+
+    .search {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        padding: 10px 10px 0;
+    }
+
+    .form-group {
+        padding: 0 10px 0 0;
+    }
+
+    .form-input {
+        width: 250px;
+    }
+
+    .solution-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .image-row {
+        margin: 30px 0;
+        width: 100%;
+        max-width: 1500px;
+    }
+
+    .image-col {
+        display: flex;
+        justify-content: center;
+    }
+
+    .image-card {
+        width: 320px;
+        margin-bottom: 20px;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px #6666664d;
+        overflow: hidden;
+        align-items: center;
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+        transition: all 0.3s ease;
+    }
+
+    .image-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 6px 12px #6666664d;
+    }
+
+    .image-card img {
+        width: 320px;
+        height: 180px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    .rating {
+        padding: 0 5px;
+        background-color: #00000060;
+        border-radius: 0 4px 0 0;
+        position: absolute;
+        left: 0;
+        top: 147px;
+    }
+
+    .capacity {
+        color: #ffffff;
+        background-color: #00000060;
+        border-radius: 4px 0 0 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        right: 0;
+        top: 156px;
+    }
+
+    .capacity-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card-body {
+        width: 100%;
+    }
+
+    .card-tittle h4 {
+        color: #000000;
+        margin: 0;
+        font-size: 0.9em;
+        font-weight: bold;
+    }
+
+    .card-info p {
+        color: #000000;
+        margin: 0;
+    }
+
+    .full-detail {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .short-detail {
+        display: block;
+        text-align: start;
+    }
+
+    .active-button {
+        display: block;
+        text-align: end;
+    }
+
+    .btn {
+        /* background-color: #ff96ca; */
+        color: #ffffff;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:active {
+        background-color: #ffffff;
+        color: #000000;
+    }
+
+}

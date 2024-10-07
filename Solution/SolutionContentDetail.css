@@ -1,0 +1,59 @@
+body {
+    margin: 0;
+}
+
+.POD-solution-detail {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.POD-solution-detail {
+
+    .solution-detail-container {
+        width: 60%;
+        max-width: 1400px;
+    }
+
+    .solution-detail-container img {
+        width: 100%;
+        height: 600px;
+        border-radius: 10px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    .short-detail {
+        border: none;
+    }
+
+    .rating {
+        padding: 0 5px;
+        background-color: #00000060;
+        border-radius: 0 4px 0 0;
+        position: absolute;
+        left: 0;
+        top: 147px;
+    }
+
+    .capacity {
+        color: #ffffff;
+        background-color: #ffffff60;
+        border-radius: 4px 0 0 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        right: 0;
+        top: 147px;
+    }
+
+    .capacity-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+}
