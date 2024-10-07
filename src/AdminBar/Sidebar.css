@@ -4,10 +4,10 @@
   }
   
   .toggle-button {
-    display: none; /* Ẩn button trên màn hình lớn */
+    display: none;  /*Ẩn button trên màn hình lớn */
     margin: 10px;
     padding: 10px;
-    background-color: #007bff;
+    background-color: #000000;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -21,6 +21,11 @@
     display: block; /* Hiện button khi sidebar đóng */
   }
   
+  .sidebar-link {
+    color: inherit; /* Kế thừa màu sắc từ phần tử cha */
+    text-decoration: none; /* Bỏ gạch chân */
+}
+
   /* Media Queries */
   @media (max-width: 768px) {
     .sidebar-container {
