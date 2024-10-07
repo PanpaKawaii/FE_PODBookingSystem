@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom';
+import './Header.css';
+
 import M from 'materialize-css';
 import 'materialize-css/dist/css/materialize.min.css';
 import { Navbar, Icon } from 'react-materialize';
-import './Header.css';
 
 export default function Header() {
     return (
@@ -18,7 +19,7 @@ export default function Header() {
                     <li><Link to='/about'><Icon left>info_outline</Icon>About</Link></li>
                     <li><Link to='/solution'><Icon left>dvr</Icon>Solution</Link></li>
                     <li><Link to='/contact'><Icon left>contacts</Icon>Contact</Link></li>
-                    <li><Link to='/user/information'><Icon left>user</Icon>User</Link></li>
+                    <li><Link to='/user/information'><Icon style={{ fontSize: '50px' }}>account_circle</Icon></Link></li>
                 </ul>
             </Navbar>
         </div>
