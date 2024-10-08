@@ -8,25 +8,29 @@ import {
   CDBSidebarFooter,
 } from 'cdbreact'
 import './Sidebar.css'
-
+import { Link } from 'react-router-dom'
 const Sidebar = () => {
   return (
-    <CDBSidebar style={{ height: '100vh' }} textColor="#333" backgroundColor="#f4f4f4">
-      <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>BABYCARE ™</CDBSidebarHeader>
+    <CDBSidebar style={{
+       height: '100vh', // Sử dụng dấu phẩy thay vì dấu chấm phẩy
+       }} textColor="#333" backgroundColor="#f4f4f4">
+      <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>
+        <Link to='/' className="sidebar-link">INNOSPACE ™</Link>
+      </CDBSidebarHeader>
 
       <CDBSidebarContent>
         <CDBSidebarMenu>
           <CDBSidebarMenuItem icon="th-large" textFontSize="14px">
-            Dashboard
+            <Link to='/pod'>Manage POD</Link>
           </CDBSidebarMenuItem>
           <CDBSidebarMenuItem icon="sticky-note" textFontSize="14px">
-            Explore
+          <Link to='/user'>Manage User</Link>
           </CDBSidebarMenuItem>
           <CDBSidebarMenuItem icon="credit-card" iconType="solid" textFontSize="14px">
             Care Products
           </CDBSidebarMenuItem>
           <CDBSidebarMenuItem icon="gamepad" iconType="solid" textFontSize="14px">
-            Fun and Games
+          <Link to='/'>Log out</Link>
           </CDBSidebarMenuItem>
         </CDBSidebarMenu>
         

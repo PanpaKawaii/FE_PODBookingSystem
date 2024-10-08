@@ -1,0 +1,66 @@
+.user-manage {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8); /* Nền trắng với độ trong suốt */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-list {
+    margin-top: 20px;
+}
+
+.user-card {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: space-between; /* Đảm bảo khoảng cách giữa các phần tử */
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    background: rgba(255, 255, 255, 0.9); /* Nền thẻ người dùng */
+    border-radius: 5px;
+    margin-bottom: 10px; /* Khoảng cách giữa các thẻ */
+}
+
+.user-avatar {
+    width: 100px; /* Chiều rộng của ảnh đại diện */
+    height: 100px; /* Chiều cao của ảnh đại diện */
+    border-radius: 50%; /* Để ảnh tròn */
+    margin-right: 15px; /* Khoảng cách giữa ảnh và thông tin */
+}
+
+.user-info {
+    flex: 1; /* Để thông tin chiếm không gian còn lại */
+    display: flex;
+    flex-direction: column; /* Để các thông tin xếp chồng lên nhau */
+margin-right: 50px;
+}
+
+
+.user-actions {
+    display: flex;
+    gap: 10px; /* Khoảng cách giữa các nút */
+}
+
+.edit-button, .delete-button, .add-button {
+    background-color: #cfd3d6;
+    color: white;
+    border: none;
+    padding: 8px; /* Giảm padding cho nút */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px; /* Kích thước font chữ cho nút */
+}
+
+.edit-button:hover, .delete-button:hover, .add-button:hover {
+    background-color: #0056b3;
+}
+
+.add-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
