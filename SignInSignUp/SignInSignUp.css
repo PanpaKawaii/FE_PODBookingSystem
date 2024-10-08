@@ -2,28 +2,32 @@ body {
     margin: 0;
 }
 
-.content {
+.POD-signin-signup {
     font-family: Arial, sans-serif;
     background-color: #eeefe9;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
 }
 
-.content {
+.POD-signin-signup {
 
     .signin-signup-container {
+        height: 600px;
+        margin: 100px 10px 140px;
         background-color: #ffffff;
         border-radius: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .card {
+    .card-box {
         width: 800px;
+        height: 600px;
         display: flex;
         position: relative;
     }
@@ -31,63 +35,50 @@ body {
     .card-body {
         flex: 1;
         width: 50%;
+        height: 600px;
         padding: 40px;
+        margin: 0;
     }
 
     .title {
+        font-weight: bold;
+        margin: 0 0 30px;
         display: flex;
         justify-content: center;
-        margin-bottom: 2rem;
+    }
+
+    .form-box {
+        position: relative;
     }
 
     .form-input {
-        margin-bottom: 15px;
+        margin-left: 40px;
     }
 
     input {
         width: 100%;
-        padding: 10px 10px 10px 35px;
+        margin: 0;
         box-sizing: border-box;
         outline: none;
-        border: 1px solid #ddd;
-        border-radius: 50px;
     }
 
     .icon {
+        margin: 10px 0;
+        left: 0;
         position: absolute;
-        margin: 8px 0px 0px 8px;
-        color: orange;
-    }
-
-    .form-box1 .form-input input:focus,
-    .form-box1 .form-input input:focus,
-    .form-box1 .form-input input:valid {
-        border: 2px solid orange;
-    }
-
-    .form-box2 .form-input input:focus,
-    .form-box2 .form-input input:valid {
-        border: 2px solid #4866a8;
     }
 
     .forget-link {
         display: block;
         text-align: right;
-        color: #ffb200;
+        color: #83999f;
         font-weight: bold;
-        text-decoration: none;
         margin-bottom: 15px;
+        /* text-decoration: none; */
     }
 
     .forget-link:hover {
-        color: #ffa000;
-        text-decoration: none;
-    }
-
-    hr {
-        margin: 20px 0;
-        border: none;
-        border-top: 1px solid #ddd;
+        color: #53737e;
     }
 
     .img-left {
@@ -111,57 +102,15 @@ body {
     }
 
     .btn {
+        color: #000000;
         width: 100%;
-        padding: 12px;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
+        margin: 10px 0;
+        border-radius: 5px;
         font-weight: bold;
-        margin-bottom: 10px;
     }
 
-    .form-box1 {
-        button[type="submit"] {
-            border: none;
-            cursor: pointer;
-            background: #fff300;
-            color: black;
-            transition: 0.5s;
-        }
+    .form-box {
 
-        button[type="submit"]:hover {
-            background: #ffd800;
-        }
-
-        button[type="reset"],
-        button[type="button"] {
-            border: none;
-            cursor: pointer;
-            background: #fcfcc2;
-            color: black;
-            transition: 0.5s;
-        }
-
-        button[type="reset"]:hover,
-        button[type="button"]:hover {
-            background: #fafa98;
-        }
-
-        .btn-signup {
-            margin-top: 20px;
-            color: white !important;
-            background: #4866a8;
-            border: 0;
-            border-radius: 10px;
-            transition: 0.5s;
-        }
-
-        .btn-signup:hover {
-            background: #3d578f;
-        }
-    }
-
-    .form-box2 {
         .btn-box {
             display: flex;
             justify-content: space-between;
@@ -170,49 +119,15 @@ body {
 
         button[type="submit"] {
             width: 65%;
-            border: none;
-            cursor: pointer;
-            background: #4866a8;
-            color: white;
-            transition: 0.5s;
         }
 
-        button[type="submit"]:hover {
-            background: #3d578f;
-        }
-
-        button[type="reset"],
-        button[type="button"] {
+        button[type="reset"] {
             width: 30%;
-            border: none;
-            cursor: pointer;
-            background: #d0d4ff;
-            color: white;
-            transition: 0.5s;
         }
 
-        button[type="reset"]:hover,
-        button[type="button"]:hover {
-            background: #b4b7fa;
-        }
-
-        .btn-already {
-            color: black !important;
-            background: #fff300;
-            border: 0;
-            border-radius: 10px;
-            transition: 0.5s;
-        }
-
-        .btn-already:hover {
-            background: #ffd800;
-        }
     }
 
     @media screen and (max-width: 768px) {
-        .card {
-            width: 600px;
-        }
 
         .img-left {
             display: none;
@@ -225,5 +140,7 @@ body {
         .card-disappear {
             display: none;
         }
+
     }
+
 }
