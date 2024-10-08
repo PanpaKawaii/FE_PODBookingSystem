@@ -30,6 +30,7 @@ body {
 
     .solution-container {
         width: 100%;
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         transition: all 0.3s ease;
@@ -39,6 +40,7 @@ body {
         margin: 30px 0;
         width: 100%;
         max-width: 1500px;
+        height: 400px;
     }
 
     .image-col {
@@ -132,7 +134,6 @@ body {
     }
 
     .btn {
-        /* background-color: #ff96ca; */
         color: #ffffff;
         font-weight: bold;
         border: none;

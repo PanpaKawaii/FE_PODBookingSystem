@@ -24,6 +24,14 @@ export default function SolutionContent() {
                         </Form.Control>
                     </Form.Group>
 
+                    <Form.Group controlId='formStore' className='form-group'>
+                        <Form.Control as='select'>
+                            <option value=''>[Store]</option>
+                            <option value='option1'>12 Đường Sáng Tạo, Thủ Đức</option>
+                            <option value='option2'>34 Đại lộ Kinh Doanh, Thủ Đức</option>
+                        </Form.Control>
+                    </Form.Group>
+
                     <Form.Group controlId='formType' className='form-group'>
                         <Form.Control as='select'>
                             <option value=''>[Type]</option>
@@ -66,8 +74,8 @@ export default function SolutionContent() {
                                         <span key={i} style={{ color: 'gold', fontSize: '1.5em' }}>★</span>
                                     ))}
                                 </div>
-                                <div className='capacity'>
 
+                                <div className='capacity'>
                                     {pod.capacity === 10 ?
                                         (
                                             <span className='capacity-icon' style={{ fontWeight: 'bold', paddingRight: '5px' }}><Icon>person</Icon> x 10</span>
@@ -78,9 +86,8 @@ export default function SolutionContent() {
                                             ))
                                         )
                                     }
-
-
                                 </div>
+
                                 <Card.Body className='card-body'>
                                     <Card.Title className='card-tittle'>
                                         <h4>{pod.PodName}</h4>
