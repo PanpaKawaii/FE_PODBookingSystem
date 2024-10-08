@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+}
+
+.POD-home {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.POD-home img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.POD-home {
+
+    .contact-card {
+        margin: 20px auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .contact-card img {
+        width: 400px;
+        height: auto;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    .contact-card {
+
+        .contact-us {
+            background-color: #ffffff;
+            padding: 20px 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-us h1 {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .contact-us p {
+            color: #666666;
+            margin: 0 0 5px;
+        }
+
+        .input {
+            background-color: 'transparent';
+            transition: all 0.3 ease;
+        }
+
+        .submit {
+            background-color: #00cdd4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .submit:active {
+            background-color: #00cdd4;
+        }
+
+    }
+
+
+
+    .home-container {
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+}
