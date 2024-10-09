@@ -1,6 +1,45 @@
-.admin-home {
-    background-image: url('https://i.pinimg.com/1200x/44/46/01/444601128ade12bdfae7e9dd8f522fb4.jpg');
-    background-size: cover; /* Ensures the image covers the entire background */
-    background-position: center; /* Centers the image */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
+.welcome-container {
+  text-align: center;
+  padding: 20px;
+  max-width: 100%; /* Giới hạn chiều rộng tối đa */
+  margin: 0 auto; /* Căn giữa container */
+  background-color: #f9f9f9; /* Màu nền nhẹ */
+  border-radius: 8px; /* Bo góc */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+
+.welcome-image {
+  max-width: 40%;
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 8px; /* Bo góc cho hình ảnh */
+}
+
+
+
+
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .welcome-container {
+    padding: 15px; /* Giảm padding trên màn hình nhỏ */
   }
+
+  h1 {
+    font-size: 1.5em; /* Giảm kích thước tiêu đề */
+  }
+
+  p {
+    font-size: 1em; /* Giảm kích thước văn bản */
+  }
+
+ 
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.3em; /* Giảm kích thước tiêu đề cho màn hình nhỏ hơn */
+  }
+
+  
+}
