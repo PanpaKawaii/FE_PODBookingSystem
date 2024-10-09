@@ -1,10 +1,45 @@
-.home {
-    height: auto;
-    width:100%;
-    display: flex;
-    background-image: url('../Admin_image/adminhome.jpg');
-    background-size: cover;
-    background-position: center;
-    
+.welcome-container {
+  text-align: center;
+  padding: 20px;
+  max-width: 100%; /* Giới hạn chiều rộng tối đa */
+  margin: 0 auto; /* Căn giữa container */
+  background-color: #f9f9f9; /* Màu nền nhẹ */
+  border-radius: 8px; /* Bo góc */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+
+.welcome-image {
+  max-width: 40%;
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 8px; /* Bo góc cho hình ảnh */
+}
+
+
+
+
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .welcome-container {
+    padding: 15px; /* Giảm padding trên màn hình nhỏ */
   }
+
+  h1 {
+    font-size: 1.5em; /* Giảm kích thước tiêu đề */
+  }
+
+  p {
+    font-size: 1em; /* Giảm kích thước văn bản */
+  }
+
+ 
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.3em; /* Giảm kích thước tiêu đề cho màn hình nhỏ hơn */
+  }
+
   
+}
