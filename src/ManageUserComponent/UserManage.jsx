@@ -1,12 +1,15 @@
 import React from 'react';
 import './UserManage.css'; // Thêm CSS cho component
-
+import avt from '../Admin_image/avt.jpg'
+import Button from 'react-bootstrap/Button'; // Thêm import cho Button
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'; // Thêm import cho biểu tượng
 const UserManage = () => {
     const users = [
-        { id: '123456', class: 'SWR-9', position: 'Event Manager', name: 'Sarah', avatar: 'https://via.placeholder.com/50' },
-        { id: '123457', class: 'SWR-9', position: 'Event Manager', name: 'John', avatar: 'https://via.placeholder.com/50' },
-        { id: '123458', class: 'SWR-9', position: 'Event Manager', name: 'Alice', avatar: 'https://via.placeholder.com/50' },
-        { id: '123459', class: 'SWR-9', position: 'Event Manager', name: 'Bob', avatar: 'https://via.placeholder.com/50' },
+        { id: '123456', class: 'SWR-9', position: 'Event Manager', name: 'Sarah', avatar: avt },
+        { id: '123457', class: 'SWR-9', position: 'Event Manager', name: 'John', avatar: avt },
+        { id: '123458', class: 'SWR-9', position: 'Event Manager', name: 'Alice', avatar: avt },
+        { id: '123459', class: 'SWR-9', position: 'Event Manager', name: 'Bob', avatar: avt },
     ];
 
     return (
@@ -23,8 +26,12 @@ const UserManage = () => {
                             <p>POSITION: {user.position}</p>
                         </div>
                         <div className="user-actions">
-                            <button className="edit-button">✎</button> {/* Thay đổi icon */}
-                            <button className="delete-button">🗑️</button>
+                        <Button variant onClick={() => handleEdit(idx)}>
+                    <FontAwesomeIcon icon={faEdit} /> {/* Biểu tượng sửa */}
+                  </Button>
+                  <Button variant onClick={() => handleDelete(idx)}>
+                    <FontAwesomeIcon icon={faTrash} /> {/* Biểu tượng xóa */}
+                  </Button>
                         </div>
                     </div>
                 ))}
