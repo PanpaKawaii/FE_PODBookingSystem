@@ -5,7 +5,7 @@ import User from './ManageUserComponent/UserManage'
 import Sidebar from './AdminBar/Sidebar'
 import './App.css'
 import Header from './HeadFootComponent/Header'
-
+import Report from './ManageReportComponent/ReportManage.jsx'
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/pod" element={<POD />}></Route>
           <Route path="/user" element={<User />}></Route>
+          <Route path="/report" element={<Report />}></Route>
         </Routes>
         </div>
       </div>

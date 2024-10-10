@@ -1,43 +1,63 @@
-
-
-.toggle-button {
-    display: none;  /* Ẩn button trên màn hình lớn */
-    margin: 10px;
-    padding: 10px;
-    background-color: #000000;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
+body {
+    font-family: "Lato", sans-serif;
 }
 
-.open .toggle-button {
-    display: none; /* Ẩn button khi sidebar mở */
+.sidenav {
+    height: 100%;
+    width:0 ;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+.nav{
+    background-color: #f4f4f4;
 }
 
-.closed .toggle-button {
-    display: block; /* Hiện button khi sidebar đóng */
+.sidenav.open {
+    width: 250px;
 }
 
-.sidebar-link {
-    color: inherit; /* Kế thừa màu sắc từ phần tử cha */
-    text-decoration: none; /* Bỏ gạch chân */
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    color: #000000;
+    display: block;
+    transition: 0.3s;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-    .sidebar-container {
-        position: relative;
-    }
+.sidenav a:hover {
+    color: #cdcaca;
+}
 
-    CDBSidebar {
-        display: none; /* Ẩn sidebar trên màn hình nhỏ */
-    }
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
 
-    .sidebar-container.open CDBSidebar {
-        display: block; /* Hiện sidebar khi mở */
-    }
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
 
-    .toggle-button {
-        display: block; /* Hiện button trên màn hình nhỏ */
-    }
+#main.shifted {
+    margin-left: 250px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+.sidebar-header {
+    background-color: #f1f1f1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
 }

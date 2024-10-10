@@ -10,7 +10,7 @@
 
 .welcome-image {
   max-width: 40%;
-  height: auto;
+  height: 65vh;
   margin-bottom: 20px;
   border-radius: 8px; /* Bo góc cho hình ảnh */
 }

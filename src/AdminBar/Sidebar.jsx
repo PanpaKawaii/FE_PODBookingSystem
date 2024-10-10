@@ -1,48 +1,50 @@
-import React from 'react';
-import {
-  CDBSidebar,
-  CDBSidebarHeader,
-  CDBSidebarMenuItem,
-  CDBSidebarContent,
-  CDBSidebarMenu,
-  CDBSidebarFooter,
-} from 'cdbreact'
-import './Sidebar.css'
-import { Link } from 'react-router-dom'
-
-
+import React, { useState } from 'react';
+import './Sidebar.css'; 
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquare, faUser, faChartBar, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // const openNav = () => {
+  //   setIsOpen(true);
+  // };
+
+  // const closeNav = () => {
+  //   setIsOpen(false);
+  // };
+
+  const toggleNav = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <CDBSidebar style={{
-      height: '100vh', // Sử dụng dấu phẩy thay vì dấu chấm phẩy
-    }} textColor="#333" backgroundColor="#f4f4f4">
-      <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>
-        <Link to='/' className="sidebar-link">INNOSPACE ™</Link>
-      </CDBSidebarHeader>
+    <div className='nav'>
+      <div id="mySidenav" className={`sidenav ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <h2>InnoSPace</h2>
+        </div>
+        <Link to="/pod">
+          <FontAwesomeIcon icon={faSquare} /> Quản lí POD
+        </Link>
+        <Link to="/user">
+          <FontAwesomeIcon icon={faUser} /> Quản lí người dùng
+        </Link>
+        <Link to="/report">
+          <FontAwesomeIcon icon={faChartBar} /> Báo cáo doanh thu
+        </Link>
+        <Link to="/">
+          <FontAwesomeIcon icon={faSignOutAlt} /> Đăng xuất
+        </Link>
+      </div>
 
-      <CDBSidebarContent>
-        <CDBSidebarMenu>
-          <CDBSidebarMenuItem icon="th-large" textFontSize="14px">
-            <Link to='/pod'>Manage POD</Link>
-          </CDBSidebarMenuItem>
-          <CDBSidebarMenuItem icon="user" textFontSize="14px">
-            <Link to='/user'>Manage Account</Link>
-
-          </CDBSidebarMenuItem>
-
-          <CDBSidebarMenuItem icon="sign-out-alt" textFontSize="14px">
-            <Link to='/'>Log out</Link>
-          </CDBSidebarMenuItem>
-        </CDBSidebarMenu>
-
-      </CDBSidebarContent>
-
-      {/* Thay thế CDBSidebarCTA bằng nội dung tùy chỉnh */}
-      <CDBSidebarFooter style={{ textAlign: 'center', padding: '20px' }}>
-
-      </CDBSidebarFooter>
-    </CDBSidebar>
+      <div id="main" className={isOpen ? 'shifted' : ''}>
+        <span style={{ fontSize: '30px', cursor: 'pointer' }} onClick={toggleNav}>
+          &#9776;
+        </span>
+      </div>
+    </div>
   );
 };
 
