@@ -1,0 +1,167 @@
+/* Section 1 */
+
+
+/* Selection Section Styles */
+.selection-section {
+    background-color: #ffffff; /* White background for the selection section */
+    padding: 20px; /* Padding inside the section */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Center text */
+    margin-bottom: 20px; /* Space below the section */
+}
+
+/* Headings */
+.selection-section h2 {
+    color: #343a40; /* Dark color for headings */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+/* Input styles */
+.slot-select,
+.pod-select {
+    margin: 0 10px; /* Space between selects */
+    padding: 10px; /* Padding inside select */
+    border: 1px solid #ced4da; /* Light border */
+    border-radius: 4px; /* Rounded corners */
+    width: 200px; /* Fixed width for selects */
+}
+
+/* Button styles */
+.book-button {
+    padding: 10px 15px; /* Padding for button */
+    background-color: #95a8bc; /* Bootstrap primary color */
+    color: white; /* White text color */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.book-button:hover {
+    background-color: #95a8bc; /* Darker blue on hover */
+}
+
+/* Flexbox for alignment */
+.selection-inputs {
+    display: flex; /* Use flexbox for alignment */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    margin-top: 20px; /* Space above inputs */
+}
+
+
+
+/* Section 2: POD Types Styles */
+.pod-types-section {
+    background-color: #ffffff; /* White background for the POD types section */
+    padding: 20px; /* Padding inside the section */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-bottom: 20px; /* Space below the section */
+    display: flex;
+    flex-direction: column; /* Đặt chiều dọc cho section */
+}
+
+/* Headings */
+.pod-types-section h2 {
+    color: #343a40; /* Dark color for headings */
+    margin-bottom: 20px; /* Space below the heading */
+ }
+
+/* POD List Styles */
+.pod-list {
+    list-style-type: none; /* Remove default list styling */
+    padding: 0; /* Remove padding */
+}
+
+.pod-item {
+    display: flex;                /* Sử dụng Flexbox */
+    align-items: center;         /* Căn giữa theo chiều dọc */
+    justify-content: space-between; /* Chia đều khoảng cách giữa các phần tử */
+    margin: 10px 0;             /* Khoảng cách giữa các item */
+    padding: 10px; /* Padding for each item */
+    border: 1px solid #e9ecef; /* Light border around each item */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #f8f9fa; /* Light background for items */
+}
+
+.pod-image {
+    width: auto; /* Set a fixed width for images */
+    height: 15vh; /* Set a fixed height for images */
+    margin-right: 10px; /* Space between image and text */
+    border-radius: 4px; /* Optional: rounded corners for images */
+}
+
+.pod-info {
+    flex: 1;                    /* Cho phép pod-info chiếm không gian còn lại */
+    margin-right: 10px;         /* Khoảng cách giữa pod-info và button */
+}
+
+/* Button styles */
+.detail-button {
+    padding: 5px 10px; /* Padding for detail button */
+    background-color: #ffffff; /* Thay đổi màu nền thành trắng */
+    color: #000000; /* Thay đổi màu chữ thành đen */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.detail-button:hover {
+    background-color: #e0e0e0; /* Thay đổi màu nền khi hover */
+    text-decoration: none; /* Đảm bảo không bị gạch chân */
+}
+
+.pod-info{
+    margin-left: 10px;
+    display:block;
+}
+
+.pod-title {
+    display: flex;           /* Sử dụng Flexbox cho tiêu đề */
+    justify-content: space-between; /* Chia đều khoảng cách giữa tiêu đề và liên kết */
+    align-items: center;     /* Căn giữa theo chiều dọc */
+}
+
+.view-all{
+    margin-left: auto;      /* Đẩy liên kết sang bên phải */
+    color: blue;            /* Màu chữ */
+    text-decoration: none;  /* Bỏ gạch chân */
+}
+
+.view-all-link:hover {
+    text-decoration: underline; /* Gạch chân khi hover */
+}
+
+
+
+
+
+/* Section 3: Contact Information Styles */
+.contact-section {
+    background-color: #ffffff; /* White background for the contact section */
+    padding: 20px; /* Padding inside the section */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-bottom: 20px; /* Space below the section */
+}
+
+/* Headings */
+.contact-section h2 {
+    color: #343a40; /* Dark color for headings */
+    margin-bottom: 15px; /* Space below the heading */
+}
+
+/* Paragraph styles */
+.contact-section p {
+    color: #495057; /* Darker gray for text */
+    margin: 5px 0; /* Space above and below paragraphs */
+    font-size: 16px; /* Font size for contact details */
+}
+
+
+
+
+
