@@ -10,14 +10,18 @@ import Footer from './HeaderFooter/Footer'
 
 import HomeContent from './Home/HomeContent'
 import ContactContent from './Contact/ContactContent'
-import SolutionContent from './Solution/SolutionContent'
+import BookingStoreContent from './Booking/BookingStoreContent'
 import AboutContent from './About/AboutContent'
 
-import SolutionDetailContent from './Solution/SolutionDetailContent'
+import BookingPodContent from './Booking/BookingPodContent'
+import BookingDetailContent from './Booking/BookingDetailContent'
+import PaymentContent from './Payment/PaymentContent'
 
-import SignInSignUp from './SignInSignUp/SignInSignUp'
 import UserInformation from './UserControlCenter/UserControlContent/UserInformation'
 import UserAccount from './UserControlCenter/UserControlContent/UserAccount'
+
+import SignInSignUp from './SignInSignUp/SignInSignUp'
+import GetDataAPI from './DataAPI/GetDataAPI'
 
 
 
@@ -28,16 +32,19 @@ function App() {
       <Routes>
         <Route path='/' element={<HomeContent />} />
         <Route path='/about' element={<AboutContent />} />
-        <Route path='/solution' element={<SolutionContent />} />
+        <Route path='/booking' element={<BookingStoreContent />} />
         <Route path='/contact' element={<ContactContent />} />
         
-        <Route path='/solution/:id' element={<SolutionDetailContent />} />
+        <Route path='/booking/:Id' element={<BookingPodContent />} />
+        <Route path='/booking/:Id/:Id' element={<BookingDetailContent />} />
+        <Route path='/booking/:Id/:Id/payment' element={<PaymentContent />} />
 
 
         <Route path='/user/information' element={<UserInformation />} />
         <Route path='/user/account' element={<UserAccount />} />
 
         <Route path='/signinsignup' element={<SignInSignUp />} />
+        <Route path='/GetDataAPI' element={<GetDataAPI />} />
       </Routes>
       <Footer />
     </>
