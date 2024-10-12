@@ -2,17 +2,18 @@ body {
     margin: 0;
 }
 
-.user-information {
+.user-control-center {
     font-family: 'Arial', sans-serif;
     background-color: #f0f0f0;
     padding: 20px;
 }
 
-.user-information {
+.user-control-center {
 
-    .user-information-left-container {
+    .user-side-bar-container {
         width: 342px;
-        height: 90vh;
+        height: auto;
+        min-height: 90vh;
         background-color: #ffffff;
         padding: 20px;
         border-right: 2px solid #cccccc;

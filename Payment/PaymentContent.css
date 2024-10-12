@@ -1,0 +1,29 @@
+body {
+    margin: 0;
+}
+
+.POD-booking-payment {
+    width: 100%;
+    background-color: #eeefe9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.POD-booking-payment {
+
+    .booking-payment-container {
+        width: 60%;
+        max-width: 1400px;
+    }
+
+    .booking-detail-container img {
+        width: 100%;
+        height: 600px;
+        border-radius: 10px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+}

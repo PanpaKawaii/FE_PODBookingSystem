@@ -10,20 +10,11 @@ body {
 
 .user-control-center {
 
-    .user-control-center-container {
-        display: flex;
-    }
-
-    .user-information-right-container {
+    .user-historybooking-right-container {
         padding: 0 20px;
     }
 
-    .image-col {
-        padding: 0;
+    p {
+        margin: 5px 0;
     }
-
-    .image-card {
-        margin: 0 0 20px;
-    }
-
 }

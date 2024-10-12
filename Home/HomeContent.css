@@ -20,21 +20,18 @@ body {
 
 .POD-home {
 
-    .shortcut-solution {
-        width: 90%;
-        max-width: 1400px;
-        margin: 60px auto;
-        background-color: #eeefe9;
+    .shortcut-booking-pod {
+        width: 100%;
+        background-color: #b9d1da;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    .shortcut-solution {
-
-        .title {
-            font-weight: bold;
-        }
+    .shortcut-booking-pod {
 
         .image-row {
-            margin: 30px 0;
+            margin: 0 0 50px;
             width: 100%;
             max-width: 1500px;
             height: auto;
@@ -146,25 +143,33 @@ body {
     }
 
     .shortcut-contact {
-        height: 550px;
-        margin: 100px auto;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        background-color: #dbeff7;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-        overflow: hidden;
-    }
-
-    .shortcut-contact img {
-        width: 400px;
-        height: auto;
-        object-fit: cover;
-        object-position: center;
-        display: block;
     }
 
     .shortcut-contact {
+
+        .card-contact {
+            margin: 0 0 100px;
+            height: 550px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .card-contact img {
+            width: 400px;
+            height: auto;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
 
         .card-form {
             height: 100%;
