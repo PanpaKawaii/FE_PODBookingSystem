@@ -1,0 +1,17 @@
+/* src/ManageStoreComponent/style.css */
+.card-img-top {
+    width: 100%;
+    height: 500px;
+    object-fit: cover; /* Cắt ảnh để phù hợp với kích thước */
+    object-position: center;
+    display: block;
+}
+
+/* Thêm quy tắc cho responsive */
+@media screen and (max-width: 768px) {
+    .card-img-top {
+        height: auto; /* Chiều cao tự động cho màn hình nhỏ */
+    }
+}
+
+

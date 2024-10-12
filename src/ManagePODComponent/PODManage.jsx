@@ -6,25 +6,40 @@ import POD from '../Admin_image/adminhome.jpg'
 import Button from 'react-bootstrap/Button'; // Thêm import cho Button
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'; // Thêm import cho biểu tượng
+// import { fetchPODData } from '../api/PODApi'; // Import the API call function
+// import { useState, useEffect } from 'react';
 
 export default function PODManage() {
+  // const [podData, setPodData] = useState([]);
+
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       const data = await fetchPODData();
+  //       setPodData(data);
+  //     } catch (error) {
+  //       console.error('Failed to fetch POD data:', error);
+  //     }
+  //   };
+
+  //   getData();
+  // }, []);
+
   return (
     <>
 
       <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-5">
+        {/* {podData.map((pod, idx) => ( // Use fetched data */}
         {Array.from({ length: 12 }).map((_, idx) => (
           <Col key={idx}>
-            <Card
-              style={{ maxWidth: '18rem' }} // sửa 'maxwidth' thành 'maxWidth'
-            >
+            <Card style={{height: '25rem', maxWidth: '18rem' }} >
               <Card.Img variant="top" src={POD} />
               <Card.Body>
-                <Card.Title>Card title</Card.Title>
+                <Card.Title>POD</Card.Title> {/* Update to use dynamic title */}
                 <Card.Text>
-                  <p>POD</p>
-                  <p>ID: 1234567890 </p>
-                  <p>Status: Active</p>
-                  <p></p>
+                  <div>POD</div> {/* Changed <p> to <div> */}
+                  <div>ID: </div> {/* Changed <p> to <div> */}
+                  <div>Status: </div> {/* Changed <p> to <div> */}
                 </Card.Text>
                 <Card.Footer className='d-flex justify-content-between'>
                   <Button variant onClick={() => handleEdit(idx)}>
@@ -37,10 +52,10 @@ export default function PODManage() {
               </Card.Body>
             </Card>
           </Col>
-        ))}
+         ))}
       </Row>
     </>
-  )
+  );
 }
 
 // // Thêm các hàm xử lý cho nút sửa và xóa
