@@ -8,6 +8,7 @@ body {
     flex-direction: column;
     align-items: center;
     font-family: 'Arial', sans-serif;
+    position: relative;
 }
 
 .POD-about {
@@ -18,14 +19,19 @@ body {
     }
 
     .slogan-container {
-        width: 65%;
+        width: 70%;
+        padding: 15px;
+        background-color: #dfdfdf;
+        border-radius: 10px;
         text-align: center;
+        position: absolute;
+        top: 46vw;
     }
 
     .about-container {
         width: 90%;
         max-width: 1500px;
-        margin: 40px 0;
+        margin: 160px 0;
         display: flex;
         flex-direction: column;
         align-items: center;

@@ -21,19 +21,19 @@ export default function ContactContent() {
                     <Form.Text><p>InnoSpace always appreciate all the opinions from you!</p></Form.Text>
                     <Form.Text><p>We will reply in the nearest 24 hours!</p></Form.Text>
 
-                    <Form.Group controlId='formBasicName'>
+                    <Form.Group controlId='formName'>
                         <Form.Control className='input' type='text' placeholder='Name' />
                     </Form.Group>
 
-                    <Form.Group controlId='formBasicEmail'>
+                    <Form.Group controlId='formEmail'>
                         <Form.Control className='input' type='text' placeholder='Email' />
                     </Form.Group>
 
-                    <Form.Group controlId='formBasicPhoneNumber'>
+                    <Form.Group controlId='formPhoneNumber'>
                         <Form.Control className='input' type='text' placeholder='Phone Number' />
                     </Form.Group>
 
-                    <Form.Group controlId='formBasicYourProblem'>
+                    <Form.Group controlId='formYourProblem'>
                         <Form.Control className='input' type='text' placeholder='Your Problem' />
                     </Form.Group>
                     <Button className='submit'>SUBMIT</Button>

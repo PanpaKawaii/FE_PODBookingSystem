@@ -12,7 +12,7 @@ export default function Footer() {
                 <div className='footer-location'>
                     <h3>Location</h3>
                     <p>+84 333 680 099</p>
-                    <p>info@workflow.com.vn</p>
+                    <p>info@innospace.com.vn</p>
                     <p>39 Nguyen Duy Hieu, Thao Dien Ward, Thu Duc, HCMC</p>
                 </div>
                 <div className='footer-solution'>

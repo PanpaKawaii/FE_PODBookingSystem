@@ -17,10 +17,12 @@ export default function Header() {
                 <ul className='links'>
                     <li><Link to='/'><Icon left>home</Icon>Home</Link></li>
                     <li><Link to='/about'><Icon left>info_outline</Icon>About</Link></li>
-                    <li><Link to='/solution'><Icon left>dvr</Icon>Solution</Link></li>
+                    <li><Link to='/booking/store'><Icon left>dvr</Icon>Booking</Link></li>
                     <li><Link to='/contact'><Icon left>contacts</Icon>Contact</Link></li>
                     <li><Link to='/user/information'><Icon style={{ fontSize: '50px' }}>account_circle</Icon></Link></li>
                     <li><Link to='/signinsignup'><Icon style={{ fontSize: '30px' }}>account_circle</Icon></Link></li>
+
+                    <li><Link to='/GetDataAPI'><Icon style={{ fontSize: '40px' }}>account_circle</Icon></Link></li>
                 </ul>
             </Navbar>
         </div>
