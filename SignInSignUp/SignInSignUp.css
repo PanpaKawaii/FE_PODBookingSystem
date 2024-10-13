@@ -3,11 +3,11 @@ body {
 }
 
 .POD-signin-signup {
-    font-family: Arial, sans-serif;
     background-color: #eeefe9;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: Arial, sans-serif;
     transition: all 0.3s ease;
 }
 

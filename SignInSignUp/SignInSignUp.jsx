@@ -46,7 +46,9 @@ export default class SignInSignUp extends Component {
     resetInputsBox2 = () => {
         var inputs = document.querySelectorAll('.form-box2 input');
         inputs.forEach(function (input) {
-            input.value = '';
+            if (!input.readOnly) {
+                input.value = '';
+            }
         });
     }
 

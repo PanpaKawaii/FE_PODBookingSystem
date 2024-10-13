@@ -1,9 +1,7 @@
 import React from 'react'
-import { Form, Button } from 'react-bootstrap';
-import { Row, Col, Card } from 'react-bootstrap';
-import { PODs } from '../List/ListOfPods';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'
+import { Form, Button, Row, Col, Card } from 'react-bootstrap';
 import './HomeContent.css'
 
 import M from 'materialize-css';
@@ -14,6 +12,29 @@ import home from '../BackgroundImage/home.jpg'
 import space from '../BackgroundImage/space.jpg'
 
 export default function HomeContent() {
+
+    const [PODs, setPODs] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const podResponse = await fetch('https://localhost:7166/api/Pod');
+                if (!podResponse.ok) throw new Error('Network response was not ok');
+                const podData = await podResponse.json();
+                setPODs(podData);
+
+                setLoading(false);
+            } catch (error) {
+                setError(error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div className='POD-home'>
 
@@ -22,10 +43,10 @@ export default function HomeContent() {
             <div className='shortcut-booking-pod'>
                 <h1><b>BEST SOLUTIONS</b></h1>
                 <Row className='image-row'>
-                    {PODs.slice(0, 4).map((pod, index) => (
-                        <Col xs={12} sm={12} md={6} lg={6} xl={6} xxl={3} className='image-col'>
-                            <Card key={pod.Id} className='image-card'>
-                                <img src={pod.img} alt={pod.PodName} />
+                    {(PODs ? PODs.slice(0, 4) : []).map((pod, index) => ( // Check if PODs is not null
+                        <Col key={pod.id} xs={12} sm={12} md={6} lg={6} xl={6} xxl={3} className='image-col'>
+                            <Card className='image-card'>
+                                <img src={pod.image} alt={pod.name} />
                                 <div className='rating'>
                                     {[...Array(pod.rating)].map((_, i) => (
                                         <span key={i} style={{ color: 'gold', fontSize: '1.5em' }}>★</span>
@@ -35,7 +56,7 @@ export default function HomeContent() {
                                 <div className='capacity'>
                                     {pod.capacity === 10 ?
                                         (
-                                            <span className='capacity-icon' style={{ fontWeight: 'bold', paddingRight: '5px' }}><Icon>person</Icon> x 10</span>
+                                            <span className='capacity-icon' style={{ paddingRight: '5px' }}><Icon>person</Icon><b> x 10</b></span>
                                         ) :
                                         (
                                             [...Array(pod.capacity)].map((_, i) => (
@@ -47,16 +68,18 @@ export default function HomeContent() {
 
                                 <Card.Body className='card-body'>
                                     <Card.Title className='card-tittle'>
-                                        <h4>{pod.PodName}</h4>
+                                        <h4><b>{pod.name}</b></h4>
                                     </Card.Title>
                                     <Card.Text className='card-info'>
                                         <div className='full-detail'>
                                             <div className='short-detail'>
-                                                <p>Type: {pod.TypeName}</p>
-                                                <p>Slot: 8:00 - 10:00</p>
+                                                <p>TypeId: {pod.typeId}</p>
+                                                <p>StoreId: {pod.storeId}</p>
                                             </div>
                                             <div className='active-button'>
-                                                <Link to={`booking/store/${pod.StoreId}/pod/${pod.Id}`}><p><Button className='btn' style={{ backgroundColor: '#28a745' }}>Select</Button></p></Link>
+                                                <Link to={`booking/store/${pod.storeId}/pod/${pod.id}`}>
+                                                    <Button className='btn' style={{ backgroundColor: '#28a745' }}>Select</Button>
+                                                </Link>
                                             </div>
                                         </div>
                                     </Card.Text>

@@ -3,9 +3,9 @@ body {
 }
 
 .user-control-center {
-    font-family: 'Arial', sans-serif;
     background-color: #f0f0f0;
     padding: 20px;
+    font-family: 'Arial', sans-serif;
 }
 
 .user-control-center {
@@ -14,8 +14,9 @@ body {
         display: flex;
     }
 
-    .user-information-right-container {
-        padding: 0 20px;
+    .user-content-right-container {
+        width: 100%;
+        padding: 0 0 0 20px;
     }
 
     .image-col {
@@ -23,7 +24,57 @@ body {
     }
 
     .image-card {
-        margin: 0 0 20px;
+        background-color: #ffffff;
+        margin: 0 0 10px;
+        padding: 5px;
+        height: 250px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .image-card img {
+        width: 320px;
+        height: 240px;
+        border-radius: 3px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    .card-body {
+        padding: 10px 20px;
+    }
+
+    .card-rating-capacity {
+        display: flex;
+        align-items: end;
+    }
+
+    .card-info {
+        display: block;
+        text-align: start;
+    }
+
+    .active-button {
+        display: flex;
+        align-items: center;
+    }
+
+    .btn {
+        color: #ffffff;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:active {
+        background-color: #ffffff;
+        color: #000000;
     }
 
 }
