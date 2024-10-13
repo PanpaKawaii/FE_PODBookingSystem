@@ -3,14 +3,14 @@ body {
 }
 
 .footer {
-    background-color: #83999f;
     color: #ffffff;
+    background-color: #83999f;
+    box-shadow: 0 -2px 4px rgba(255, 105, 180, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-family: 'Arial', sans-serif;
-    box-shadow: 0 -2px 4px rgba(255, 105, 180, 0.2);
 }
 
 .footer {

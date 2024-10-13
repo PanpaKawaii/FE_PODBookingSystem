@@ -5,6 +5,7 @@ body {
 .POD-booking-pod {
     width: 100%;
     background-color: #ffffff;
+    font-family: 'Arial', sans-serif;
 }
 
 .POD-booking-pod {
@@ -40,7 +41,7 @@ body {
         margin: 30px 0;
         width: 100%;
         max-width: 1500px;
-        height: 350px;
+        height: auto;
     }
 
     .image-col {
@@ -50,6 +51,7 @@ body {
 
     .image-card {
         width: 320px;
+        height: 300px;
         margin-bottom: 20px;
         background-color: #ffffff;
         border: none;
@@ -58,7 +60,6 @@ body {
         overflow: hidden;
         align-items: center;
         text-align: center;
-        font-family: 'Arial', sans-serif;
         transition: all 0.3s ease;
     }
 
@@ -110,7 +111,6 @@ body {
         color: #000000;
         margin: 0;
         font-size: 0.9em;
-        font-weight: bold;
     }
 
     .card-info p {

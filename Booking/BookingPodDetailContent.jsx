@@ -1,26 +1,78 @@
 import React from 'react'
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
-import { PODs } from '../List/ListOfPods';
 import './BookingPodDetailContent.css';
 
+import M from 'materialize-css';
+import 'materialize-css/dist/css/materialize.min.css';
+import { Icon } from 'react-materialize';
+
 export default function BookingPodDetailContent() {
+
+    const [PODs, setPODs] = useState(null);
+    const [TYPEs, setTYPEs] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const podResponse = await fetch('https://localhost:7166/api/Pod');
+                if (!podResponse.ok) throw new Error('Network response was not ok');
+                const podData = await podResponse.json();
+                setPODs(podData);
+
+                const typeResponse = await fetch('https://localhost:7166/api/Type');
+                if (!typeResponse.ok) throw new Error('Network response was not ok');
+                const typeData = await typeResponse.json();
+                setTYPEs(typeData);
+
+                setLoading(false);
+            } catch (error) {
+                setError(error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const PodId = useParams();
-    const pod = PODs.find(obj => {
-        return obj.Id == PodId.Id;
-    });
+    const Pod = PODs ? PODs.find(obj => {
+        return obj.id == PodId.Id;
+    }) : null;
+
+    const getPodCapacity = (podId) => {
+        const pod = PODs ? PODs.find(pod => pod.id === podId) : null;
+        const type = TYPEs ? TYPEs.find(type => type.id === pod.typeId) : null;
+        return type ? type.capacity : 0;
+    };
+
+    const getTypeName = (podId) => {
+        const pod = PODs ? PODs.find(pod => pod.id === podId) : null;
+        const type = TYPEs ? TYPEs.find(type => type.id === pod.typeId) : null;
+        return type ? type.name : null;
+    };
+
     return (
         <div className='POD-booking-pod-detail'>
             <div className='booking-pod-detail-container'>
-                <h1>{pod.PodName}</h1>
-                <div className='short-detail'>
-                    <p>{pod.TypeName} (Capacity: {pod.capacity}) / {pod.UtilityName} / {pod.StoreName}</p>
-                    <p style={{ color: 'gold', fontSize: '1.5em' }}>★ {pod.rating}</p>
-                    <p></p>
-                </div>
-                <img src={pod.img}></img>
-                <p>{pod.description}</p>
+                {Pod ? (
+                    <>
+                        <h1>{Pod.name}</h1>
+                        <div className='short-detail'>
+                            <p>{getTypeName(Pod.id)} (Capacity: {getPodCapacity(Pod.id)}) / {Pod.utilityId} / {Pod.name}</p>
+                            <p style={{ color: 'gold', fontSize: '1.5em' }}>★ {Pod.rating}</p>
+                            <p></p>
+                        </div>
+                        <img src={Pod.img}></img>
+                        <p>{Pod.description}</p>
+                    </>
+                ) : (
+                    <p>Pod not found.</p>
+                )}
                 <Form className=''>
 
                     <Form.Group controlId='formDate' className='form-group'>

@@ -5,6 +5,7 @@ body {
 .POD-booking-store {
     width: 100%;
     background-color: #ffffff;
+    font-family: 'Arial', sans-serif;
 }
 
 .POD-booking-store {
@@ -60,7 +61,6 @@ body {
         overflow: hidden;
         align-items: center;
         text-align: center;
-        font-family: 'Arial', sans-serif;
         transition: all 0.3s ease;
     }
 

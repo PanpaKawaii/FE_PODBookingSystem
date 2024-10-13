@@ -22,7 +22,7 @@ export default function Header() {
                     <li><Link to='/user/information'><Icon style={{ fontSize: '50px' }}>account_circle</Icon></Link></li>
                     <li><Link to='/signinsignup'><Icon style={{ fontSize: '30px' }}>account_circle</Icon></Link></li>
 
-                    <li><Link to='/GetDataAPI'><Icon style={{ fontSize: '40px' }}>account_circle</Icon></Link></li>
+                    {/* <li><Link to='/GetDataAPI'><Icon style={{ fontSize: '40px' }}>account_circle</Icon></Link></li> */}
                 </ul>
             </Navbar>
         </div>

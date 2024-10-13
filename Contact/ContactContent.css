@@ -3,6 +3,12 @@ body {
 }
 
 .POD-contact {
+    width: 100%;
+    background-color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+.POD-contact {
 
     .contact-container {
         display: flex;
