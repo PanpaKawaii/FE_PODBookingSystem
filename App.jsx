@@ -24,7 +24,8 @@ import UserAccount from './UserControlCenter/UserControlContent/UserAccount'
 import UserHistoryBooking from './UserControlCenter/UserControlContent/UserHistoryBooking'
 
 import SignInSignUp from './SignInSignUp/SignInSignUp'
-import GetDataAPI from './DataAPI/GetDataAPI'
+
+// import GetDataAPI from './DataAPI/GetDataAPI'
 
 
 
@@ -50,7 +51,7 @@ function App() {
         <Route path='/user/bookinghistory' element={<UserHistoryBooking />} />
 
         <Route path='/signinsignup' element={<SignInSignUp />} />
-        <Route path='/GetDataAPI' element={<GetDataAPI />} />
+        {/* <Route path='/GetDataAPI' element={<GetDataAPI />} /> */}
       </Routes>
       <Footer />
     </>
