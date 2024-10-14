@@ -1,0 +1,146 @@
+body {
+    margin: 0;
+}
+
+.POD-signin-signup {
+    background-color: #eeefe9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    transition: all 0.3s ease;
+}
+
+.POD-signin-signup {
+
+    .signin-signup-container {
+        height: 600px;
+        margin: 100px 10px 140px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card-box {
+        width: 800px;
+        height: 600px;
+        display: flex;
+        position: relative;
+    }
+
+    .card-body {
+        flex: 1;
+        width: 50%;
+        height: 600px;
+        padding: 40px;
+        margin: 0;
+    }
+
+    .title {
+        font-weight: bold;
+        margin: 0 0 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .form-box {
+        position: relative;
+    }
+
+    .form-input {
+        margin-left: 40px;
+    }
+
+    input {
+        width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    .icon {
+        margin: 10px 0;
+        left: 0;
+        position: absolute;
+    }
+
+    .forget-link {
+        display: block;
+        text-align: right;
+        color: #83999f;
+        font-weight: bold;
+        margin-bottom: 15px;
+        /* text-decoration: none; */
+    }
+
+    .forget-link:hover {
+        color: #53737e;
+    }
+
+    .img-left {
+        width: 50%;
+        height: 100%;
+        background: url('YellowBanana.jpg') center;
+        background-size: cover;
+        position: absolute;
+        right: 0;
+        transition: all 0.5s ease;
+    }
+
+    .img-right {
+        width: 50%;
+        height: 100%;
+        background: url('BlueBanana.jpg') center;
+        background-size: cover;
+        position: absolute;
+        right: 0;
+        transition: all 0.5s ease;
+    }
+
+    .btn {
+        color: #000000;
+        width: 100%;
+        margin: 10px 0;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .form-box {
+
+        .btn-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button[type="submit"] {
+            width: 65%;
+        }
+
+        button[type="reset"] {
+            width: 30%;
+        }
+
+    }
+
+    @media screen and (max-width: 768px) {
+
+        .img-left {
+            display: none;
+        }
+
+        .img-right {
+            display: none;
+        }
+
+        .card-disappear {
+            display: none;
+        }
+
+    }
+
+}

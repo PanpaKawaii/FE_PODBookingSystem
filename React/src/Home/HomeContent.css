@@ -1,0 +1,212 @@
+body {
+    margin: 0;
+}
+
+.POD-home {
+    width: 100%;
+    background-color: #eeefe9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.POD-home img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.POD-home {
+
+    .shortcut-booking-pod {
+        width: 100%;
+        background-color: #bdd4dd;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .shortcut-booking-pod {
+
+        .image-row {
+            margin: 0 0 50px;
+            width: 100%;
+            max-width: 1500px;
+            height: auto;
+        }
+
+        .image-col {
+            display: flex;
+            justify-content: center;
+        }
+
+        .image-card {
+            width: 320px;
+            height: 300px;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px #6666664d;
+            overflow: hidden;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .image-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px #6666664d;
+        }
+
+        .image-card img {
+            width: 320px;
+            height: 180px;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        .rating {
+            padding: 0 5px;
+            background-color: #00000060;
+            border-radius: 0 4px 0 0;
+            position: absolute;
+            left: 0;
+            top: 147px;
+        }
+
+        .capacity {
+            color: #ffffff;
+            background-color: #00000060;
+            border-radius: 4px 0 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            right: 0;
+            top: 156px;
+        }
+
+        .capacity-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-body {
+            width: 100%;
+        }
+
+        .card-tittle h4 {
+            color: #000000;
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        .card-info p {
+            color: #000000;
+            margin: 0;
+        }
+
+        .full-detail {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .short-detail {
+            display: block;
+            text-align: start;
+        }
+
+        .active-button {
+            display: block;
+            text-align: end;
+        }
+
+        .btn {
+            color: #ffffff;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:active {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+    }
+
+    .shortcut-contact {
+        width: 100%;
+        background-color: #deeff7;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .shortcut-contact {
+
+        .card-contact {
+            margin: 0 0 100px;
+            height: 550px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .card-contact img {
+            width: 400px;
+            height: auto;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        .card-form {
+            height: 100%;
+            background-color: #ffffff;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .card-form h1 {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .card-form p {
+            color: #666666;
+            margin: 0 0 5px;
+        }
+
+        .input {
+            background-color: 'transparent';
+            transition: all 0.3 ease;
+        }
+
+        .submit {
+            background-color: #00cdd4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .submit:active {
+            background-color: #00cdd4;
+        }
+
+    }
+
+}

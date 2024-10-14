@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+}
+
+.header {
+
+    .menu {
+        background-color: #53737e;
+        font-family: 'Arial', sans-serif;
+        transition: all 0.3s ease;
+    }
+
+    .menu ul {
+        margin: 0 20px;
+    }
+
+    .menu a {
+        font-weight: bold;
+    }
+
+    .brand-logo {
+        font-weight: bold;
+        margin: 0 20px;
+    }
+
+}
