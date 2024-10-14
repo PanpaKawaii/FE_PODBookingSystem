@@ -1,0 +1,40 @@
+/* Header.css */
+div.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  background-color: #f4f4f4; /* Màu nền tương ứng với bg-light */
+  flex-wrap: wrap; /* Hỗ trợ responsive */
+}
+
+.search-bar {
+  flex-grow: 1;
+  position: relative; /* Đặt vị trí tương đối cho div chứa thanh tìm kiếm */
+  margin: 1rem;
+}
+
+.admin-avatar {
+  margin-right: 0.8rem; /* Khoảng cách bên phải */
+}
+
+.admin-avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Hình tròn */
+}
+
+.user-info {
+  text-align: start; /* Căn chỉnh văn bản bên trái */
+  display: flex; /* Sử dụng flexbox để căn chỉnh */
+  align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+.user-info .username {
+  font-weight: bold; /* Tên người dùng đậm */
+}
+
+.user-info .role {
+  color: #6c757d; /* Màu cho chức vụ */
+}
+

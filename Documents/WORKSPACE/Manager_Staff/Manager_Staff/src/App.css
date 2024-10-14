@@ -1,0 +1,19 @@
+.main-container{
+  display: flex;
+  min-height: 100vh; /* Đảm bảo container chiếm toàn bộ chiều cao viewport */
+}
+
+.main-content{
+   flex: 1; /* Đảm bảo admin-content chiếm không gian còn lại */
+   display: flex;
+   flex-direction: column; /* Để nội dung bên trong có thể xếp chồng lên nhau */
+   height:100vh;
+}
+
+.main-content-body{
+   padding: 20px;
+   flex: 1; /* Để nội dung bên trong có thể mở rộng */
+   overflow-y: auto; /* Thêm thanh cuộn cho nội dung */
+}
+
+
