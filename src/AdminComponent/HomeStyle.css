@@ -9,10 +9,11 @@
 }
 
 .welcome-image {
-  max-width: 40%;
+  max-width: 50%;
   height: 65vh;
   margin-bottom: 20px;
   border-radius: 8px; /* Bo góc cho hình ảnh */
+  object-fit: cover;
 }
 
 

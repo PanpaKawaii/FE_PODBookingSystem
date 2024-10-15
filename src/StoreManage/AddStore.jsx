@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './StyleAddStore.css'
+import './style.css'
 
 export default function AddStore() {
   const [storeName, setStoreName] = useState('');
@@ -14,7 +14,7 @@ export default function AddStore() {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="storeName">Store Name:</label>
+        <label htmlFor="storeName">Tên cửa hàng:</label>
         <input
           type="text"
           id="storeName"
@@ -24,7 +24,7 @@ export default function AddStore() {
         />
       </div>
       <div>
-        <label htmlFor="location">Location:</label>
+        <label htmlFor="location">Địa chỉ:</label>
         <input
           type="text"
           id="location"
@@ -35,7 +35,7 @@ export default function AddStore() {
       </div>
 
       <div>
-        <label htmlFor="phone">Phone:</label>
+        <label htmlFor="phone">Số điện thoại:</label>
         <input
           type="text"
           id="phone"
@@ -44,7 +44,7 @@ export default function AddStore() {
           required
         />
       </div>
-      <button type="submit">Add Store</button>
+      <button className='add' type="submit">Thêm</button>
     </form>
   );
 }

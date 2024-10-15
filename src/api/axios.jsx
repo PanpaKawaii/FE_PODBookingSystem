@@ -1,9 +1,23 @@
-// import axios from 'axios';
+import axios from "axios";
+const baseUrl = "https://localhost:7166/api/";
 
-// // Create an Axios instance with custom configuration
-// const api = axios.create({
-//   baseURL: 'https://localhost:7166/api/', // Set your base URL here
-//   // ... other configurations if needed
-// });
+const config = {
+  baseUrl: baseUrl,
+};
 
-// export default api; // Ensure you have a default export
+const api = axios.create(config);
+
+api.defaults.baseURL = baseUrl;
+
+// handle before call API
+const handleBefore = (config) => {
+  //handle hanh dong trc khi call API
+  //lay ra cai token va dinh kem theo cai request
+  const token = localStorage.getItem("token")?.replaceAll('"', "");
+  config.headers["Authorization"] = `Bearer ${token}`;
+  return config;
+};
+
+api.interceptors.request.use(handleBefore, null); 
+
+export default api;

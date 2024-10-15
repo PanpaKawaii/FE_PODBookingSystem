@@ -15,3 +15,44 @@
 }
 
 
+
+/*style for add store*/
+/* src/ManageStoreComponent/AddStore.css */
+
+form {
+    max-width: 400px; /* Set a maximum width for the form */
+    margin: 20px auto; /* Center the form horizontally */
+    padding: 20px; /* Add padding inside the form */
+    border: 1px solid #ccc; /* Add a border around the form */
+    border-radius: 5px; /* Round the corners of the form */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    background-color: #f9f9f9; /* Light background color */
+}
+
+div {
+    margin-bottom: 15px; /* Space between form fields */
+}
+
+label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space between label and input */
+    font-weight: bold; /* Make labels bold */
+}
+
+input {
+    width: 100%; /* Make inputs take full width */
+    padding: 8px; /* Add padding inside inputs */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 4px; /* Round corners of inputs */
+}
+
+
+
+.add-link:hover {
+    background-color: #d1ddea; /* Darker shade on hover */
+}
+
+a{
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}

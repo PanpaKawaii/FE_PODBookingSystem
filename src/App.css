@@ -16,5 +16,24 @@
     overflow-y: auto; /* Thêm thanh cuộn cho nội dung */
 }
 
+.add-link{
+    background-color: #f4e4e4; /* Bootstrap primary color */
+    color: rgb(0, 0, 0); /* Text color */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding for the button */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline from link */
+    display: inline-block; /* Align properly */
+    transition: background-color 0.3s; /* Smooth transition */
+    width: 100%;
+}
 
+.add{
+    width: 100%;
+    background-color: rgb(42, 136, 225);
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
 

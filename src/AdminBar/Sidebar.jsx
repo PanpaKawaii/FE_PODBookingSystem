@@ -36,7 +36,7 @@ const Sidebar = () => {
           <i className={`fa fa-caret-down ${isDropdownOpen ? 'active' : ''}`}></i>
         </button>
         <div className={`dropdown-container ${isDropdownOpen ? 'open' : ''}`}> {/* Thêm class để điều khiển hiển thị */}
-          <Link to="/customers">Khách hàng</Link>
+          <Link to="/customer">Khách hàng</Link>
           <Link to="/manager">Quản lý</Link>
           <Link to="/staff">Nhân viên</Link>
         </div>

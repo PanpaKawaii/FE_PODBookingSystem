@@ -8,6 +8,10 @@ import Header from './HeadFootComponent/Header'
 import Report from './ManageReportComponent/ReportManage.jsx'
 import Store from './StoreManage/index'
 import AddStore from './StoreManage/AddStore'
+import Staff from './ManageUserComponent/Staff'
+import Manager from './ManageUserComponent/Manager'
+import Customer from './ManageUserComponent/Customer'
+import AddPOD from './ManagePODComponent/AddPOD'
 function App() {
   return (
     <div className='admin-container' > 
@@ -22,6 +26,10 @@ function App() {
           <Route path="/report" element={<Report />}></Route>
           <Route path='/store' element={<Store />}></Route>
           <Route path='/addstore' element={<AddStore />}></Route>
+          <Route path='/staff' element={<Staff />}></Route>
+          <Route path='/manager' element={<Manager />}></Route>
+          <Route path='/customer' element={<Customer />}></Route>
+          <Route path='/addpod' element={<AddPOD />}></Route>
         </Routes>
         </div>
       </div>

@@ -1,5 +1,5 @@
 /* Header.css */
-.header-container {
+div.header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,3 +34,4 @@
 .user-info .role {
   color: #6c757d; /* Màu cho chức vụ */
 }
+
