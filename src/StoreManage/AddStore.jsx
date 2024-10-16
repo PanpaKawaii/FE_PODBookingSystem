@@ -3,12 +3,18 @@ import './style.css'
 
 export default function AddStore() {
   const [storeName, setStoreName] = useState('');
-  const [location, setLocation] = useState('');
-  const [phone, setPhone] = useState('');
-  const handleSubmit = (e) => {
+  const [address, setAddress] = useState('');
+  const [contact, setContact] = useState('');
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log('Store added:', { storeName, location, phone });
+    console.log('Store added:', { storeName, address, contact });
+    try {
+      const response = await api.post("Store", { storeName, address, contact });
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -24,23 +30,23 @@ export default function AddStore() {
         />
       </div>
       <div>
-        <label htmlFor="location">Địa chỉ:</label>
+        <label htmlFor="address">Địa chỉ:</label>
         <input
           type="text"
-          id="location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          id="address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
           required
         />
       </div>
 
       <div>
-        <label htmlFor="phone">Số điện thoại:</label>
+        <label htmlFor="contact">Số điện thoại:</label>
         <input
           type="text"
-          id="phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          id="contact"
+          value={contact}
+          onChange={(e) => setContact(e.target.value)}
           required
         />
       </div>
