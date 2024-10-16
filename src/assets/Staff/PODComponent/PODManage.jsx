@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { message, Popconfirm } from "antd";
 import { faEdit, faStar, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./PODManage.css";
+import { ReloadOutlined } from "@ant-design/icons";
 
 export default function PODManage() {
   const [podData, setPodData] = useState([]);
@@ -89,6 +90,9 @@ export default function PODManage() {
           </Col>
         ))}
       </Row>
+      <button className="add-button" onClick={fetchPODData}>
+        <ReloadOutlined />
+      </button>
     </>
   );
 }

@@ -7,6 +7,7 @@ import {
   faUser,
   faChartBar,
   faSignOutAlt,
+  faFileClipboard,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
@@ -28,7 +29,8 @@ const Sidebar = () => {
           <FontAwesomeIcon className="icon" icon={faSquare} /> Quản lí POD
         </Link>
         <Link to="/order">
-          <FontAwesomeIcon className="icon" icon={faUser} /> Quản lí đơn hàng
+          <FontAwesomeIcon className="icon" icon={faFileClipboard} /> Quản lí
+          đơn hàng
         </Link>
         <Link to="/customer">
           <FontAwesomeIcon className="icon" icon={faUser} /> Quản lí khách hàng
