@@ -12,6 +12,8 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "antd": "^5.21.4",
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "cdbreact": "^1.5.19",
     "react": "^18.3.1",
