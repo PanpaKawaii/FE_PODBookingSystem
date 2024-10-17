@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './ReportManage.css'; // Import the CSS file
 import api from '../api/axios';
 import Table from 'react-bootstrap/Table';
-import { useState, useEffect } from 'react';
 
 export default function ReportManage() {
   const [Pod, setPod] = useState([]);
@@ -10,7 +9,10 @@ export default function ReportManage() {
   const [type, setType] = useState([]);
   const [payment, setPayment] = useState([]);
   const [booking, setBooking] = useState([]);
-  const [bookingOrder, setBookingOrder] = useState([]); // New state for BookingOrder
+  const [bookingOrder, setBookingOrder] = useState([]);
+  const [selectedStore, setSelectedStore] = useState(''); // State for selected store
+  const [filteredResults, setFilteredResults] = useState([]); // State for filtered results
+
   const fetchPod = async () => {
     try {
       const response = await api.get("Pod");
@@ -19,6 +21,7 @@ export default function ReportManage() {
       console.log(err);
     }
   }
+
   const fetchStore = async () => {
     try {
       const response = await api.get("Store");
@@ -27,6 +30,7 @@ export default function ReportManage() {
       console.log(err);
     }
   }
+
   const fetchType = async () => {
     try {
       const response = await api.get("Type");
@@ -35,6 +39,7 @@ export default function ReportManage() {
       console.log(err);
     }
   }
+
   const fetchPayment = async () => {
     try {
       const response = await api.get("Payment");
@@ -43,6 +48,7 @@ export default function ReportManage() {
       console.log(err);
     }
   }
+
   const fetchBooking = async () => {
     try {
       const response = await api.get("Booking");
@@ -51,7 +57,8 @@ export default function ReportManage() {
       console.log(err);
     }
   }
-  const fetchBookingOrder = async () => { // New function to fetch BookingOrder
+
+  const fetchBookingOrder = async () => {
     try {
       const response = await api.get("BookingOrder");
       setBookingOrder(response.data);
@@ -59,6 +66,7 @@ export default function ReportManage() {
       console.log(err);
     }
   }
+
   useEffect(() => {
     fetchPod();
     fetchStore();
@@ -66,7 +74,7 @@ export default function ReportManage() {
     fetchPayment();
     fetchBooking();
     fetchBookingOrder();
-  }, [])
+  }, []);
 
   const getPodDetails = (podId) => {
     const pod = Pod.find(p => p.id === podId);
@@ -75,51 +83,77 @@ export default function ReportManage() {
     return { name: pod.name, typeName };
   };
 
+  const filterAndMapResults = (payments, bookings, pods, stores, bookingOrders, selectedStore) => {
+    return payments.map((payment) => {
+      const bookingEntry = bookings.find(b => b.id === payment.bookingId);
+      const podId = bookingEntry ? bookingEntry.podId : null;
+      const podDetails = getPodDetails(podId);
 
+      const bookingOrderEntry = bookingOrders.find(bo => bo.bookingId === payment.bookingId);
+      const bookingOrderAmount = bookingOrderEntry ? bookingOrderEntry.amount : 0;
 
+      const pod = pods.find(p => p.id === podId);
+      const storeId = pod ? pod.storeId : null;
+      const storeName = stores.find(s => s.id === storeId)?.name || '';
+
+      // Filter based on selected store
+      if (selectedStore && storeName !== selectedStore) {
+        return null; // Skip this entry if it doesn't match the selected store
+      }
+
+      return {
+        id: payment.id,
+        podName: podDetails.name,
+        typeName: podDetails.typeName,
+        storeName,
+        date: payment.date,
+        podRevenue: payment.amount,
+        serviceRevenue: bookingOrderAmount,
+        totalRevenue: payment.amount + bookingOrderAmount
+      };
+    }).filter(result => result !== null); // Remove null entries
+  };
+  // Use the function in handleSubmit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const results = filterAndMapResults(payment, booking, Pod, store, bookingOrder, selectedStore);
+    setFilteredResults(results);
+  };
+
+  const calculateStoreRevenue = () => {
+    const podRevenue = filteredResults.reduce((total, result) => total + result.podRevenue, 0);
+    const serviceRevenue = filteredResults.reduce((total, result) => total + result.serviceRevenue, 0);
+    return {
+      totalRevenue: podRevenue + serviceRevenue,
+      podRevenue,
+      serviceRevenue
+    };
+  };
+
+  const { totalRevenue, podRevenue, serviceRevenue } = calculateStoreRevenue();
 
   return (
     <div className="report-manage">
       <div className="report-controls">
         <div className="control-group">
           <label>
-            Loại thời gian:
-            <select>
-              <option value="day">Báo cáo theo ngày</option>
-              <option value="week">Báo cáo theo tuần</option>
-              <option value="month">Báo cáo theo tháng</option>
-            </select>
-          </label>
-          <label>
-            Ngày bắt đầu:
-            <input type="date" />
-          </label>
-
-        </div>
-        <div className="control-group">
-          <label>
             Cửa hàng:
-            <select>
+            <select value={selectedStore} onChange={(e) => setSelectedStore(e.target.value)}>
+              <option value="">Tất cả</option>
               {store.map((store) => (
-                <option key={store.id} value={store.id}>{store.name}</option>
+                <option key={store.id} value={store.name}>{store.name}</option>
               ))}
             </select>
           </label>
-          <label>
-            Ngày kết thúc:
-            <input type="date" />
-          </label>
         </div>
-        <button className="search-report">Tìm kiếm</button>
+        <button className="search-report" onClick={handleSubmit}>Tìm kiếm</button>
       </div>
       <hr />
       <div className="report-overview">
         <h3>Tổng quan</h3>
-        <p><strong>Tổng doanh thu:</strong>{
-          payment.reduce((total, payment) => total + payment.amount, 0) +
-          bookingOrder.reduce((total, order) => total + order.amount, 0)
-        }</p>        <p><strong>Doanh thu từ POD:</strong>{payment.reduce((total, payment) => total + payment.amount, 0)}</p>
-        <p><strong>Doanh thu từ dịch vụ đi kèm:</strong>{bookingOrder.reduce((total, bookingOrder) => total + bookingOrder.amount, 0)}</p>
+        <p><strong>Tổng doanh thu:</strong> {totalRevenue}</p>
+        <p><strong>Doanh thu từ POD:</strong> {podRevenue}</p>
+        <p><strong>Doanh thu từ dịch vụ đi kèm:</strong> {serviceRevenue}</p>
       </div>
       <hr />
       <div className="report-detail">
@@ -129,6 +163,7 @@ export default function ReportManage() {
             <tr>
               <th>Tên POD</th>
               <th>Loại POD</th>
+              <th>Cửa hàng</th>
               <th>Ngày đặt</th>
               <th>Doanh thu POD</th>
               <th>Doanh thu dịch vụ đi kèm</th>
@@ -136,26 +171,17 @@ export default function ReportManage() {
             </tr>
           </thead>
           <tbody>
-            {payment.map((payment) => {
-              const bookingEntry = booking.find(b => b.id === payment.bookingId);
-              const podId = bookingEntry ? bookingEntry.podId : null;
-              const podDetails = getPodDetails(podId);
-              // Find the booking order amount
-
-              const bookingOrderEntry = bookingOrder.find(bo => bo.bookingId === payment.bookingId);
-              const bookingOrderAmount = bookingOrderEntry ? bookingOrderEntry.amount : 0;
-
-              return (
-                <tr key={payment.id}>
-                  <td>{podDetails.name}</td>
-                  <td>{podDetails.typeName}</td>
-                  <td>{payment.date}</td>
-                  <td>{payment.amount}</td>
-                  <td>{bookingOrderAmount}</td>
-                  <td>{payment.amount + bookingOrderAmount}</td>
-                </tr>
-              );
-            })}
+            {filteredResults.map((result) => (
+              <tr key={result.id}>
+                <td>{result.podName}</td>
+                <td>{result.typeName}</td>
+                <td>{result.storeName}</td>
+                <td>{result.date}</td>
+                <td>{result.podRevenue}</td>
+                <td>{result.serviceRevenue}</td>
+                <td>{result.totalRevenue}</td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
