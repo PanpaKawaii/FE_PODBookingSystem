@@ -13,6 +13,16 @@ const Order = () => {
   const apiUser = "https://localhost:7166/api/User";
   const apiBooking = "https://localhost:7166/api/Booking";
 
+  // Lọc ra những booking có trạng thái "Đang chờ"
+  const pendingBookings = bookingData.filter(
+    (booking) => booking.status === "Đang chờ"
+  );
+
+  // Lọc ra những user có booking đang chờ
+  const usersWithPendingBookings = userData.filter((user) =>
+    pendingBookings.some((booking) => booking.userId === user.id)
+  );
+
   const fetchUserData = async () => {
     try {
       const response = await axios.get(apiUser);
@@ -35,7 +45,42 @@ const Order = () => {
     fetchUserData();
     fetchBookingData();
   }, []);
+  const handleAcceptBooking = async (booking) => {
+    try {
+      // Cập nhật trạng thái booking
+      const updatedBooking = {
+        ...booking,
+        status: "Xác nhận",
+        feedback: booking.feedback || "", // Đảm bảo có giá trị cho feedback
+      };
 
+      // Gọi API để cập nhật booking
+      await axios.put(`${apiBooking}/${booking.id}`, updatedBooking);
+
+      // Tìm user tương ứng
+      const user = userData.find((user) => user.id === booking.userId);
+      if (!user) {
+        console.error("User not found");
+        return;
+      }
+
+      // Tăng điểm người dùng
+      const updatedUser = {
+        ...user,
+        point: user.point + 100,
+      };
+
+      // Gọi API để cập nhật người dùng
+      await axios.put(`${apiUser}/${updatedUser.id}`, updatedUser);
+
+      // Cập nhật lại dữ liệu trong state
+      fetchUserData();
+      fetchBookingData();
+    } catch (error) {
+      console.error("Failed to accept booking:", error);
+      // Hiển thị thông báo lỗi cho người dùng nếu cần
+    }
+  };
   if (userData.length === 0 || bookingData.length === 0) {
     return <p>Loading...</p>;
   }
@@ -121,26 +166,29 @@ const Order = () => {
       key: "actions",
       align: "center",
       render: (text, record) => (
-        <div>
-          <Button
-            type="primary"
-            onClick={() => handleEditBooking(record)}
-            style={{ marginRight: 8 }}
+        <Space>
+          <Popconfirm
+            title="Bạn có chắc chắn muốn duyệt booking này?"
+            onConfirm={() => handleAcceptBooking(record)}
+            okText="Đồng ý"
+            cancelText="Hủy"
           >
-            Duyệt
-          </Button>
+            <Button type="primary" style={{ marginRight: 8 }}>
+              Duyệt
+            </Button>
+          </Popconfirm>
 
           <Popconfirm
-            title="Are you sure to delete this company?"
+            title="Bạn có chắc chắn muốn từ chối booking này?"
             onConfirm={() => handleDeleteBooking(record.id)}
-            okText="Yes"
-            cancelText="No"
+            okText="Đồng ý"
+            cancelText="Hủy"
           >
             <Button type="primary" danger>
               Từ chối
             </Button>
           </Popconfirm>
-        </div>
+        </Space>
       ),
     },
   ];
@@ -193,49 +241,61 @@ const Order = () => {
 
   return (
     <div className="user-manage">
-      <Title level={2}>Thông tin khách hàng và đặt chỗ</Title>
-      {usersWithBookings.map((user) => {
-        const userBookings = bookingData.filter(
-          (booking) => booking.userId === user.id
-        );
-        return (
-          <Card
-            key={user.id}
-            title={`Khách hàng: ${user.name}`}
-            style={{ marginBottom: 20 }}
-          >
-            <Table
-              dataSource={[user]}
-              columns={userColumns}
-              pagination={false}
-              rowKey="id"
-            />
-            <Title level={4} style={{ marginTop: 20 }}>
-              Thông tin đặt chỗ
-            </Title>
+      <Title level={2}>Đơn đang chờ xử lý</Title>
+      {usersWithPendingBookings.length === 0 ? (
+        <Card>
+          <Title level={4} style={{ textAlign: "center" }}>
+            Hiện tại không có yêu cầu nào
+          </Title>
+        </Card>
+      ) : (
+        usersWithPendingBookings.map((user) => {
+          const userPendingBookings = pendingBookings.filter(
+            (booking) => booking.userId === user.id
+          );
+          return (
+            <Card
+              key={user.id}
+              title={
+                <span style={{ fontWeight: "bold" }}>
+                  Khách hàng: {user.name}
+                </span>
+              }
+              style={{ marginBottom: 20 }}
+            >
+              <Table
+                dataSource={[user]}
+                columns={userColumns}
+                pagination={false}
+                rowKey="id"
+              />
+              <Title level={4} style={{ marginTop: 20 }}>
+                Thông tin đặt chỗ đang chờ
+              </Title>
 
-            {userBookings.map((booking) => (
-              <Card key={booking.id} style={{ marginBottom: 10 }}>
-                <Table
-                  dataSource={[booking]}
-                  columns={bookingColumns}
-                  pagination={false}
-                  rowKey="id"
-                />
-                <Title level={5} style={{ marginTop: 10 }}>
-                  Chi tiết đơn hàng
-                </Title>
-                <Table
-                  dataSource={booking.bookingOrders}
-                  columns={orderColumns}
-                  pagination={false}
-                  rowKey="id"
-                />
-              </Card>
-            ))}
-          </Card>
-        );
-      })}
+              {userPendingBookings.map((booking) => (
+                <Card key={booking.id} style={{ marginBottom: 10 }}>
+                  <Table
+                    dataSource={[booking]}
+                    columns={bookingColumns}
+                    pagination={false}
+                    rowKey="id"
+                  />
+                  <Title level={5} style={{ marginTop: 10 }}>
+                    Chi tiết đơn hàng
+                  </Title>
+                  <Table
+                    dataSource={booking.bookingOrders}
+                    columns={orderColumns}
+                    pagination={false}
+                    rowKey="id"
+                  />
+                </Card>
+              ))}
+            </Card>
+          );
+        })
+      )}
     </div>
   );
 };
