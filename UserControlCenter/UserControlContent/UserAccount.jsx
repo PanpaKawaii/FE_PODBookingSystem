@@ -10,7 +10,7 @@ export default function UserAccount() {
 
                 <UserSideBar className='user-side-bar-container' />
 
-                <div className='user-content-right-container'>
+                <div className='user-account'>
                     <input placeholder='Old Password'></input>
                     <input placeholder='New Password'></input>
                     <input placeholder='Confirm'></input>

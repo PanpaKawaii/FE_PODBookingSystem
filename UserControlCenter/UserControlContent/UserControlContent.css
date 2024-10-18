@@ -4,7 +4,7 @@ body {
 
 .user-control-center {
     background-color: #f0f0f0;
-    padding: 20px;
+    padding: 20px 20px 10px;
     font-family: 'Arial', sans-serif;
 }
 
@@ -14,67 +14,104 @@ body {
         display: flex;
     }
 
-    .user-content-right-container {
+    .user-information {
         width: 100%;
         padding: 0 0 0 20px;
     }
 
-    .image-col {
-        padding: 0;
+    .user-account {
+        width: 100%;
+        padding: 0 0 0 20px;
     }
 
-    .image-card {
-        background-color: #ffffff;
-        margin: 0 0 10px;
-        padding: 5px;
-        height: 250px;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: center;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
+    .user-booking {
+        width: 100%;
+        padding: 0 0 0 20px;
 
-    .image-card img {
-        width: 320px;
-        height: 240px;
-        border-radius: 3px;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-    }
+        .booking-row {
+            margin: 0;
 
-    .card-body {
-        padding: 10px 20px;
-    }
+            .booking-col {
+                padding: 0;
 
-    .card-rating-capacity {
-        display: flex;
-        align-items: end;
-    }
+                .booking-card {
+                    background-color: #ffffff;
+                    margin: 0 0 10px;
+                    height: 250px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    justify-content: space-between;
+                    overflow: hidden;
+                    transition: all 0.3s ease;
 
-    .card-info {
-        display: block;
-        text-align: start;
-    }
+                    .card-information {
+                        width: 60%;
+                        width: auto;
+                        display: flex;
 
-    .active-button {
-        display: flex;
-        align-items: center;
-    }
+                        img {
+                            width: 320px;
+                            height: 240px;
+                            margin: 5px;
+                            border-radius: 5px;
+                            object-fit: cover;
+                            object-position: center;
+                            display: block;
+                        }
 
-    .btn {
-        color: #ffffff;
-        font-weight: bold;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+                        .card-info {
+                            padding: 0 20px;
+                            display: block;
+                            text-align: start;
 
-    .btn:active {
-        background-color: #ffffff;
-        color: #000000;
-    }
+                            h4 {
+                                margin: 20px 0 0;
+                            }
 
+                            .card-rating-capacity {
+                                display: flex;
+                                align-items: end;
+                            }
+                        }
+
+                        .card-date {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+
+                            .slot-name {
+                                display: flex;
+                                justify-content: center;
+                            }
+
+                            span {
+                                margin: 0 5px;
+                            }
+                        }
+                    }
+
+                    .rebook-button {
+                        display: flex;
+                        align-items: center;
+                        padding: 0 20px;
+
+                        .btn {
+                            color: #ffffff;
+                            font-weight: bold;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+
+                        .btn:active {
+                            background-color: #ffffff;
+                            color: #000000;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

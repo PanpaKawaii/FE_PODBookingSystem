@@ -72,7 +72,6 @@ body {
         display: block;
         text-align: right;
         color: #83999f;
-        font-weight: bold;
         margin-bottom: 15px;
         /* text-decoration: none; */
     }
@@ -80,26 +79,26 @@ body {
     .forget-link:hover {
         color: #53737e;
     }
-
-    .img-left {
+     
+    .movingImage {
         width: 50%;
         height: 100%;
         background: url('YellowBanana.jpg') center;
-        background-size: cover;
         position: absolute;
         right: 0;
         transition: all 0.5s ease;
     }
 
-    .img-right {
+    /* .movingImage{
         width: 50%;
         height: 100%;
-        background: url('BlueBanana.jpg') center;
-        background-size: cover;
-        position: absolute;
         right: 0;
+        object-fit: cover;
+        object-position: center;
+        display: block;
         transition: all 0.5s ease;
-    }
+        position: absolute;
+    } */
 
     .btn {
         color: #000000;
@@ -129,11 +128,7 @@ body {
 
     @media screen and (max-width: 768px) {
 
-        .img-left {
-            display: none;
-        }
-
-        .img-right {
+        .movingImage {
             display: none;
         }
 

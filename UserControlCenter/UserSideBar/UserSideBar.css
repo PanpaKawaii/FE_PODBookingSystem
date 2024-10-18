@@ -3,18 +3,13 @@ body {
 }
 
 .user-control-center {
-    background-color: #f0f0f0;
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-}
-
-.user-control-center {
 
     .user-side-bar-container {
         width: 342px;
         height: auto;
         min-height: 90vh;
         background-color: #ffffff;
+        margin: 0 0 10px;
         padding: 20px;
         border-right: 2px solid #cccccc;
     }

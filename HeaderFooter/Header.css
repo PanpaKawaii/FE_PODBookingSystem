@@ -2,9 +2,9 @@ body {
     margin: 0;
 }
 
-.header {
+.user-header {
 
-    .menu {
+    /* .menu {
         background-color: #53737e;
         font-family: 'Arial', sans-serif;
         transition: all 0.3s ease;
@@ -15,12 +15,30 @@ body {
     }
 
     .menu a {
+        text-decoration: none;
         font-weight: bold;
     }
 
     .brand-logo {
         font-weight: bold;
         margin: 0 20px;
+    } */
+
+    .menu {
+        background-color: #53737e;
+        transition: all 0.3s ease;
+    }
+
+    .menu a {
+        text-decoration: none;
+        color: #ffffff;
+        margin: 0 20px;
+        font-weight: bold;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .brandlogo {
+        color: #ffffff;
     }
 
 }

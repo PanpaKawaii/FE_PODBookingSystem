@@ -4,16 +4,13 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Row, Col, Card } from 'react-bootstrap';
 import './HomeContent.css'
 
-import M from 'materialize-css';
-import 'materialize-css/dist/css/materialize.min.css';
-import { Icon } from 'react-materialize';
-
 import home from '../BackgroundImage/home.jpg'
 import space from '../BackgroundImage/space.jpg'
 
 export default function HomeContent() {
 
     const [PODs, setPODs] = useState(null);
+    const [TYPEs, setTYPEs] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -25,6 +22,11 @@ export default function HomeContent() {
                 const podData = await podResponse.json();
                 setPODs(podData);
 
+                const typeResponse = await fetch('https://localhost:7166/api/Type');
+                if (!typeResponse.ok) throw new Error('Network response was not ok');
+                const typeData = await typeResponse.json();
+                setTYPEs(typeData);
+
                 setLoading(false);
             } catch (error) {
                 setError(error);
@@ -34,6 +36,11 @@ export default function HomeContent() {
 
         fetchData();
     }, []);
+
+    const getCapacity = (typeId) => {
+        const type = TYPEs ? TYPEs.find(type => type.id === typeId) : null;
+        return type ? type.capacity : 0;
+    };
 
     return (
         <div className='POD-home'>
@@ -54,13 +61,13 @@ export default function HomeContent() {
                                 </div>
 
                                 <div className='capacity'>
-                                    {pod.capacity === 10 ?
+                                    {getCapacity(pod.typeId) === 10 ?
                                         (
-                                            <span className='capacity-icon' style={{ paddingRight: '5px' }}><Icon>person</Icon><b> x 10</b></span>
+                                            <span className='capacity-icon' style={{ padding: '5px' }}><i className='fa-solid fa-user' style={{ paddingRight: '5px' }}></i><b> x 10</b></span>
                                         ) :
                                         (
-                                            [...Array(pod.capacity)].map((_, i) => (
-                                                <span key={i} className='capacity-icon'><Icon>person</Icon></span>
+                                            [...Array(getCapacity(pod.typeId))].map((_, i) => (
+                                                <span key={i} className='capacity-icon' style={{ padding: '5px' }}><i className='fa-solid fa-user'></i></span>
                                             ))
                                         )
                                     }
@@ -96,8 +103,8 @@ export default function HomeContent() {
                     <img src={space} alt='space' />
                     <Form className='card-form'>
                         <h1>CONTACT US</h1>
-                        <Form.Text><p>InnoSpace always appreciate all the opinions from you!</p></Form.Text>
-                        <Form.Text><p>We will reply in the nearest 24 hours!</p></Form.Text>
+                        <Form.Text><p>InnoSpace luôn sẵn sàng lắng nghe câu hỏi và ý kiến đóng góp từ bạn!</p></Form.Text>
+                        <Form.Text><p>Chúng tôi sẽ phản hồi ngay trong 24h tiếp theo!</p></Form.Text>
 
                         <Form.Group controlId='formName'>
                             <Form.Control className='input' type='text' placeholder='Name' />
@@ -114,7 +121,7 @@ export default function HomeContent() {
                         <Form.Group controlId='formYourProblem'>
                             <Form.Control className='input' type='text' placeholder='Your Problem' />
                         </Form.Group>
-                        <Button className='submit'>SUBMIT</Button>
+                        <Button className='btn'>SUBMIT</Button>
                     </Form>
                 </div>
             </div>
