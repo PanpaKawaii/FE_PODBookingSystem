@@ -19,6 +19,8 @@ import Order from "./assets/Staff/Order/Order";
 import Report from "./assets/Staff/ReportComponent/ReportManage";
 import Staff from "./assets/Staff/UserComponent/Staff";
 import Customer from "./assets/Staff/UserComponent/Customer";
+import OrderHistory from "./assets/Staff/Order/OrderHistory";
+import Product from "./assets/Staff/ProductComponent/Product";
 
 function App() {
   return (
@@ -39,9 +41,11 @@ function App() {
               <Route path="/" element={<Home />}></Route>
               <Route path="/pod" element={<POD />}></Route>
               <Route path="/order" element={<Order />}></Route>
+              <Route path="/history" element={<OrderHistory />}></Route>
               <Route path="/report" element={<Report />}></Route>
               <Route path="/staff" element={<Staff />}></Route>
               <Route path="/customer" element={<Customer />}></Route>
+              <Route path="/product" element={<Product />}></Route>
             </Routes>
           </div>
         </div>

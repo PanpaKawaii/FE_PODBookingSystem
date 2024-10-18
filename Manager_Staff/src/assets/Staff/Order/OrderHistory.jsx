@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Order.css";
-import {
-  Table,
-  Card,
-  Button,
-  Space,
-  Tag,
-  Typography,
-  Popconfirm,
-  message,
-} from "antd";
+import { Table, Card, Button, Space, Tag, Typography, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
-const Order = () => {
+const OrderHistory = () => {
   const [userData, setUserData] = useState([]);
   const [bookingData, setBookingData] = useState([]);
 
@@ -24,7 +15,7 @@ const Order = () => {
 
   // Lọc ra những booking có trạng thái "Đang chờ"
   const pendingBookings = bookingData.filter(
-    (booking) => booking.status === "Đang chờ"
+    (booking) => booking.status === "Xác nhận"
   );
 
   // Lọc ra những user có booking đang chờ
@@ -85,7 +76,6 @@ const Order = () => {
       // Cập nhật lại dữ liệu trong state
       fetchUserData();
       fetchBookingData();
-      message.success("Duyệt đơn thành công");
     } catch (error) {
       console.error("Failed to accept booking:", error);
       // Hiển thị thông báo lỗi cho người dùng nếu cần
@@ -171,36 +161,36 @@ const Order = () => {
       key: "feedback",
       render: (feedback) => feedback || "Chưa có feedback",
     },
-    {
-      title: "Actions",
-      key: "actions",
-      align: "center",
-      render: (text, record) => (
-        <Space>
-          <Popconfirm
-            title="Bạn có chắc chắn muốn duyệt booking này?"
-            onConfirm={() => handleAcceptBooking(record)}
-            okText="Đồng ý"
-            cancelText="Hủy"
-          >
-            <Button type="primary" style={{ marginRight: 8 }}>
-              Duyệt
-            </Button>
-          </Popconfirm>
+    // {
+    //   title: "Actions",
+    //   key: "actions",
+    //   align: "center",
+    //   render: (text, record) => (
+    //     <Space>
+    //       <Popconfirm
+    //         title="Bạn có chắc chắn muốn duyệt booking này?"
+    //         onConfirm={() => handleAcceptBooking(record)}
+    //         okText="Đồng ý"
+    //         cancelText="Hủy"
+    //       >
+    //         <Button type="primary" style={{ marginRight: 8 }}>
+    //           Duyệt
+    //         </Button>
+    //       </Popconfirm>
 
-          {/* <Popconfirm
-            title="Bạn có chắc chắn muốn từ chối booking này?"
-            onConfirm={() => handleDeleteBooking(record.id)}
-            okText="Đồng ý"
-            cancelText="Hủy"
-          >
-            <Button type="primary" danger>
-              Từ chối
-            </Button>
-          </Popconfirm> */}
-        </Space>
-      ),
-    },
+    //       <Popconfirm
+    //         title="Bạn có chắc chắn muốn từ chối booking này?"
+    //         onConfirm={() => handleDeleteBooking(record.id)}
+    //         okText="Đồng ý"
+    //         cancelText="Hủy"
+    //       >
+    //         <Button type="primary" danger>
+    //           Từ chối
+    //         </Button>
+    //       </Popconfirm>
+    //     </Space>
+    //   ),
+    // },
   ];
 
   const orderColumns = [
@@ -310,4 +300,4 @@ const Order = () => {
   );
 };
 
-export default Order;
+export default OrderHistory;

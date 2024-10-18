@@ -6,7 +6,7 @@ import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 
 const Customer = () => {
@@ -15,6 +15,9 @@ const Customer = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
   const apiUser = "https://localhost:7166/api/User";
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat("vi-VN").format(number);
+  };
 
   const fetchUserData = async () => {
     try {
@@ -35,9 +38,15 @@ const Customer = () => {
     setShowModal(true);
   };
 
-  const handleDelete = (id) => {
-    console.log("Delete user with id:", id);
-    // Implement delete functionality
+  const handleDelete = async (userId) => {
+    try {
+      await axios.delete(`${apiUser}/${userId}`);
+      message.success("Xoá thành công");
+      fetchUserData();
+    } catch (error) {
+      console.error("Error deleting company:", error);
+      message.error("Xoá không thành công");
+    }
   };
 
   const handleCloseModal = () => {
@@ -93,8 +102,8 @@ const Customer = () => {
               alt={`${user.name}'s avatar`}
               className="user-avatar"
             />
+            <h3>{user.name}</h3>
             <div className="user-info">
-              <h3>{user.name}</h3>
               <p>ID: {user.id}</p>
               <p>Email: {user.email}</p>
               <p>Số điện thoại: {user.phoneNumber}</p>
@@ -103,15 +112,22 @@ const Customer = () => {
                 Chú ý:{" "}
                 <span style={{ color: "seagreen" }}>{user.description}</span>{" "}
               </p>
-              <p>Điểm: {user.point}</p>
+              <p>Điểm: {formatNumber(user.point)}</p>
             </div>
-            <div className="user-actions">
+            <div className="action">
               <Button variant="primary" onClick={() => handleEdit(user)}>
                 <FontAwesomeIcon icon={faEdit} /> Sửa
               </Button>
-              <Button variant="danger" onClick={() => handleDelete(user.id)}>
-                <FontAwesomeIcon icon={faTrash} /> Xóa
-              </Button>
+              <Popconfirm
+                title="Are you sure to delete this company?"
+                onConfirm={() => handleDelete(user.id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button variant="danger">
+                  <FontAwesomeIcon icon={faTrash} /> Xóa
+                </Button>
+              </Popconfirm>
             </div>
           </div>
         ))}
@@ -197,9 +213,14 @@ const Customer = () => {
           <Button variant="secondary" onClick={handleCloseModal}>
             Đóng
           </Button>
-          <Button variant="primary" onClick={handleSaveChanges}>
-            Lưu thay đổi
-          </Button>
+          <Popconfirm
+            title="Bạn có chắc chắn muốn lưu thay đổi không?"
+            onConfirm={handleSaveChanges}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button variant="primary">Lưu thay đổi</Button>
+          </Popconfirm>
         </Modal.Footer>
       </Modal>
     </div>
