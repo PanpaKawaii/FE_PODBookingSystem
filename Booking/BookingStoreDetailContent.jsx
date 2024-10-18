@@ -5,9 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import './BookingStoreDetailContent.css';
 
-import M from 'materialize-css';
-import 'materialize-css/dist/css/materialize.min.css';
-import { Icon } from 'react-materialize';
+import single1 from '../assets/PODs/single1.jpg'
 
 export default function BookingStoreDetailContent() {
 
@@ -32,7 +30,7 @@ export default function BookingStoreDetailContent() {
 
         fetchData();
     }, []);
-    
+
     const StoreId = useParams();
     const Store = STOREs ? STOREs.find(obj => {
         return obj.id == StoreId.Id;
@@ -43,13 +41,15 @@ export default function BookingStoreDetailContent() {
             <div className='booking-store-detail-container'>
                 {Store ? (
                     <>
-                        <h1>{Store.name}</h1>
+                        <h1><b>{Store.name}</b></h1>
                         <div className='short-detail'>
                             <p>{Store.name} / {Store.contact} / {Store.address}</p>
                             <p style={{ color: 'gold', fontSize: '1.5em' }}>★ {Store.rating}</p>
                             <p></p>
                         </div>
-                        <img src={Store.image} alt={Store.name}></img>
+                        <div className='image-detail'>
+                            <img src={single1} alt={Store.name}></img>
+                        </div>
                         <p>{Store.description}</p>
                         <Link to={`pod`}>
                             <Button>VIEW PODS</Button>

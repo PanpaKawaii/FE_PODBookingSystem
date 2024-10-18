@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Form, Button, Card } from 'react-bootstrap';
@@ -8,7 +8,6 @@ import './BookingPodDetailContent.css';
 import single1 from '../assets/PODs/single1.jpg'
 import double1 from '../assets/PODs/double1.jpg'
 import group1 from '../assets/PODs/group1.jpg'
-import QRcode from '../BackgroundImage/QRcode.jpg'
 
 export default function BookingPodDetailContent() {
 
@@ -19,7 +18,6 @@ export default function BookingPodDetailContent() {
         setId(UserIdInt);
     }, [UserId]);
 
-    const [BOOKINGs, setBOOKINGs] = useState(null);
     const [PODs, setPODs] = useState(null);
     const [TYPEs, setTYPEs] = useState(null);
     const [UTILITIes, setUTILITIes] = useState(null);
@@ -31,11 +29,6 @@ export default function BookingPodDetailContent() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const bookingResponse = await fetch('https://localhost:7166/api/Booking');
-                if (!bookingResponse.ok) throw new Error('Network response was not ok');
-                const bookingData = await bookingResponse.json();
-                setBOOKINGs(bookingData);
-
                 const podResponse = await fetch('https://localhost:7166/api/Pod');
                 if (!podResponse.ok) throw new Error('Network response was not ok');
                 const podData = await podResponse.json();
@@ -94,35 +87,12 @@ export default function BookingPodDetailContent() {
     const [SlotId, setSlotId] = useState('');
     const [Confirm, setConfirm] = useState(false);
 
-    const [bookingsHaveTheSameDateAndSlot, setBookingsHaveTheSameDateAndSlot] = useState(null);
-
-    // Những Slot được chọn từ AvailableSLOTs
-    const selectedSlots = AvailableSLOTs ? AvailableSLOTs.filter(slot => SlotId.includes(slot.id)) : [];
-    console.log('SlotId: ', SlotId)
-
-    // Những Booking có cùng Date được chọn
-    const bookingsHaveTheSameDate = BOOKINGs ? BOOKINGs.filter(booking =>
-        booking.date.substring(0, 10) === date
-    ).map(booking => booking.id) : [];
-    console.log('bookingsHaveTheSameDate: ', bookingsHaveTheSameDate)
-
-    // Những Booking có cùng Date và cùng Slot được chọn
-    const aaaaaaa = selectedSlots ? selectedSlots.filter(slot => (slot.bookings).some(booking => bookingsHaveTheSameDate.includes(booking.id))) : [];
-    
-    useEffect(() => {
-        setBookingsHaveTheSameDateAndSlot(aaaaaaa)
-        console.log('SameDateSlot: ', aaaaaaa)
-        console.log('SameDateSlot: ', aaaaaaa.length)
-    }, [SlotId]);
-
-
-
-
-
-    // Lấy những Slot được chọn
-    const thisSLOT = AvailableSLOTs ? AvailableSLOTs.filter(slot => String(SlotId).includes(String(slot.id))) : null;
+    // Lấy Slot được chọn
+    const thisSLOT = AvailableSLOTs ? AvailableSLOTs.find(slot => String(slot.id) === SlotId) : null;
 
     const Booking = async () => {
+        const SlotIdInt = parseInt(SlotId, 10);
+
         if (!MaxID) {
             console.error('Please wait for the system');
             return;
@@ -131,7 +101,7 @@ export default function BookingPodDetailContent() {
             console.error('Pod or UserId is not defined');
             return;
         }
-        if (!date || SlotId.length === 0) {
+        if (date == '' || SlotId == '') {
             console.error('Date or SlotId is not defined');
             return;
         }
@@ -139,14 +109,14 @@ export default function BookingPodDetailContent() {
             console.error('You have not confirmed yet');
             return;
         }
-
+        
         const bookingData = {
             id: MaxID + 1,
             date: date,
             status: 'Chờ xác nhận',
-            feedback: '',
+            feedback: 'null',
             podId: Pod.id,
-            slotIds: SlotId.map(id => parseInt(id, 10)),
+            slotIds: [SlotIdInt],
             userId: id,
         };
         console.log('Booking data:', bookingData);
@@ -186,8 +156,10 @@ export default function BookingPodDetailContent() {
 
     const handleBooking = async (e) => {
         e.preventDefault();
-        // const date = e.target.BookingDate.value;
-        // setDate(date);
+        const date = e.target.BookingDate.value;
+        const SlotId = e.target.BookingSlot.value;
+        setDate(date);
+        setSlotId(SlotId);
         setIsPopupOpen(true);
 
         const fetchMaxBookingId = async () => {
@@ -210,6 +182,7 @@ export default function BookingPodDetailContent() {
     const handleConfirm = () => {
         setIsQROpen(true)
         setConfirm(true);
+        Booking();
     };
 
 
@@ -243,7 +216,7 @@ export default function BookingPodDetailContent() {
 
                         <div className='detail-container'>
                             <div className='short-detail'>
-                                <h5><b>{thisSTORE ? `${thisSTORE.name}: ${thisSTORE.address} / Hotline: ${thisSTORE.contact}` : 'Store not found'}</b></h5>
+                                <h5><b>{thisSTORE ? `${thisSTORE.name} / ${thisSTORE.address} / Hotline: ${thisSTORE.contact}` : 'Store not found'}</b></h5>
                                 <p>{thisTYPE ? `${thisTYPE.name} / Sức chứa: ${thisTYPE.capacity} người` : 'Type not found'}</p>
 
                                 <div className='favorite'>
@@ -274,75 +247,38 @@ export default function BookingPodDetailContent() {
                                 <Card>
                                     <Card.Body>
 
-                                        <h4><b>Amount: {Amount > 1000000 ? (Amount / 1000000) + ' triệu đồng' : Amount > 1000 ? (Amount / 1000) + ' ngàn đồng' : Amount + ' đồng'}</b></h4>
+                                        <h4><b>Price: {Amount / 1000}.000đ</b></h4>
 
                                         <Form className='form-card' onSubmit={handleBooking}>
                                             <Form.Group controlId='BookingDate' className='form-group'>
                                                 <Form.Control className='input' type='date' onChange={(e) => {
                                                     const selectedDate = e.target.value;
-                                                    setDate(selectedDate);
                                                     console.log(selectedDate);
-                                                }} required />
+                                                }} />
                                             </Form.Group>
 
                                             <Form.Group controlId='BookingSlot' className='form-group'>
-                                                {AvailableSLOTs.map((slot, index) => (
-                                                    <div
-                                                        key={index}
-                                                        onClick={() => {
-                                                            const selectedSlot = AvailableSLOTs.find(s => s.id === slot.id);
-                                                            setAmount(prevAmount => prevAmount + (selectedSlot.price * (selectedSlot.selected ? 1 : -1)));
-                                                            selectedSlot.selected = !selectedSlot.selected; // Toggle selection
-                                                            console.log(selectedSlot.selected ? `Selected: ${slot.id}` : `Deselected: ${slot.id}`);
-                                                            setSlotId(prevSlotId => {
-                                                                const isSelected = prevSlotId.includes(slot.id);
-                                                                if (isSelected) {
-                                                                    return prevSlotId.filter(id => id !== slot.id); // Remove if already selected
-                                                                } else {
-                                                                    return [...prevSlotId, slot.id]; // Add if not selected
-                                                                }
-                                                            });
-                                                        }}
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            backgroundColor: slot.selected ? '#d3f9d8' : '#fff',
-                                                            padding: '10px',
-                                                            margin: '5px 0',
-                                                            border: '1px solid #ccc',
-                                                            borderRadius: '5px'
-                                                        }}
-                                                    >
-                                                        {`[${slot.name}] ${slot.startTime}:00 - ${slot.endTime}:00 (${slot.price / 1000}.000đ)`}
-                                                    </div>
-                                                ))}
-                                            </Form.Group>
-
-                                            <Form.Group controlId='DateValidation' className='form-group'>
-                                                {(() => {
-                                                    const selectedDate = new Date(date);
-                                                    const currentDate = new Date();
-                                                    currentDate.setHours(0, 0, 0, 0); // Reset time to start of day for fair comparison
-
-                                                    if (selectedDate < currentDate) {
-                                                        return (
-                                                            <Form.Text className="text-danger">
-                                                                Please select a date from today onwards.
-                                                            </Form.Text>
-                                                        );
-                                                    } else if (selectedDate > new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000)) {
-                                                        return (
-                                                            <Form.Text className="text-warning">
-                                                                Bookings are only available for the next 30 days.
-                                                            </Form.Text>
-                                                        );
+                                                <Form.Control as='select' onChange={(e) => {
+                                                    const selectedSlot = AvailableSLOTs.find(slot => String(slot.id) === e.target.value);
+                                                    if (selectedSlot) {
+                                                        setAmount(selectedSlot.price);
+                                                    } else {
+                                                        setAmount(0);
                                                     }
-                                                    return null;
-                                                })()}
+                                                    console.log(e.target.value);
+                                                }}>
+                                                    <option value=''>[Slot]</option>
+                                                    {AvailableSLOTs.map((slot, index) => (
+                                                        <option key={index} value={slot.id}>
+                                                            {`[${slot.name}] ${slot.startTime}:00 - ${slot.endTime}:00 (${slot.price / 1000}.000đ)`}
+                                                        </option>
+                                                    ))}
+                                                </Form.Control>
                                             </Form.Group>
 
-                                            {bookingsHaveTheSameDateAndSlot && bookingsHaveTheSameDateAndSlot.length !== 0 && <p>Slot không khả dụng</p>}
-                                            {bookingsHaveTheSameDateAndSlot && bookingsHaveTheSameDateAndSlot.length === 0 && SlotId.length > 0 && new Date(date) > new Date().setHours(0, 0, 0, 0) && <Button type='submit' className='btn'>SELECT</Button>}
-
+                                            <a href='#popupConfirm' id='openPopUp'>
+                                                <Button type='submit' className='btn'>SELECT</Button>
+                                            </a>
                                         </Form>
                                     </Card.Body>
                                 </Card>
@@ -358,21 +294,7 @@ export default function BookingPodDetailContent() {
                         </div>
 
                         <div>
-                            <h3>Bookings for this Pod:</h3>
-                            {BOOKINGs && BOOKINGs.filter(booking => booking.podId === Pod.id).map((booking, index) => (
-                                <div key={index} style={{
-                                    border: '1px solid #ccc',
-                                    borderRadius: '5px',
-                                    padding: '10px',
-                                    margin: '10px 0'
-                                }}>
-                                    <p><strong>Date:</strong> {booking.date}</p>
-                                    <p><strong>Date:</strong> {booking.date.substring(0, 10)}</p>
-                                    <p><strong>Date:</strong> {date}</p>
-                                    <p><strong>Status:</strong> {booking.status}</p>
-                                    <p><strong>Feedback:</strong> {booking.feedback || 'No feedback yet'}</p>
-                                </div>
-                            ))}
+
                         </div>
 
                     </>
@@ -399,14 +321,23 @@ export default function BookingPodDetailContent() {
                                 <img src={single1} alt={Pod.name}></img>
                                 {/* <img src={Pod.image} alt={Pod.name}></img> */}
 
-                                <h5><b>{thisSTORE ? `${thisSTORE.name}: ${thisSTORE.address}` : 'Store not found'}</b></h5>
+                                <h5><b>{thisSTORE ? `${thisSTORE.name} / ${thisSTORE.address}` : 'Store not found'}</b></h5>
+
                                 <p>{thisTYPE ? `${thisTYPE.name} / Sức chứa: ${thisTYPE.capacity} người` : 'Type not found'}</p>
 
+                                {/* <h5><b>Tiện nghi có sẵn:</b></h5>
+                                {AvailableUTILITIes.map((utility) => (
+                                    <li key={utility.id}>{utility.name}</li>
+                                ))} */}
+
                                 <h5><b>Ngày nhận phòng: {date}</b></h5>
-                                <p>Giờ nhận phòng: </p>
-                                {thisSLOT && thisSLOT.map(slot => (
-                                    <p key={slot.id}>{`[${slot.name}] ${slot.startTime}:00 - ${slot.endTime}:00 (${slot.price / 1000}.000đ)`}</p>
-                                ))}
+                                {/* <p>SlotId: {SlotId}</p> */}
+                                {/* {SlotId.map((slot, index) => (
+                                    <option key={index} value={slot.id}>
+                                        {`[Slot ${index + 1}] ${slot.startTime}:00 - ${slot.endTime}:00 (${slot.price / 1000}.000đ)`}
+                                    </option>
+                                ))} */}
+                                <p>{`Giờ nhận phòng: [${thisSLOT.name}] ${thisSLOT.startTime}:00 - ${thisSLOT.endTime}:00 (${thisSLOT.price / 1000}.000đ)`}</p>
 
                                 <div className='button-confirm-amount'>
                                     <h3><b>Amount: {Amount / 1000}.000đ</b></h3>
@@ -418,7 +349,7 @@ export default function BookingPodDetailContent() {
                             <div className='payment-qrcode'>
                                 <h1><b>Payment</b></h1>
                                 {IsQROpen && (
-                                    <img src={QRcode} alt='QRcode'></img>
+                                    <img src={double1} alt='QR CODE'></img>
                                 )}
                             </div>
                         </div>

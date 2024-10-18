@@ -105,45 +105,42 @@ body {
 
     .card-body {
         width: 100%;
-    }
 
-    .card-tittle h4 {
-        color: #000000;
-        margin: 0;
-        font-size: 0.9em;
-    }
+        h4 {
+            margin: 0 0 10px;
+        }
 
-    .card-info p {
-        color: #000000;
-        margin: 0;
-    }
+        p {
+            margin: 0;
+        }
 
-    .full-detail {
-        display: flex;
-        justify-content: space-between;
-    }
+        .full-detail {
+            display: flex;
+            justify-content: space-between;
+        }
 
-    .short-detail {
-        display: block;
-        text-align: start;
-    }
+        .short-detail {
+            display: block;
+            text-align: start;
+        }
 
-    .active-button {
-        display: block;
-        text-align: end;
-    }
+        .active-button {
+            display: block;
+            text-align: end;
+        }
 
-    .btn {
-        color: #ffffff;
-        font-weight: bold;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+        .btn {
+            color: #ffffff;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    .btn:active {
-        background-color: #ffffff;
-        color: #000000;
+        .btn:active {
+            background-color: #ffffff;
+            color: #000000;
+        }
     }
 
 }
