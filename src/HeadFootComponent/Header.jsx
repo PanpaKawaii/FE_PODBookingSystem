@@ -2,10 +2,27 @@ import React from 'react';
 import { CDBInput } from 'cdbreact'; // Nhập CDBInput từ cdbreact
 import './Header.css'; // Nhập file CSS
 import Avatar from '../Admin_image/avt.jpg'; // Nhập file CSS
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Nhập FontAwesomeIcon
-// import { faSearch } from '@fortawesome/free-solid-svg-icons'; // Nhập biểu tượng kính lúp
+import { useEffect, useState } from 'react';
+import api from '../api/axios';
 
 export default function Header() {
+  const [adminName, setAdminName] = useState('');
+  const [adminRole, setAdminRole] = useState('');
+  useEffect(() => {
+    // Fetch users from API
+    api.get('/User')
+      .then(response => {
+        // Assuming response.data is an array of users
+        const adminUser = response.data.find(user => user.role === 'Admin');
+        if (adminUser) {
+          setAdminName(adminUser.name);
+          setAdminRole(adminUser.role);
+        } else {
+          console.error('No admin user found');
+        }
+      })
+      .catch(error => console.error('Error fetching users:', error));
+  }, []);
   return (
     <div className="header-container"> {/* Sử dụng lớp CSS */}
       <div className="search-bar"> {/* Div cho thanh tìm kiếm */}
@@ -21,8 +38,8 @@ export default function Header() {
           <img src={Avatar} alt="Admin Avatar" /> {/* Hình đại diện */}
         </div>
         <div className="user-info"> {/* Căn chỉnh văn bản bên phải */}
-          <div className="username">Jijue Anderson</div> {/* Tên người dùng */}
-          <div className="role">Admin</div> {/* Chức vụ */}
+          <div className="username">{adminName}</div> {/* Tên người dùng */}
+          <div className="role">{adminRole}</div> {/* Chức vụ */}
         </div>
       </div>
     </div>
