@@ -23,6 +23,7 @@ export default function PODManage() {
       console.error("Failed to fetch POD data:", error);
     }
   };
+
   const handleDelete = async (podId) => {
     try {
       await axios.delete(`${apiPod}/${podId}`);
@@ -43,7 +44,7 @@ export default function PODManage() {
     fetchPODData();
   }, []);
   if (podData.length === 0) {
-    return <p>Loading ...</p>;
+    return <p>Loading...</p>;
   }
   return (
     <>
@@ -90,9 +91,9 @@ export default function PODManage() {
           </Col>
         ))}
       </Row>
-      <button className="add-button" onClick={fetchPODData}>
+      <Button className="add-button" onClick={fetchPODData}>
         <ReloadOutlined />
-      </button>
+      </Button>
     </>
   );
 }

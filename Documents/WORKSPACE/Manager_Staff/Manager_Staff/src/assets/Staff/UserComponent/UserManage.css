@@ -3,10 +3,14 @@
     background: rgba(255, 255, 255, 0.8); /* Nền trắng với độ trong suốt */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid grey;
+
 }
 
 .user-list {
     margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-top: 1px solid grey;
 }
 
 .user-card {
@@ -31,13 +35,13 @@
     flex: 1; /* Để thông tin chiếm không gian còn lại */
     display: flex;
     flex-direction: column; /* Để các thông tin xếp chồng lên nhau */
-margin-right: 50px;
+    margin-right: 50px;
 }
 
 
-.user-actions {
+.action {
     display: flex;
-    gap: 10px; /* Khoảng cách giữa các nút */
+    gap: 5px;
 }
 
 .edit-button, .delete-button, .add-button {
