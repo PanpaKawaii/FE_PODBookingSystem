@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import './ReportManage.css'; // Import the CSS file
+import React, { useState, useEffect } from 'react';
+import './ReportManage.css';
 import api from '../api/axios';
 import Table from 'react-bootstrap/Table';
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addDays } from 'date-fns';
 
 export default function ReportManage() {
   const [Pod, setPod] = useState([]);
@@ -10,70 +11,30 @@ export default function ReportManage() {
   const [payment, setPayment] = useState([]);
   const [booking, setBooking] = useState([]);
   const [bookingOrder, setBookingOrder] = useState([]);
-  const [selectedStore, setSelectedStore] = useState(''); // State for selected store
-  const [filteredResults, setFilteredResults] = useState([]); // State for filtered results
+  const [selectedStore, setSelectedStore] = useState('');
+  const [filteredResults, setFilteredResults] = useState([]);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [reportType, setReportType] = useState('all');
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  const fetchPod = async () => {
+  const fetchData = async (endpoint, setState) => {
     try {
-      const response = await api.get("Pod");
-      setPod(response.data);
+      const response = await api.get(endpoint);
+      setState(response.data);
     } catch (err) {
       console.log(err);
     }
-  }
-
-  const fetchStore = async () => {
-    try {
-      const response = await api.get("Store");
-      setStore(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const fetchType = async () => {
-    try {
-      const response = await api.get("Type");
-      setType(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const fetchPayment = async () => {
-    try {
-      const response = await api.get("Payment");
-      setPayment(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const fetchBooking = async () => {
-    try {
-      const response = await api.get("Booking");
-      setBooking(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const fetchBookingOrder = async () => {
-    try {
-      const response = await api.get("BookingOrder");
-      setBookingOrder(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  };
 
   useEffect(() => {
-    fetchPod();
-    fetchStore();
-    fetchType();
-    fetchPayment();
-    fetchBooking();
-    fetchBookingOrder();
+    fetchData("Pod", setPod);
+    fetchData("Store", setStore);
+    fetchData("Type", setType);
+    fetchData("Payment", setPayment);
+    fetchData("Booking", setBooking);
+    fetchData("BookingOrder", setBookingOrder);
   }, []);
 
   const getPodDetails = (podId) => {
@@ -96,9 +57,12 @@ export default function ReportManage() {
       const storeId = pod ? pod.storeId : null;
       const storeName = stores.find(s => s.id === storeId)?.name || '';
 
-      // Filter based on selected store
-      if (selectedStore && storeName !== selectedStore) {
-        return null; // Skip this entry if it doesn't match the selected store
+      const paymentDate = new Date(payment.date);
+
+      if ((selectedStore && storeName !== selectedStore) ||
+          (startDate && paymentDate < new Date(startDate)) ||
+          (endDate && paymentDate > new Date(endDate))) {
+        return null;
       }
 
       return {
@@ -111,13 +75,45 @@ export default function ReportManage() {
         serviceRevenue: bookingOrderAmount,
         totalRevenue: payment.amount + bookingOrderAmount
       };
-    }).filter(result => result !== null); // Remove null entries
+    }).filter(result => result !== null);
   };
-  // Use the function in handleSubmit
+
+  const filterResultsByTimeframe = (results) => {
+    if (reportType === 'all') {
+      return results; // Show all results
+    }
+
+    let startDateObj = new Date(startDate);
+    let endDateObj = new Date(endDate);
+
+    if (reportType === 'daily') {
+      if (!startDate || !endDate) {
+        alert("Vui lòng chọn ngày bắt đầu và ngày kết thúc.");
+        return [];
+      }
+    } else if (reportType === 'weekly') {
+      if (!startDate) {
+        alert("Vui lòng chọn ngày bắt đầu cho báo cáo hàng tuần.");
+        return [];
+      }
+      startDateObj = startOfWeek(startDateObj);
+      endDateObj = endOfWeek(startDateObj);
+    } else if (reportType === 'monthly') {
+      startDateObj = startOfMonth(new Date(selectedYear, selectedMonth - 1, 1));
+      endDateObj = endOfMonth(new Date(selectedYear, selectedMonth - 1, 1));
+    }
+
+    return results.filter(result => {
+      const paymentDate = new Date(result.date);
+      return paymentDate >= startDateObj && paymentDate <= endDateObj;
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const results = filterAndMapResults(payment, booking, Pod, store, bookingOrder, selectedStore);
-    setFilteredResults(results);
+    const filteredResults = filterResultsByTimeframe(results);
+    setFilteredResults(filteredResults);
   };
 
   const calculateStoreRevenue = () => {
@@ -132,10 +128,71 @@ export default function ReportManage() {
 
   const { totalRevenue, podRevenue, serviceRevenue } = calculateStoreRevenue();
 
+  const handleStartDateChange = (e) => {
+    const selectedStartDate = e.target.value;
+    setStartDate(selectedStartDate);
+
+    if (reportType === 'weekly') {
+      const startDateObj = new Date(selectedStartDate);
+      const endDateObj = addDays(startDateObj, 6);
+      setEndDate(format(endDateObj, 'yyyy-MM-dd'));
+    }
+  };
+
+  const handleReportTypeChange = (e) => {
+    setReportType(e.target.value);
+    // Reset start and end dates when report type changes
+    setStartDate('');
+    setEndDate('');
+  };
+
   return (
     <div className="report-manage">
       <div className="report-controls">
         <div className="control-group">
+          <label>
+            Loại báo cáo:
+            <select value={reportType} onChange={handleReportTypeChange}>
+              <option value="all">Tất cả</option>
+              <option value="daily">Hàng ngày</option>
+              <option value="weekly">Hàng tuần</option>
+              <option value="monthly">Hàng tháng</option>
+            </select>
+          </label>
+          {reportType === 'monthly' && (
+            <>
+              <label>
+                Chọn tháng:
+                <select value={selectedMonth} onChange={(e) => setSelectedMonth(Number(e.target.value))}>
+                  {[...Array(12)].map((_, i) => (
+                    <option key={i + 1} value={i + 1}>{`Tháng ${i + 1}`}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Chọn năm:
+                <select value={selectedYear} onChange={(e) => setSelectedYear(Number(e.target.value))}>
+                  {[...Array(10)].map((_, i) => (
+                    <option key={i} value={new Date().getFullYear() - i}>
+                      {new Date().getFullYear() - i}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
+          )}
+          {reportType !== 'monthly' && (
+            <>
+              <label>
+                Ngày bắt đầu:
+                <input type="date" value={startDate} onChange={handleStartDateChange} />
+              </label>
+              <label>
+                Ngày kết thúc:
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              </label>
+            </>
+          )}
           <label>
             Cửa hàng:
             <select value={selectedStore} onChange={(e) => setSelectedStore(e.target.value)}>
@@ -186,5 +243,5 @@ export default function ReportManage() {
         </Table>
       </div>
     </div>
-  )
+  );
 }

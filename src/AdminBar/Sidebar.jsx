@@ -20,7 +20,7 @@ const Sidebar = () => {
     <div className='nav'>
       <div id="mySidenav" className={`sidenav ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h2>InnoSPace</h2>
+          <Link to="/"><h2>InnoSPace</h2></Link>
         </div>
         <Link to="/store">
           <FontAwesomeIcon className='icon' icon={faSquare} /> Quản lí cửa hàng
@@ -37,7 +37,7 @@ const Sidebar = () => {
         </button>
         <div className={`dropdown-container ${isDropdownOpen ? 'open' : ''}`}> {/* Thêm class để điều khiển hiển thị */}
           <Link to="/customer">Khách hàng</Link>
-          <Link to="/manager">Quản lý</Link>
+          {/* <Link to="/manager">Quản lý</Link> */}
           <Link to="/staff">Nhân viên</Link>
         </div>
         <Link to="/report">

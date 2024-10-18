@@ -25,6 +25,12 @@ export default function Store() {
   }, [])
     return (
         <>
+        <div className='title-store'>
+            <h1>Cửa hàng</h1>
+            <button className='add-store-button'>
+                <Link to="/addstore">Thêm cửa hàng</Link>
+            </button>
+        </div>
             <div className="container mt-4">
                 <div className="row">
                     {store.map((store, idx) => (
@@ -52,10 +58,7 @@ export default function Store() {
                     ))} 
                 </div>
             </div>
-            <button className='add-link' >
-                <Link to="/addstore">Thêm cửa hàng
-                </Link>
-            </button>
+          
 
         </>
     );

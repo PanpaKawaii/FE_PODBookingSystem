@@ -1,19 +1,23 @@
 .admin-container{
-   display: flex;
-   min-height: 100vh; /* Đảm bảo container chiếm toàn bộ chiều cao viewport */
-}
-
-.admin-content{
-    flex: 1; /* Đảm bảo admin-content chiếm không gian còn lại */
     display: flex;
-    flex-direction: column; /* Để nội dung bên trong có thể xếp chồng lên nhau */
-    height:100vh;
-}
-
-.admin-content-body{
-    padding: 20px;
-    flex: 1; /* Để nội dung bên trong có thể mở rộng */
-    overflow-y: auto; /* Thêm thanh cuộn cho nội dung */
+    min-height: 100vh; /* Đảm bảo container chiếm toàn bộ chiều cao viewport */
+ }
+ 
+ .admin-content{
+     flex: 1; /* Đảm bảo admin-content chiếm không gian còn lại */
+     display: flex;
+     flex-direction: column; /* Để nội dung bên trong có thể xếp chồng lên nhau */
+     height:100vh;
+ }
+ 
+ .admin-content-body{
+     flex: 1; /* Để nội dung bên trong có thể mở rộng */
+     overflow-y: auto;
+     
+ }
+ /* Ẩn thanh cuộn */
+.admin-content-body::-webkit-scrollbar {
+    display: none;
 }
 
 .add-link{
@@ -26,6 +30,7 @@
     display: inline-block; /* Align properly */
     transition: background-color 0.3s; /* Smooth transition */
     width: 100%;
+    margin-top: 10px;
 }
 
 .add{

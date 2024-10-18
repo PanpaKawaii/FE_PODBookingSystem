@@ -1,17 +1,18 @@
 import { Routes, Route } from 'react-router-dom'
 import Home from './AdminComponent/Home'
-import POD from './ManagePODComponent/PODManage'
+import POD from './ManagePODComponent/POD'
 // import User from './ManageUserComponent/UserManage'
 import Sidebar from './AdminBar/Sidebar'
 import './App.css'
 import Header from './HeadFootComponent/Header'
 import Report from './ManageReportComponent/ReportManage.jsx'
-import Store from './StoreManage/index'
+import Store from './StoreManage/Store'
 import AddStore from './StoreManage/AddStore'
 import Staff from './ManageUserComponent/Staff'
 import Manager from './ManageUserComponent/Manager'
 import Customer from './ManageUserComponent/Customer'
 import AddPOD from './ManagePODComponent/AddPOD'
+import AddStaff from './ManageUserComponent/AddStaff'
 function App() {
   return (
     <div className='admin-container' > 
@@ -30,6 +31,7 @@ function App() {
           <Route path='/manager' element={<Manager />}></Route>
           <Route path='/customer' element={<Customer />}></Route>
           <Route path='/addpod' element={<AddPOD />}></Route>
+          <Route path='/addstaff' element={<AddStaff />}></Route>
         </Routes>
         </div>
       </div>

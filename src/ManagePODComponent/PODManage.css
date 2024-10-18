@@ -5,3 +5,55 @@
     
 }
 
+.pod-card{
+    max-width: 30rem;
+    height: auto;
+    display: flex; /* Allows the card to expand with its content */
+    flex-direction: column; /* Ensures content is stacked vertically */
+    padding: 1rem; /* Adds space inside the card */
+    margin: 1rem; /* Adds space outside the card */
+    border: none;
+}
+
+.pod-img{
+    height: 15rem;
+    width: 10rem;
+    object-fit: cover; /* Cắt ảnh để phù hợp với kích thước */
+    object-position: center;
+    display: block;
+}
+@media (max-width: 768px) {
+    .pod-card{
+        height: 20rem;
+        max-width: 20rem;
+    }
+    .pod-img{
+        height: 10rem;
+        width: 10rem;
+    }
+}
+
+div.card-body{
+    padding: 10px 0 0 0;
+}
+.card.pod-card{
+    border: none;
+}
+
+.title-pod{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-pod-button{
+    color: black;
+    background-color: rgb(133, 71, 240);
+    border-color: rgb(133, 71, 290);
+    padding: 0.5rem 0.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    margin-right: 32px;
+}
+
+

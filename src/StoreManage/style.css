@@ -62,3 +62,18 @@ div.card-body{
     padding: 10px 0 0 0;
 }
 
+.title-store{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-store-button{
+    color: black;
+    background-color: rgb(133, 71, 240);
+    border-color: rgb(133, 71, 290);
+    padding: 0.5rem 0.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    margin-right: 32px;
+}
