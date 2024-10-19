@@ -17,6 +17,62 @@ export const STOREs = [
         StoreName: 'Cơ sở 2',
     },
 ]
+
+export const BOOKINGs = [
+    {
+        Id: 1,
+        PodName: 'POD cao cấp',
+        TypeName: 'Single',
+        UtilityName: 'Bảng trắng thông minh',
+        StoreId: 1,
+        StoreName: 'Cơ sở 1',
+        capacity: 1,
+        rating: 5,
+        img: id1,
+        description: 'ABC bla bla bla ~',
+        status: 'Available',
+    },
+    {
+        Id: 2,
+        PodName: 'POD cao cấp',
+        TypeName: 'Single',
+        UtilityName: 'Bảng trắng thông minh',
+        StoreId: 1,
+        StoreName: 'Cơ sở 1',
+        capacity: 1,
+        rating: 5,
+        img: id2,
+        description: 'ABC bla bla bla ~',
+        status: 'Unavailable',
+    },
+    {
+        Id: 3,
+        PodName: 'POD cao cấp',
+        TypeName: 'Double',
+        UtilityName: 'Bảng trắng thông minh',
+        StoreId: 1,
+        StoreName: 'Cơ sở 1',
+        capacity: 2,
+        rating: 4,
+        img: id3,
+        description: 'ABC bla bla bla ~',
+        status: 'Available',
+    },
+    {
+        Id: 4,
+        PodName: 'POD cao cấp',
+        TypeName: 'Double',
+        UtilityName: 'Bảng trắng thông minh',
+        StoreId: 2,
+        StoreName: 'Cơ sở 2',
+        capacity: 2,
+        rating: 5,
+        img: id4,
+        description: 'ABC bla bla bla ~',
+        status: 'Available',
+    },
+]
+
 export const PODs = [
     {
         Id: 1,
