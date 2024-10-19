@@ -6,7 +6,7 @@ import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { message, Popconfirm } from "antd";
+import { message, Popconfirm, Table, Tag } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 
 const Customer = () => {
@@ -15,6 +15,7 @@ const Customer = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
   const apiUser = "https://localhost:7166/api/User";
+
   const formatNumber = (number) => {
     return new Intl.NumberFormat("vi-VN").format(number);
   };
@@ -31,7 +32,9 @@ const Customer = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
-
+  if (userData.length === 0) {
+    return <p>Loading...</p>;
+  }
   const handleEdit = (user) => {
     setSelectedUser(user);
     setEditedUser({ ...user });
@@ -70,7 +73,6 @@ const Customer = () => {
         editedUser
       );
       if (response.status === 200) {
-        // Update the user in the local state
         setUserData((prevData) =>
           prevData.map((user) =>
             user.id === editedUser.id ? editedUser : user
@@ -82,56 +84,118 @@ const Customer = () => {
       fetchUserData();
     } catch (error) {
       console.error("Failed to update user:", error);
-      // Handle error (e.g., show error message to user)
     }
   };
 
-  if (userData.length === 0) {
-    return <p>Loading...</p>;
-  }
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+    },
+    {
+      title: "Loại tài khoản",
+      dataIndex: "type",
+      key: "type",
+      align: "center",
+      filters: [
+        {
+          text: "V.I.P",
+          value: "VIP",
+        },
+        {
+          text: "Khách hàng thường",
+          value: "Regular",
+        },
+      ],
+      onFilter: (value, record) => record.type === value,
+      render: (type) => (
+        <Tag color={type === "VIP" ? "gold" : "blue"}>{type}</Tag>
+      ),
+    },
+
+    {
+      title: "Chú ý",
+      dataIndex: "description",
+      key: "description",
+      render: (description) => {
+        let color;
+
+        switch (description) {
+          case "Khách hàng ưu tiên":
+            color = "seagreen";
+            break;
+          case "Khách hàng mới":
+            color = "blue"; // or any other shade of blue
+            break;
+          case "Khách hàng cũ":
+            color = "grey"; // or any other shade of purple
+            break;
+          case "Khách hàng tiềm năng":
+            color = "purple"; // or any other shade of purple
+            break;
+          default:
+            color = "black"; // fallback color
+        }
+
+        return <span style={{ color, fontWeight: "bold" }}>{description}</span>;
+      },
+    },
+    {
+      title: "Điểm",
+      dataIndex: "point",
+      key: "point",
+      render: (point) => formatNumber(point),
+      sorter: (a, b) => a.point - b.point,
+    },
+    {
+      title: "Chỉnh sửa",
+      key: "action",
+      render: (_, record) => (
+        <>
+          <Button variant="primary" onClick={() => handleEdit(record)}>
+            <FontAwesomeIcon icon={faEdit} /> Sửa
+          </Button>{" "}
+          <Popconfirm
+            title="Are you sure to delete this company?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button variant="danger">
+              <FontAwesomeIcon icon={faTrash} /> Xóa
+            </Button>
+          </Popconfirm>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="user-manage">
       <h1>Tài khoản khách hàng</h1>
-
-      <div className="user-list">
-        {userData.map((user) => (
-          <div key={user.id} className="user-card">
-            <img
-              src={user.image || "default-avatar.jpg"}
-              alt={`${user.name}'s avatar`}
-              className="user-avatar"
-            />
-            <h3>{user.name}</h3>
-            <div className="user-info">
-              <p>ID: {user.id}</p>
-              <p>Email: {user.email}</p>
-              <p>Số điện thoại: {user.phoneNumber}</p>
-              <p>Loại tài khoản: {user.type}</p>
-              <p>
-                Chú ý:{" "}
-                <span style={{ color: "seagreen" }}>{user.description}</span>{" "}
-              </p>
-              <p>Điểm: {formatNumber(user.point)}</p>
-            </div>
-            <div className="action">
-              <Button variant="primary" onClick={() => handleEdit(user)}>
-                <FontAwesomeIcon icon={faEdit} /> Sửa
-              </Button>
-              <Popconfirm
-                title="Are you sure to delete this company?"
-                onConfirm={() => handleDelete(user.id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button variant="danger">
-                  <FontAwesomeIcon icon={faTrash} /> Xóa
-                </Button>
-              </Popconfirm>
-            </div>
-          </div>
-        ))}
-      </div>
+      <Table
+        dataSource={userData}
+        columns={columns}
+        rowKey="id"
+        pagination={{ pageSize: 10 }}
+        bordered
+      />
       <button className="add-button" onClick={fetchUserData}>
         <ReloadOutlined />
       </button>
@@ -194,6 +258,7 @@ const Customer = () => {
                   name="point"
                   value={editedUser.point}
                   onChange={handleInputChange}
+                  step={100}
                 />
               </Form.Group>
               <Form.Group className="mb-3">

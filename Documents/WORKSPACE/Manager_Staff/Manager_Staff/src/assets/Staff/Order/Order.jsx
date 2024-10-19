@@ -18,9 +18,11 @@ const { Title } = Typography;
 const Order = () => {
   const [userData, setUserData] = useState([]);
   const [bookingData, setBookingData] = useState([]);
+  const [paymentData, setPaymentData] = useState([]);
 
   const apiUser = "https://localhost:7166/api/User";
   const apiBooking = "https://localhost:7166/api/Booking";
+  const apiPayment = "https://localhost:7166/api/Payment";
 
   // Lọc ra những booking có trạng thái "Đang chờ"
   const pendingBookings = bookingData.filter(
@@ -164,6 +166,19 @@ const Order = () => {
       render: (status) => (
         <Tag color={status === "Xác nhận" ? "green" : "blue"}>{status}</Tag>
       ),
+    },
+    {
+      title: "Phương thức thanh toán",
+      dataIndex: "paymentMethod",
+      key: "paymentMethod",
+      render: (_, booking) => {
+        const payment = paymentData.find(
+          (payment) => payment.bookingId === booking.id
+        );
+        return payment ? payment.method : "Chưa thanh toán";
+        //Nếu tìm thấy đối tượng payment phù hợp (nếu payment tồn tại), nó sẽ trả về payment.method, tức là phương thức thanh toán của booking đó (ví dụ: "Thanh toán qua Momo").
+        //Nếu không tìm thấy đối tượng payment (nghĩa là chưa có thanh toán cho booking này), nó trả về "Chưa thanh toán".
+      },
     },
     {
       title: "Feedback",

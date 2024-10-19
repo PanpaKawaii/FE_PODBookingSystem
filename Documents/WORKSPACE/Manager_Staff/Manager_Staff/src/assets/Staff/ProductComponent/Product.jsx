@@ -9,23 +9,45 @@ import {
   Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { ReloadOutlined, StarFilled } from "@ant-design/icons";
+import {
+  DeleteFilled,
+  EditFilled,
+  PlusCircleFilled,
+  ReloadOutlined,
+  StarFilled,
+} from "@ant-design/icons";
 import axios from "axios";
+import "./Product.css";
 
 function Product() {
   const apiProduct = "https://localhost:7166/api/Product";
-
+  const apiCategory = "https://localhost:7166/api/Category";
   const [product, setProduct] = useState([]);
+  const [category, setCategory] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formVariable] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
 
   const fetchProductData = async () => {
     try {
-      const response = await axios.get(apiProduct);
-      setProduct(response.data); // Lưu toàn bộ dữ liệu từ API vào state
+      const productResponse = await axios.get(apiProduct);
+      const categoryResponse = await axios.get(apiCategory);
+
+      setCategory(categoryResponse.data);
+
+      const productsWithCategory = productResponse.data.map((product) => ({
+        ...product,
+        categoryName:
+          categoryResponse.data.find((cat) => cat.id === product.categoryId)
+            ?.name || "Không xác định",
+      }));
+      //Sau khi nhận được dữ liệu, chúng ta kết hợp thông tin danh mục vào dữ liệu sản phẩm bằng cách sử dụng phương thức map().
+      //Chúng ta thêm một trường mới categoryName vào mỗi sản phẩm, lấy từ danh mục tương ứng.
+
+      setProduct(productsWithCategory);
     } catch (error) {
-      console.error("Failed to fetch Product data:", error);
+      console.error("Failed to fetch data:", error);
+      message.error("Không thể tải dữ liệu");
     }
   };
 
@@ -61,15 +83,33 @@ function Product() {
     formVariable.resetFields();
   };
 
-  const handleSubmitValue = async (product) => {
+  const handleSubmitValue = async (values) => {
     try {
       setSubmitting(true);
-      if (product.id) {
-        await axios.put(`${apiProduct}/${product.id}`, product); // Cập nhật sản phẩm
+      let productData = { ...values };
+
+      // Xử lý giá
+      if (typeof productData.price === "string") {
+        productData.price = parseFloat(productData.price.replace(/[^\d]/g, ""));
+      }
+
+      // Chuyển đổi các trường số
+      ["stock", "rating", "storeId", "categoryId"].forEach((field) => {
+        if (productData[field]) {
+          productData[field] = Number(productData[field]);
+        }
+      });
+
+      if (productData.id) {
+        await axios.put(`${apiProduct}/${productData.id}`, productData);
         message.success("Sản phẩm được cập nhật thành công");
       } else {
-        await axios.post(apiProduct, product); // Thêm sản phẩm mới
-        message.success("Sản phẩm được thêm thành công");
+        // Loại bỏ trường id nếu đang tạo mới
+        delete productData.id;
+        const response = await axios.post(apiProduct, productData);
+        message.success(
+          `Sản phẩm được thêm thành công với id: ${response.data.id}`
+        );
       }
       fetchProductData();
       handleHideModal();
@@ -80,7 +120,6 @@ function Product() {
       setSubmitting(false);
     }
   };
-
   const handleDelete = async (productId) => {
     try {
       await axios.delete(`${apiProduct}/${productId}`);
@@ -106,16 +145,44 @@ function Product() {
       align: "center",
     },
     {
+      title: "Mô tả",
+      dataIndex: "description",
+      key: "description",
+      align: "center",
+    },
+    {
       title: "Giá",
       dataIndex: "price",
       key: "price",
       align: "center",
       render: (price) => formatCurrency(price),
+      sorter: (a, b) => a.price - b.price,
     },
     {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
+      title: "Danh mục",
+      dataIndex: "categoryName",
+      key: "categoryName",
+      align: "center",
+      filters: [
+        {
+          text: "Đồ ăn",
+          value: "Đồ ăn",
+        },
+        {
+          text: "Đồ uống",
+          value: "Đồ uống",
+        },
+        {
+          text: "Đồ chơi",
+          value: "Đồ chơi",
+        },
+      ],
+      onFilter: (value, record) => record.categoryName.includes(value),
+    },
+    {
+      title: "Mã danh mục",
+      dataIndex: "categoryId",
+      key: "categoryId",
       align: "center",
     },
     {
@@ -123,6 +190,7 @@ function Product() {
       dataIndex: "stock",
       key: "stock",
       align: "center",
+      sorter: (a, b) => a.stock - b.stock,
     },
     {
       title: "Đánh giá",
@@ -134,6 +202,7 @@ function Product() {
           {rating} <StarFilled style={{ color: "gold" }} />
         </span>
       ),
+      sorter: (a, b) => a.rating - b.rating,
     },
     {
       title: "Actions",
@@ -146,6 +215,7 @@ function Product() {
             onClick={() => handleOpenModal(record)}
             style={{ marginRight: 8 }}
           >
+            <EditFilled />
             Điều chỉnh
           </Button>
 
@@ -156,6 +226,7 @@ function Product() {
             cancelText="No"
           >
             <Button type="primary" danger>
+              <DeleteFilled />
               Xoá
             </Button>
           </Popconfirm>
@@ -176,17 +247,24 @@ function Product() {
       }}
     >
       <div>
-        <h1 style={{ textAlign: "center" }}>Các sản phẩm của cửa hàng</h1>
+        <h1 style={{ textAlign: "center" }}>Các sản phẩm kèm</h1>
         <Button
           type="primary"
           onClick={() => handleOpenModal(null)}
           style={{ marginBottom: 16 }}
         >
+          <PlusCircleFilled />
           Thêm sản phẩm mới
         </Button>
       </div>
       <br />
-      <Table dataSource={product} columns={columns} bordered rowKey="id" />
+      <Table
+        dataSource={product}
+        columns={columns}
+        bordered
+        rowKey="id"
+        pagination={{ pageSize: 7 }}
+      />
 
       <Modal
         title="Quản lý sản phẩm"
