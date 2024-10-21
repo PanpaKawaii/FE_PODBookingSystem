@@ -7,6 +7,7 @@ import {
   Popconfirm,
   Table,
   Modal,
+  Select,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import {
@@ -27,6 +28,13 @@ function Product() {
   const [showModal, setShowModal] = useState(false);
   const [formVariable] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [maxProductId, setMaxProductId] = useState(0);
+
+  const storeOptions = [
+    { value: 1, label: "Cơ sở 1" },
+    { value: 2, label: "Cơ sở 2" },
+  ];
 
   const fetchProductData = async () => {
     try {
@@ -41,10 +49,11 @@ function Product() {
           categoryResponse.data.find((cat) => cat.id === product.categoryId)
             ?.name || "Không xác định",
       }));
-      //Sau khi nhận được dữ liệu, chúng ta kết hợp thông tin danh mục vào dữ liệu sản phẩm bằng cách sử dụng phương thức map().
-      //Chúng ta thêm một trường mới categoryName vào mỗi sản phẩm, lấy từ danh mục tương ứng.
 
       setProduct(productsWithCategory);
+      // Tìm ID lớn nhất
+      const maxId = Math.max(...productsWithCategory.map((p) => p.id), 0);
+      setMaxProductId(maxId);
     } catch (error) {
       console.error("Failed to fetch data:", error);
       message.error("Không thể tải dữ liệu");
@@ -54,33 +63,38 @@ function Product() {
   useEffect(() => {
     fetchProductData();
   }, []);
-  if (product.length === 0) {
-    return <p>Loading...</p>;
-  }
 
   const handleOpenModal = (record) => {
     setShowModal(true);
+    setEditingProduct(record);
     if (record) {
-      formVariable.setFieldsValue(record); // Gán dữ liệu sản phẩm vào form
+      formVariable.setFieldsValue({
+        ...record,
+        price: formatCurrency(record.price),
+      });
     } else {
-      formVariable.resetFields(); // Xóa form khi thêm sản phẩm mới
+      formVariable.resetFields();
     }
   };
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
     }).format(amount);
   };
+
   const handlePriceChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ""); // Chỉ giữ lại chữ số
+    const value = e.target.value.replace(/\D/g, "");
     formVariable.setFieldsValue({
       price: formatCurrency(value),
     });
   };
+
   const handleHideModal = () => {
     setShowModal(false);
     formVariable.resetFields();
+    setEditingProduct(null);
   };
 
   const handleSubmitValue = async (values) => {
@@ -88,24 +102,26 @@ function Product() {
       setSubmitting(true);
       let productData = { ...values };
 
-      // Xử lý giá
-      if (typeof productData.price === "string") {
-        productData.price = parseFloat(productData.price.replace(/[^\d]/g, ""));
+      if (!editingProduct) {
+        // Nếu đang thêm mới, tạo ID mới
+        productData.id = maxProductId + 1;
+        setMaxProductId(productData.id);
       }
 
-      // Chuyển đổi các trường số
+      productData.price = parseFloat(productData.price.replace(/[^\d]/g, ""));
+
       ["stock", "rating", "storeId", "categoryId"].forEach((field) => {
         if (productData[field]) {
           productData[field] = Number(productData[field]);
         }
       });
 
-      if (productData.id) {
-        await axios.put(`${apiProduct}/${productData.id}`, productData);
+      console.log("Dữ liệu gửi đi:", productData);
+
+      if (editingProduct) {
+        await axios.put(`${apiProduct}/${editingProduct.id}`, productData);
         message.success("Sản phẩm được cập nhật thành công");
       } else {
-        // Loại bỏ trường id nếu đang tạo mới
-        delete productData.id;
         const response = await axios.post(apiProduct, productData);
         message.success(
           `Sản phẩm được thêm thành công với id: ${response.data.id}`
@@ -114,8 +130,8 @@ function Product() {
       fetchProductData();
       handleHideModal();
     } catch (error) {
-      console.error(error);
-      message.error("Đã có lỗi xảy ra khi thêm/cập nhật sản phẩm");
+      console.error("Chi tiết lỗi:", error.response?.data);
+      message.error(`Lỗi: ${error.response?.data?.message || error.message}`);
     } finally {
       setSubmitting(false);
     }
@@ -163,27 +179,8 @@ function Product() {
       dataIndex: "categoryName",
       key: "categoryName",
       align: "center",
-      filters: [
-        {
-          text: "Đồ ăn",
-          value: "Đồ ăn",
-        },
-        {
-          text: "Đồ uống",
-          value: "Đồ uống",
-        },
-        {
-          text: "Đồ chơi",
-          value: "Đồ chơi",
-        },
-      ],
+      filters: category.map((cat) => ({ text: cat.name, value: cat.name })),
       onFilter: (value, record) => record.categoryName.includes(value),
-    },
-    {
-      title: "Mã danh mục",
-      dataIndex: "categoryId",
-      key: "categoryId",
-      align: "center",
     },
     {
       title: "Kho",
@@ -239,8 +236,7 @@ function Product() {
     <div
       style={{
         padding: "20px",
-        background:
-          "rgba(255, 255, 255, 0.8)" /* Nền trắng với độ trong suốt */,
+        background: "rgba(255, 255, 255, 0.8)",
         borderRadius: "10px",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
         border: "1px solid grey",
@@ -267,20 +263,13 @@ function Product() {
       />
 
       <Modal
-        title="Quản lý sản phẩm"
+        title={editingProduct ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm mới"}
         open={showModal}
         onCancel={handleHideModal}
         onOk={() => formVariable.submit()}
         confirmLoading={submitting}
       >
         <Form form={formVariable} onFinish={handleSubmitValue}>
-          <Form.Item
-            name="id"
-            label="Mã sản phẩm"
-            rules={[{ required: true, message: "Vui lòng nhập mã sản phẩm" }]}
-          >
-            <Input />
-          </Form.Item>
           <Form.Item
             name="name"
             label="Tên sản phẩm"
@@ -302,7 +291,7 @@ function Product() {
               { required: true, message: "Vui lòng nhập mô tả sản phẩm" },
             ]}
           >
-            <Input />
+            <Input.TextArea />
           </Form.Item>
           <Form.Item
             name="stock"
@@ -320,23 +309,34 @@ function Product() {
               { required: true, message: "Vui lòng nhập đánh giá sản phẩm" },
             ]}
           >
-            <InputNumber min={0} max={5} />
+            <InputNumber min={0} max={5} step={1} />
           </Form.Item>
+
           <Form.Item
             name="storeId"
-            label="Mã cửa hàng"
-            rules={[{ required: true, message: "Vui lòng nhập mã cửa hàng" }]}
+            label="Cơ sở"
+            rules={[{ required: true, message: "Vui lòng chọn cơ sở" }]}
           >
-            <InputNumber />
+            <Select>
+              {storeOptions.map((store) => (
+                <Select.Option key={store.value} value={store.value}>
+                  {store.label}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             name="categoryId"
-            label="Mã loại sản phẩm"
-            rules={[
-              { required: true, message: "Vui lòng nhập mã loại sản phẩm" },
-            ]}
+            label="Loại sản phẩm"
+            rules={[{ required: true, message: "Vui lòng chọn loại sản phẩm" }]}
           >
-            <InputNumber />
+            <Select>
+              {category.map((cat) => (
+                <Select.Option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

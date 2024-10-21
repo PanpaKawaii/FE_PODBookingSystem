@@ -10,8 +10,11 @@ import {
   Typography,
   Popconfirm,
   message,
+  Modal,
+  Input,
+  Empty,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -19,20 +22,13 @@ const Order = () => {
   const [userData, setUserData] = useState([]);
   const [bookingData, setBookingData] = useState([]);
   const [paymentData, setPaymentData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const apiUser = "https://localhost:7166/api/User";
   const apiBooking = "https://localhost:7166/api/Booking";
   const apiPayment = "https://localhost:7166/api/Payment";
-
-  // Lọc ra những booking có trạng thái "Đang chờ"
-  const pendingBookings = bookingData.filter(
-    (booking) => booking.status === "Đang chờ"
-  );
-
-  // Lọc ra những user có booking đang chờ
-  const usersWithPendingBookings = userData.filter((user) =>
-    pendingBookings.some((booking) => booking.userId === user.id)
-  );
 
   const fetchUserData = async () => {
     try {
@@ -51,58 +47,55 @@ const Order = () => {
       console.error("Failed to fetch booking data:", error);
     }
   };
-  const handleEditBooking = async () => {};
+
+  const fetchPaymentData = async () => {
+    try {
+      const response = await axios.get(apiPayment);
+      setPaymentData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch payment data:", error);
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
     fetchBookingData();
+    fetchPaymentData();
   }, []);
+
   const handleAcceptBooking = async (booking) => {
     try {
-      // Cập nhật trạng thái booking
       const updatedBooking = {
         ...booking,
         status: "Xác nhận",
-        feedback: booking.feedback || "", // Đảm bảo có giá trị cho feedback
+        feedback: booking.feedback || "",
       };
 
-      // Gọi API để cập nhật booking
       await axios.put(`${apiBooking}/${booking.id}`, updatedBooking);
 
-      // Tìm user tương ứng
       const user = userData.find((user) => user.id === booking.userId);
       if (!user) {
         console.error("User not found");
         return;
       }
 
-      // Tăng điểm người dùng
       const updatedUser = {
         ...user,
         point: user.point + 100,
       };
 
-      // Gọi API để cập nhật người dùng
       await axios.put(`${apiUser}/${updatedUser.id}`, updatedUser);
 
-      // Cập nhật lại dữ liệu trong state
       fetchUserData();
       fetchBookingData();
       message.success("Duyệt đơn thành công");
+      setModalVisible(false);
     } catch (error) {
       console.error("Failed to accept booking:", error);
-      // Hiển thị thông báo lỗi cho người dùng nếu cần
+      message.error("Duyệt đơn thất bại");
     }
   };
-  if (userData.length === 0 || bookingData.length === 0) {
-    return <p>Loading...</p>;
-  }
 
-  // Lọc ra những user có booking
-  const usersWithBookings = userData.filter((user) =>
-    bookingData.some((booking) => booking.userId === user.id)
-  );
-
-  // Hàm định dạng tiền tệ
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -110,12 +103,10 @@ const Order = () => {
     }).format(amount);
   };
 
-  // Hàm định dạng số
   const formatNumber = (number) => {
     return new Intl.NumberFormat("vi-VN").format(number);
   };
 
-  // Hàm định dạng ngày tháng
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("vi-VN", {
       year: "numeric",
@@ -123,6 +114,89 @@ const Order = () => {
       day: "2-digit",
     });
   };
+
+  const showDetailModal = (booking) => {
+    setSelectedBooking(booking);
+    setModalVisible(true);
+  };
+
+  const pendingBookings = bookingData
+    .filter((booking) => booking.status === "Đang chờ")
+    .map((booking) => ({
+      ...booking,
+      user: userData.find((user) => user.id === booking.userId),
+    }));
+
+  const filteredPendingBookings = pendingBookings.filter(
+    (booking) =>
+      booking.user &&
+      (booking.user.phoneNumber.includes(searchTerm) ||
+        booking.user.email.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const mainColumns = [
+    { title: "Khách hàng", dataIndex: ["user", "name"], key: "name" },
+    { title: "Email", dataIndex: ["user", "email"], key: "email" },
+    {
+      title: "Số điện thoại",
+      dataIndex: ["user", "phoneNumber"],
+      key: "phoneNumber",
+    },
+    { title: "Mô tả", dataIndex: ["user", "description"], key: "description" },
+    {
+      title: "Nhóm tài khoản",
+      dataIndex: ["user", "type"],
+      key: "type",
+      align: "center",
+      filters: [
+        {
+          text: "V.I.P",
+          value: "VIP",
+        },
+        {
+          text: "Khách hàng thường",
+          value: "Regular",
+        },
+      ],
+      onFilter: (value, record) => record.user.type === value,
+      render: (type) => (
+        <Tag
+          style={{ fontSize: "14px" }}
+          color={type === "VIP" ? "#F28705" : "cornflowerblue"}
+        >
+          {type}
+        </Tag>
+      ),
+    },
+    {
+      title: "Ngày đặt",
+      dataIndex: "date",
+      key: "date",
+      render: (date) => formatDate(date),
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => (
+        <Tag color={status === "Xác nhận" ? "green" : "blue"}>{status}</Tag>
+      ),
+    },
+    {
+      title: "Chi tiết",
+      key: "detail",
+      align: "center",
+      render: (_, record) => (
+        <Button onClick={() => showDetailModal(record)} icon={<EyeOutlined />}>
+          Xem
+        </Button>
+      ),
+    },
+  ];
 
   const userColumns = [
     { title: "Tên", dataIndex: "name", key: "name" },
@@ -132,15 +206,6 @@ const Order = () => {
       title: "Nhóm tài khoản",
       dataIndex: "type",
       key: "type",
-      align: "center",
-      render: (type) => (
-        <Tag
-          color={type === "VIP" ? "#F28705" : ""}
-          style={{ fontSize: "14px" }}
-        >
-          {type}
-        </Tag>
-      ),
     },
     { title: "Mô tả", dataIndex: "description", key: "description" },
     {
@@ -176,8 +241,6 @@ const Order = () => {
           (payment) => payment.bookingId === booking.id
         );
         return payment ? payment.method : "Chưa thanh toán";
-        //Nếu tìm thấy đối tượng payment phù hợp (nếu payment tồn tại), nó sẽ trả về payment.method, tức là phương thức thanh toán của booking đó (ví dụ: "Thanh toán qua Momo").
-        //Nếu không tìm thấy đối tượng payment (nghĩa là chưa có thanh toán cho booking này), nó trả về "Chưa thanh toán".
       },
     },
     {
@@ -185,36 +248,6 @@ const Order = () => {
       dataIndex: "feedback",
       key: "feedback",
       render: (feedback) => feedback || "Chưa có feedback",
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      align: "center",
-      render: (text, record) => (
-        <Space>
-          <Popconfirm
-            title="Bạn có chắc chắn muốn duyệt booking này?"
-            onConfirm={() => handleAcceptBooking(record)}
-            okText="Đồng ý"
-            cancelText="Hủy"
-          >
-            <Button type="primary" style={{ marginRight: 8 }}>
-              Duyệt
-            </Button>
-          </Popconfirm>
-
-          {/* <Popconfirm
-            title="Bạn có chắc chắn muốn từ chối booking này?"
-            onConfirm={() => handleDeleteBooking(record.id)}
-            okText="Đồng ý"
-            cancelText="Hủy"
-          >
-            <Button type="primary" danger>
-              Từ chối
-            </Button>
-          </Popconfirm> */}
-        </Space>
-      ),
     },
   ];
 
@@ -265,62 +298,80 @@ const Order = () => {
   ];
 
   return (
-    <div className="user-manage">
+    <div>
       <Title level={2}>Đơn đang chờ xử lý</Title>
-      {usersWithPendingBookings.length === 0 ? (
+      <Input
+        placeholder="Tìm kiếm theo số điện thoại hoặc email"
+        value={searchTerm}
+        onChange={handleSearch}
+        style={{ marginBottom: 20 }}
+        prefix={<SearchOutlined />}
+      />
+      {pendingBookings.length === 0 ? (
         <Card>
           <Title level={4} style={{ textAlign: "center" }}>
             Hiện tại không có yêu cầu nào
           </Title>
         </Card>
+      ) : filteredPendingBookings.length === 0 ? (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={<span>Không tìm thấy kết quả cho "{searchTerm}"</span>}
+        />
       ) : (
-        usersWithPendingBookings.map((user) => {
-          const userPendingBookings = pendingBookings.filter(
-            (booking) => booking.userId === user.id
-          );
-          return (
-            <Card
-              key={user.id}
-              title={
-                <span style={{ fontWeight: "bold" }}>
-                  Khách hàng: {user.name}
-                </span>
-              }
-              style={{ marginBottom: 20 }}
-            >
+        <Table
+          dataSource={filteredPendingBookings}
+          columns={mainColumns}
+          rowKey="id"
+          pagination={{ pageSize: 7 }}
+        />
+      )}
+      <Modal
+        title="Chi tiết đơn hàng"
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        width={1000}
+        footer={null}
+      >
+        {selectedBooking && (
+          <>
+            <Card title="Thông tin khách hàng">
               <Table
-                dataSource={[user]}
+                dataSource={[selectedBooking.user]}
                 columns={userColumns}
                 pagination={false}
                 rowKey="id"
               />
-              <Title level={4} style={{ marginTop: 20 }}>
-                Thông tin đặt chỗ đang chờ
-              </Title>
-
-              {userPendingBookings.map((booking) => (
-                <Card key={booking.id} style={{ marginBottom: 10 }}>
-                  <Table
-                    dataSource={[booking]}
-                    columns={bookingColumns}
-                    pagination={false}
-                    rowKey="id"
-                  />
-                  <Title level={5} style={{ marginTop: 10 }}>
-                    Chi tiết đơn hàng
-                  </Title>
-                  <Table
-                    dataSource={booking.bookingOrders}
-                    columns={orderColumns}
-                    pagination={false}
-                    rowKey="id"
-                  />
-                </Card>
-              ))}
             </Card>
-          );
-        })
-      )}
+            <Card title="Thông tin đặt chỗ" style={{ marginTop: 16 }}>
+              <Table
+                dataSource={[selectedBooking]}
+                columns={bookingColumns}
+                pagination={false}
+                rowKey="id"
+              />
+            </Card>
+            <Card title="Chi tiết đơn hàng" style={{ marginTop: 16 }}>
+              <Table
+                dataSource={selectedBooking.bookingOrders}
+                columns={orderColumns}
+                pagination={false}
+                rowKey="id"
+              />
+            </Card>
+            <div style={{ marginTop: 16, textAlign: "right" }}>
+              <Popconfirm
+                title="Bạn có chắc chắn muốn duyệt booking này?"
+                onConfirm={() => handleAcceptBooking(selectedBooking)}
+                okText="Đồng ý"
+                cancelText="Hủy"
+              >
+                <Button type="primary">Duyệt</Button>
+              </Popconfirm>
+            </div>
+          </>
+        )}
+      </Modal>
     </div>
   );
 };

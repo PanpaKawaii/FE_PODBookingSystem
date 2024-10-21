@@ -6,14 +6,17 @@ import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { message, Popconfirm, Table, Tag } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
+import { message, Popconfirm, Table, Tag, Input } from "antd";
+import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+
+const { Search } = Input;
 
 const Customer = () => {
   const [userData, setUserData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const apiUser = "https://localhost:7166/api/User";
 
   const formatNumber = (number) => {
@@ -32,9 +35,11 @@ const Customer = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
+
   if (userData.length === 0) {
     return <p>Loading...</p>;
   }
+
   const handleEdit = (user) => {
     setSelectedUser(user);
     setEditedUser({ ...user });
@@ -87,6 +92,16 @@ const Customer = () => {
     }
   };
 
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+  };
+
+  const filteredUserData = userData.filter(
+    (user) =>
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.phoneNumber.includes(searchTerm)
+  );
+
   const columns = [
     {
       title: "ID",
@@ -109,7 +124,7 @@ const Customer = () => {
       key: "phoneNumber",
     },
     {
-      title: "Loại tài khoản",
+      title: "Tài khoản",
       dataIndex: "type",
       key: "type",
       align: "center",
@@ -128,9 +143,8 @@ const Customer = () => {
         <Tag color={type === "VIP" ? "gold" : "blue"}>{type}</Tag>
       ),
     },
-
     {
-      title: "Chú ý",
+      title: "Khách hàng",
       dataIndex: "description",
       key: "description",
       render: (description) => {
@@ -141,16 +155,16 @@ const Customer = () => {
             color = "seagreen";
             break;
           case "Khách hàng mới":
-            color = "blue"; // or any other shade of blue
+            color = "blue";
             break;
           case "Khách hàng cũ":
-            color = "grey"; // or any other shade of purple
+            color = "grey";
             break;
           case "Khách hàng tiềm năng":
-            color = "purple"; // or any other shade of purple
+            color = "purple";
             break;
           default:
-            color = "black"; // fallback color
+            color = "black";
         }
 
         return <span style={{ color, fontWeight: "bold" }}>{description}</span>;
@@ -189,11 +203,20 @@ const Customer = () => {
   return (
     <div className="user-manage">
       <h1>Tài khoản khách hàng</h1>
+      <Search
+        placeholder="Tìm kiếm theo email hoặc số điện thoại"
+        allowClear
+        enterButton="Tìm kiếm"
+        size="large"
+        onSearch={handleSearch}
+        style={{ marginBottom: 16 }}
+        prefix={<SearchOutlined />}
+      />
       <Table
-        dataSource={userData}
+        dataSource={filteredUserData}
         columns={columns}
         rowKey="id"
-        pagination={{ pageSize: 10 }}
+        pagination={{ pageSize: 4 }}
         bordered
       />
       <button className="add-button" onClick={fetchUserData}>
@@ -203,7 +226,7 @@ const Customer = () => {
         <Modal.Header closeButton>
           <Modal.Title>Chỉnh sửa thông tin người dùng</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="customer-modal-body">
           {editedUser && (
             <Form>
               <Form.Group className="mb-3">

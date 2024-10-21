@@ -8,19 +8,23 @@ import {
   Form,
   Input,
   Select,
+  Tag,
 } from "antd";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faStar, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ReloadOutlined } from "@ant-design/icons";
 import "./PODManage.css";
+import des from "../ManagerImage/POD.jpg";
 
 export default function PODManage() {
   const [podData, setPodData] = useState([]);
-  const [editingPod, setEditingPod] = useState(null);
+  const [storeData, setStoreData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const apiPod = "https://localhost:7166/api/Pod";
+  const apiStore = "https://localhost:7166/api/Store";
 
   const fetchPODData = async () => {
     try {
@@ -29,6 +33,15 @@ export default function PODManage() {
     } catch (error) {
       console.error("Failed to fetch POD data:", error);
       message.error("Không thể tải dữ liệu POD");
+    }
+  };
+  const fetchStoreData = async () => {
+    try {
+      const response = await axios.get(apiStore);
+      setStoreData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch Store data:", error);
+      message.error("Không thể tải dữ liệu Store");
     }
   };
 
@@ -43,33 +56,53 @@ export default function PODManage() {
     }
   };
 
-  const handleEditPod = (pod) => {
-    setEditingPod(pod);
-    form.setFieldsValue(pod);
-    setIsModalVisible(true);
-  };
-
-  const handleSaveEdit = async (values) => {
+  const handleEdit = async (values) => {
     try {
-      await axios.put(`${apiPod}/${editingPod.id}`, values);
+      setLoading(true);
+      console.log("Dữ liệu gửi đi:", values);
+
+      await axios.put(`${apiPod}/${values.id}`, values);
       message.success("Cập nhật POD thành công");
-      setIsModalVisible(false);
       fetchPODData();
+      setIsModalVisible(false);
     } catch (error) {
       console.error("Lỗi khi cập nhật POD:", error);
       message.error("Cập nhật POD không thành công");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchPODData();
+    fetchStoreData();
   }, []);
 
   const columns = [
     {
+      title: "Hình ảnh",
+      key: "image",
+      render: () => (
+        <img
+          src={des}
+          alt="POD"
+          style={{ width: 100, height: 100, objectFit: "cover" }}
+        />
+      ),
+      width: 100,
+    },
+    {
       title: "ID",
       dataIndex: "id",
       key: "id",
+      align: "center",
+      hidden: true,
+    },
+
+    {
+      title: "Loại POD",
+      dataIndex: "typeId",
+      key: "typeId",
       align: "center",
     },
     {
@@ -79,16 +112,21 @@ export default function PODManage() {
       align: "center",
     },
     {
-      title: "Loại POD",
-      dataIndex: "typeId",
-      key: "typeId",
-      align: "center",
-    },
-    {
       title: "Mã cơ sở",
       dataIndex: "storeId",
       key: "storeId",
       align: "center",
+      hidden: true,
+    },
+    {
+      title: "Cơ sở",
+      dataIndex: "storeId", // Dùng storeId để tra cứu
+      key: "storeName",
+      align: "center",
+      render: (storeId) => {
+        const store = storeData.find((store) => store.id === storeId);
+        return store ? store.name : "Không có dữ liệu";
+      },
     },
     {
       title: "Trạng thái",
@@ -100,6 +138,9 @@ export default function PODManage() {
         { text: "Đang sử dụng", value: "Đang sử dụng" },
       ],
       onFilter: (value, record) => record.status.includes(value),
+      render: (status) => (
+        <Tag color={status === "Hoạt động" ? "blue" : "green"}>{status}</Tag>
+      ),
     },
     {
       title: "Đánh giá",
@@ -115,15 +156,24 @@ export default function PODManage() {
       sorter: (a, b) => a.rating - b.rating,
     },
     {
-      title: "Chỉnh sửa",
-      key: "action",
-      render: (_, record) => (
+      title: "Điều chỉnh",
+      key: "id",
+      dataIndex: "id",
+      align: "center",
+      render: (id, record) => (
         <div className="action-buttons">
-          <Button onClick={() => handleEditPod(record)}>
-            <FontAwesomeIcon icon={faEdit} />
+          <Button
+            style={{ backgroundColor: "cornflowerblue" }}
+            onClick={() => {
+              setIsModalVisible(true);
+              form.setFieldsValue(record);
+            }}
+          >
+            <FontAwesomeIcon style={{ color: "#FAFBFB" }} icon={faEdit} />
           </Button>
         </div>
       ),
+      width: 100,
     },
   ];
 
@@ -143,10 +193,18 @@ export default function PODManage() {
       <Modal
         title="Chỉnh sửa POD"
         visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={() => {
+          setIsModalVisible(false);
+          form.resetFields();
+        }}
         footer={null}
+        confirmLoading={loading}
+        onOk={() => form.submit()}
       >
-        <Form form={form} onFinish={handleSaveEdit} layout="vertical">
+        <Form form={form} onFinish={handleEdit} layout="vertical">
+          <Form.Item name="id" label="Tên" hidden>
+            <Input />
+          </Form.Item>
           <Form.Item
             name="name"
             label="Tên"

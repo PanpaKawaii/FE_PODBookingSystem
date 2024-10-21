@@ -182,7 +182,7 @@ const OrderHistory = () => {
       render: (_, record) => {
         const user = filteredUsers.find((u) => u.id === record.userId);
         return user ? (
-          <Tag color={user.type === "VIP" ? "#FFD700" : "blue"}>
+          <Tag color={user.type === "VIP" ? "#FFD700" : "cornflowerblue"}>
             {user.type}
           </Tag>
         ) : (
@@ -192,7 +192,7 @@ const OrderHistory = () => {
     },
 
     {
-      title: "Hành động",
+      title: "Chi tiết",
       key: "actions",
       align: "center",
       render: (_, record) => (
@@ -290,7 +290,7 @@ const OrderHistory = () => {
         dataSource={filteredBookings}
         columns={userColumns}
         rowKey="id"
-        pagination={{ pageSize: 10 }}
+        pagination={{ pageSize: 5 }}
         bordered
       />
       <Modal

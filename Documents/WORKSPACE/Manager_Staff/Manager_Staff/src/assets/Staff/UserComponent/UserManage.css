@@ -4,7 +4,7 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border: 1px solid grey;
-
+    background-size: cover;
 }
 
 .user-list {
@@ -67,4 +67,10 @@
     height: 50px;
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.customer-modal-body {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    border: 1px solid grey;
+    margin: 20px;
 }
