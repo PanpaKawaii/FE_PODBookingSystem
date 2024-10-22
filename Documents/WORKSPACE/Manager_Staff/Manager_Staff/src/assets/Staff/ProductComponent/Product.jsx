@@ -16,6 +16,7 @@ import {
   PlusCircleFilled,
   ReloadOutlined,
   StarFilled,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
 import "./Product.css";
@@ -63,7 +64,13 @@ function Product() {
   useEffect(() => {
     fetchProductData();
   }, []);
-
+  if (category.length === 0 && product.length === 0) {
+    return (
+      <p>
+        Loading... <LoadingOutlined />
+      </p>
+    );
+  }
   const handleOpenModal = (record) => {
     setShowModal(true);
     setEditingProduct(record);

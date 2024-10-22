@@ -7,7 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { message, Popconfirm, Table, Tag, Input } from "antd";
-import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  ReloadOutlined,
+  SearchOutlined,
+  LoadingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 const { Search } = Input;
 
@@ -15,6 +20,8 @@ const Customer = () => {
   const [userData, setUserData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [totalUsers, setTotalUsers] = useState(0);
+
   const [editedUser, setEditedUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const apiUser = "https://localhost:7166/api/User";
@@ -34,10 +41,16 @@ const Customer = () => {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+    const userCount = userData.filter((u) => u.role === "User").length;
+    setTotalUsers(userCount);
+  }, [userData]);
 
   if (userData.length === 0) {
-    return <p>Loading...</p>;
+    return (
+      <p>
+        Loading... <LoadingOutlined />
+      </p>
+    );
   }
 
   const handleEdit = (user) => {
@@ -212,6 +225,12 @@ const Customer = () => {
         style={{ marginBottom: 16 }}
         prefix={<SearchOutlined />}
       />
+      <p>
+        <strong>
+          <UserOutlined /> Tổng số người dùng:
+        </strong>{" "}
+        {totalUsers}
+      </p>
       <Table
         dataSource={filteredUserData}
         columns={columns}

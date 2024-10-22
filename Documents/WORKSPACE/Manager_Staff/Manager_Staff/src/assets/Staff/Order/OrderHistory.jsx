@@ -1,27 +1,51 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Order.css";
-import { Table, Card, Button, Tag, Typography, Modal, Input } from "antd";
+import {
+  Table,
+  Card,
+  Button,
+  Tag,
+  Typography,
+  Modal,
+  Input,
+  Space,
+  DatePicker,
+} from "antd";
 import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import {
+  LoadingOutlined,
+  EyeTwoTone,
+  EyeInvisibleTwoTone,
+} from "@ant-design/icons";
+dayjs.extend(isBetween);
 
 const { Title } = Typography;
+const { RangePicker } = DatePicker;
 
 const OrderHistory = () => {
   const [userData, setUserData] = useState([]);
   const [bookingData, setBookingData] = useState([]);
   const [paymentData, setPaymentData] = useState([]);
   const [productData, setProductData] = useState([]);
-  const [orderData, setOrderData] = useState([]); // Sửa từ setOderData thành setOrderData
+  const [orderData, setOrderData] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedBooking, setSelectedBooking] = useState(null); // Quản lý modal
+  const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [revenueData, setRevenueData] = useState([]);
+  const [showRevenue, setShowRevenue] = useState(false);
 
   const apiUser = "https://localhost:7166/api/User";
   const apiBooking = "https://localhost:7166/api/Booking";
   const apiPayment = "https://localhost:7166/api/Payment";
-  const apiOrder = "https://localhost:7166/api/BookingOrder"; // API đúng cho order
-  const apiProduct = "https://localhost:7166/api/Product"; // API đúng cho sản phẩm
+  const apiOrder = "https://localhost:7166/api/BookingOrder";
+  const apiProduct = "https://localhost:7166/api/Product";
 
   const fetchUserData = async () => {
     try {
@@ -44,7 +68,7 @@ const OrderHistory = () => {
   const fetchOrderData = async () => {
     try {
       const response = await axios.get(apiOrder);
-      setOrderData(response.data); // Lưu dữ liệu Order
+      setOrderData(response.data);
     } catch (error) {
       console.error("Failed to fetch order data:", error);
     }
@@ -53,7 +77,7 @@ const OrderHistory = () => {
   const fetchProductData = async () => {
     try {
       const response = await axios.get(apiProduct);
-      setProductData(response.data); // Lưu dữ liệu Product
+      setProductData(response.data);
     } catch (error) {
       console.error("Failed to fetch product data:", error);
     }
@@ -72,9 +96,10 @@ const OrderHistory = () => {
     fetchUserData();
     fetchBookingData();
     fetchPaymentData();
-    fetchOrderData(); // Thêm fetchOrderData
+    fetchOrderData();
     fetchProductData();
   }, []);
+
   if (
     userData.length === 0 &&
     bookingData.length === 0 &&
@@ -82,17 +107,17 @@ const OrderHistory = () => {
     productData.length === 0 &&
     orderData.length === 0
   ) {
-    return <p>Loading...</p>;
+    return (
+      <p>
+        Loading... <LoadingOutlined />
+      </p>
+    );
   }
 
-  // Lọc dữ liệu người dùng theo từ khóa tìm kiếm
-  const filteredUsers = userData.filter(
-    (user) => user.phoneNumber.includes(searchTerm)
-    // ||
-    //   user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = userData.filter((user) =>
+    user.phoneNumber.includes(searchTerm)
   );
 
-  // Lọc danh sách bookings cho người dùng
   const filteredBookings = bookingData.filter((booking) =>
     filteredUsers.some((user) => user.id === booking.userId)
   );
@@ -123,14 +148,9 @@ const OrderHistory = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("vi-VN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
+    return dayjs(dateString).format("DD/MM/YYYY");
   };
 
-  // Hàm để render trạng thái đơn hàng
   const renderOrderStatus = (status) => {
     return <Tag color="seagreen">{status}</Tag>;
   };
@@ -166,14 +186,8 @@ const OrderHistory = () => {
       key: "type",
       align: "center",
       filters: [
-        {
-          text: "V.I.P",
-          value: "VIP",
-        },
-        {
-          text: "Khách hàng thường",
-          value: "Regular",
-        },
+        { text: "V.I.P", value: "VIP" },
+        { text: "Khách hàng thường", value: "Regular" },
       ],
       onFilter: (value, record) => {
         const user = filteredUsers.find((u) => u.id === record.userId);
@@ -190,7 +204,6 @@ const OrderHistory = () => {
         );
       },
     },
-
     {
       title: "Chi tiết",
       key: "actions",
@@ -206,7 +219,6 @@ const OrderHistory = () => {
     },
   ];
 
-  // Modal content hiển thị trạng thái đơn hàng và phương thức thanh toán
   const modalContent = selectedBooking ? (
     <div>
       <p>
@@ -248,6 +260,14 @@ const OrderHistory = () => {
         {paymentData.find((payment) => payment.bookingId === selectedBooking.id)
           ?.method || "Không có thông tin"}
       </p>
+      <p>
+        <strong>Số tiền thanh toán:</strong>{" "}
+        {formatCurrency(
+          paymentData.find(
+            (payment) => payment.bookingId === selectedBooking.id
+          )?.amount || 0
+        )}
+      </p>
       {selectedBooking.bookingOrders?.map((order) => {
         const product = productData.find(
           (product) =>
@@ -265,20 +285,98 @@ const OrderHistory = () => {
             <p>- Số lượng : {formatNumber(order.quantity)}</p>
             <p>- Tổng tiền : {formatCurrency(order.amount)}</p>
             <p>
-              <strong>Trạng thái đơn hàng:</strong>{" "}
+              <strong>Trạng thái đơn hàng : </strong>{" "}
               {renderOrderStatus(order.status)}
             </p>
           </div>
         );
       })}
+      <p>
+        <strong>Tổng số tiền thanh toán : </strong>{" "}
+        {formatCurrency(
+          (paymentData.find(
+            (payment) => payment.bookingId === selectedBooking.id
+          )?.amount || 0) +
+            (selectedBooking.bookingOrders?.reduce(
+              (total, order) => total + order.amount,
+              0
+            ) || 0)
+        )}
+      </p>
     </div>
   ) : null;
+
+  const calculateRevenue = () => {
+    if (!startDate || !endDate) {
+      alert("Vui lòng chọn khoảng thời gian");
+      return;
+    }
+
+    const filteredPayments = paymentData.filter((payment) => {
+      const paymentDate = dayjs(payment.date);
+      return paymentDate.isBetween(startDate, endDate, null, "[]");
+    });
+
+    console.log("Filtered Payments:", filteredPayments);
+
+    const dailyRevenue = {};
+    filteredPayments.forEach((payment) => {
+      const date = dayjs(payment.date).format("YYYY-MM-DD");
+      dailyRevenue[date] = (dailyRevenue[date] || 0) + payment.amount;
+    });
+    setRevenueData(
+      Object.entries(dailyRevenue).map(([date, amount]) => ({ date, amount }))
+    );
+
+    console.log("Revenue Data:", revenueData);
+    setShowRevenue(true);
+  };
+
+  const renderRevenueTable = () => {
+    const columns = [
+      {
+        title: "Ngày",
+        dataIndex: "date",
+        key: "date",
+        render: (date) => formatDate(date),
+      },
+      {
+        title: "Doanh thu",
+        dataIndex: "amount",
+        key: "amount",
+        render: (amount) => formatCurrency(amount),
+      },
+    ];
+
+    return (
+      <Table
+        dataSource={revenueData}
+        columns={columns}
+        pagination={false}
+        bordered
+        summary={(pageData) => {
+          const total = pageData.reduce((sum, { amount }) => sum + amount, 0);
+          return (
+            <Table.Summary.Row>
+              <Table.Summary.Cell>
+                <strong>Tổng cộng</strong>
+              </Table.Summary.Cell>
+              <Table.Summary.Cell>
+                <strong>{formatCurrency(total)}</strong>
+              </Table.Summary.Cell>
+            </Table.Summary.Row>
+          );
+        }}
+      />
+    );
+  };
 
   return (
     <div className="user-manage">
       <Title style={{ textAlign: "center" }} level={2}>
         Lịch sử đơn hàng
       </Title>
+
       <Input
         placeholder="Tìm kiếm theo số điện thoại "
         value={searchTerm}
@@ -293,6 +391,29 @@ const OrderHistory = () => {
         pagination={{ pageSize: 5 }}
         bordered
       />
+      <Card title="Thống kê doanh thu" style={{ marginBottom: 20 }}>
+        <Space direction="vertical" size="middle" style={{ display: "flex" }}>
+          <RangePicker
+            onChange={(dates) => {
+              setStartDate(dates ? dates[0] : null);
+              setEndDate(dates ? dates[1] : null);
+            }}
+          />
+          <Space>
+            <Button onClick={calculateRevenue}>
+              <EyeTwoTone />
+              Xem
+            </Button>
+            {showRevenue && (
+              <Button onClick={() => setShowRevenue(false)}>
+                <EyeInvisibleTwoTone />
+                Ẩn
+              </Button>
+            )}
+          </Space>
+          {showRevenue && revenueData.length > 0 && renderRevenueTable()}
+        </Space>
+      </Card>
       <Modal
         title={
           <div

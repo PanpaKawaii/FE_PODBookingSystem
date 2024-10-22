@@ -14,7 +14,11 @@ import {
   Input,
   Empty,
 } from "antd";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  EyeOutlined,
+  SearchOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -62,7 +66,17 @@ const Order = () => {
     fetchBookingData();
     fetchPaymentData();
   }, []);
-
+  if (
+    userData.length === 0 &&
+    bookingData.length === 0 &&
+    paymentData.length === 0
+  ) {
+    return (
+      <p>
+        Loading... <LoadingOutlined />
+      </p>
+    );
+  }
   const handleAcceptBooking = async (booking) => {
     try {
       const updatedBooking = {

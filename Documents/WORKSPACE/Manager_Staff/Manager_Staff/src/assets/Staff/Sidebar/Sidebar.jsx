@@ -41,7 +41,7 @@ const Sidebar = () => {
         </Link>
         <Link to="/history">
           <FontAwesomeIcon className="icon" icon={faFileInvoiceDollar} /> Lịch
-          sử
+          sử khách hàng
         </Link>
         <Link to="/customer">
           <FontAwesomeIcon className="icon" icon={faUser} /> Quản lí khách hàng

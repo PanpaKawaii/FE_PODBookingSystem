@@ -12,8 +12,8 @@ import {
 } from "antd";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faStar, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { ReloadOutlined } from "@ant-design/icons";
+import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
+import { ReloadOutlined, LoadingOutlined } from "@ant-design/icons";
 import "./PODManage.css";
 import des from "../ManagerImage/POD.jpg";
 
@@ -78,6 +78,13 @@ export default function PODManage() {
     fetchStoreData();
   }, []);
 
+  if (podData.length === 0 && storeData.length === 0) {
+    return (
+      <p>
+        Loading... <LoadingOutlined />
+      </p>
+    );
+  }
   const columns = [
     {
       title: "Hình ảnh",
