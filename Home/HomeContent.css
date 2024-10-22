@@ -4,209 +4,180 @@ body {
 
 .POD-home {
     width: 100%;
-    background-color: #eeefe9;
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
     font-family: 'Arial', sans-serif;
+    position: relative; 
 }
 
-.POD-home img {
+.header-image {
     width: 100%;
     height: auto;
     object-fit: cover;
     object-position: center;
-    display: block;
+    position: relative; 
+    filter: brightness(40%);
 }
 
-.POD-home {
+div.overlay {
+    position: absolute; 
+    color: white; 
+    margin-top: 20%;
+    margin-left: 3%;
+    color: white;
+    text-align: center;
+}
 
-    .shortcut-booking-pod {
-        width: 100%;
-        background-color: #bdd4dd;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.hello-customers {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-family: 'Courier New', Courier, monospace;
+}
 
-    .shortcut-booking-pod {
+.intro-text-1 {
+    font-size: 2.2rem;
+    font-family: 'Times New Roman', Times, serif;
+}
 
-        .image-row {
-            margin: 0 0 50px;
-            width: 100%;
-            max-width: 1500px;
-            height: auto;
-        }
+.intro-text-2 {
+    font-size: 1rem;
+    font-family:monospace;
+}
+div.shortcut-booking-pod{
+    display: flex;
+    justify-content: center;    
+    
+}
 
-        .image-col {
-            display: flex;
-            justify-content: center;
-        }
 
-        .image-card {
-            width: 320px;
-            height: 300px;
-            margin-bottom: 20px;
-            background-color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px #6666664d;
-            overflow: hidden;
-            align-items: center;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
+.section-title {
+    text-align: center;
+    padding: 20px;
+    font-family: 'Times New Roman', Times, serif;
+    color: #484848;
+    font-size: 2rem;
+}
 
-        .image-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 6px 12px #6666664d;
-        }
-
-        .image-card img {
-            width: 320px;
-            height: 180px;
-            object-fit: cover;
-            object-position: center;
-            display: block;
-        }
-
-        .rating {
-            padding: 0 5px;
-            background-color: #00000060;
-            border-radius: 0 4px 0 0;
-            position: absolute;
-            left: 0;
-            top: 147px;
-        }
-
-        .capacity {
-            color: #ffffff;
-            background-color: #00000060;
-            border-radius: 4px 0 0 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            right: 0;
-            top: 156px;
-        }
-
-        .capacity-icon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .card-body {
-            width: 100%;
-        }
-
-        .card-tittle h4 {
-            color: #000000;
-            margin: 0;
-            font-size: 0.9em;
-        }
-
-        .card-info p {
-            color: #000000;
-            margin: 0;
-        }
-
-        .full-detail {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .short-detail {
-            display: block;
-            text-align: start;
-        }
-
-        .active-button {
-            display: block;
-            text-align: end;
-        }
-
-        .btn {
-            color: #ffffff;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn:active {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-    }
-
-    .shortcut-contact {
-        width: 100%;
-        background-color: #deeff7;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .shortcut-contact {
-
-        .card-contact {
-            margin: 0 0 100px;
-            height: 550px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .card-contact img {
-            width: 400px;
-            height: auto;
-            object-fit: cover;
-            object-position: center;
-            display: block;
-        }
-
-        .card-form {
-            height: 100%;
-            background-color: #ffffff;
-            padding: 40px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .card-form h1 {
-            color: #000000;
-            font-weight: bold;
-        }
-
-        .card-form p {
-            color: #666666;
-            margin: 0 0 5px;
-        }
-
-        .input {
-            background-color: 'transparent';
-            transition: all 0.3 ease;
-        }
-
-        .submit {
-            background-color: #00cdd4;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            margin: 10px 0;
-            cursor: pointer;
-        }
-
-        .submit:active {
-            background-color: #00cdd4;
-        }
-
-    }
+div.image-row.row{
+    justify-content: center;
+    width: 89%;
 
 }
+
+.card-title{
+    font-family: Cambria,  Cochin, Georgia, Times, 'Times New Roman', serif
+}
+
+.card-info{
+    font-family: 'Times New Roman', Times, serif;
+    color: #666666;
+    line-height: 1.5; /* Khoảng cách giữa các dòng */
+}
+
+.yellow-star{
+    color: gold;
+}
+
+.price{
+  color: #ef5939;
+    font-weight: bold; /* Đậm chữ */
+    display: inline-block; /* Để nó chỉ chiếm không gian cần thiết */
+    position: relative; /* Để có thể sử dụng pseudo-element */
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+.image-col {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    position: relative;
+
+}
+
+.carousel {
+    position: relative;
+    width: 90%; /* Đảm bảo carousel chiếm toàn bộ chiều rộng */
+    overflow: hidden; /* Ẩn các phần hình ảnh tràn ra ngoài */
+}
+
+.carousel img {
+    width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều rộng của carousel */
+    height: 60vh; /* Giữ tỷ lệ khung hình của hình ảnh */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị biến dạng */
+    filter: brightness(40%);
+}
+
+.carousel-item {
+    transition: transform 0.5s ease; /* Thêm hiệu ứng chuyển động mượt mà */
+}
+
+
+
+.carousel-caption {
+    
+    padding: 10px; /* Khoảng cách bên trong */
+    border-radius: 5px; /* Bo góc */
+    position: absolute;
+    
+    width: 60%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    h5{
+        color: white;
+        font-size: 1.5rem;
+        font-family: 'Courier New', Courier, monospace;
+
+    }
+    p{
+        color: white;
+        font-family: 'Times New Roman', Times, serif;
+
+    }
+    
+}
+.carousel-text{
+    padding: 10px; /* Khoảng cách bên trong */
+border-radius: 5px; /* Bo góc */
+text-align: center; /* Căn giữa chữ */
+display: flex; /* Sử dụng flexbox */
+flex-direction: column; /* Sắp xếp theo chiều dọc */
+justify-content: center; /* Căn giữa chiều dọc */
+align-items: center; 
+}
+
+span.carousel-control-prev,
+span.carousel-control-next {
+    border-radius: 50%;
+    color: white;
+    background-color: rgb(255, 255, 255);
+}
+.carousel-control-prev {
+    left: 10px; /* Đặt nút Previous ở bên trái */
+
+}
+
+.carousel-control-next {
+    right: 10px; /* Đặt nút Next ở bên phải */
+}
+
+
+
+
+
+
+.carousel-item {
+    padding: 20px; /* Thêm khoảng cách giữa các item */
+}
+
+.image-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
