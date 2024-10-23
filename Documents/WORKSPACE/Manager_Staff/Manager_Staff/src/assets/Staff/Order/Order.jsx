@@ -19,6 +19,8 @@ import {
   SearchOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const { Title } = Typography;
 
@@ -26,6 +28,8 @@ const Order = () => {
   const [userData, setUserData] = useState([]);
   const [bookingData, setBookingData] = useState([]);
   const [paymentData, setPaymentData] = useState([]);
+  const [podData, setPodData] = useState([]);
+  const [slotData, setSlotData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,6 +37,8 @@ const Order = () => {
   const apiUser = "https://localhost:7166/api/User";
   const apiBooking = "https://localhost:7166/api/Booking";
   const apiPayment = "https://localhost:7166/api/Payment";
+  const apiPod = "https://localhost:7166/api/Pod";
+  const apiSlot = "https://localhost:7166/api/Slot";
 
   const fetchUserData = async () => {
     try {
@@ -61,15 +67,38 @@ const Order = () => {
     }
   };
 
+  const fetchPodData = async () => {
+    try {
+      const response = await axios.get(apiPod);
+      setPodData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch pod data:", error);
+    }
+  };
+
+  const fetchSlotData = async () => {
+    try {
+      const response = await axios.get(apiSlot);
+      setSlotData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch slot data:", error);
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
     fetchBookingData();
     fetchPaymentData();
+    fetchPodData();
+    fetchSlotData();
   }, []);
+
   if (
-    userData.length === 0 &&
-    bookingData.length === 0 &&
-    paymentData.length === 0
+    userData.length === 0 ||
+    bookingData.length === 0 ||
+    paymentData.length === 0 ||
+    podData.length === 0 ||
+    slotData.length === 0
   ) {
     return (
       <p>
@@ -77,6 +106,7 @@ const Order = () => {
       </p>
     );
   }
+
   const handleAcceptBooking = async (booking) => {
     try {
       const updatedBooking = {
@@ -139,6 +169,8 @@ const Order = () => {
     .map((booking) => ({
       ...booking,
       user: userData.find((user) => user.id === booking.userId),
+      pod: podData.find((pod) => pod.id === booking.podId),
+      slot: slotData.find((slot) => slot.id === booking.slotId),
     }));
 
   const filteredPendingBookings = pendingBookings.filter(
@@ -201,6 +233,11 @@ const Order = () => {
       ),
     },
     {
+      title: "Đánh giá",
+      dataIndex: "feedback",
+      key: "feedback",
+    },
+    {
       title: "Chi tiết",
       key: "detail",
       align: "center",
@@ -213,15 +250,26 @@ const Order = () => {
   ];
 
   const userColumns = [
-    { title: "Tên", dataIndex: "name", key: "name" },
-    { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Số điện thoại", dataIndex: "phoneNumber", key: "phoneNumber" },
+    { title: "Tên", dataIndex: "name", key: "name", align: "center" },
+    { title: "Email", dataIndex: "email", key: "email", align: "center" },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+      align: "center",
+    },
     {
       title: "Nhóm tài khoản",
       dataIndex: "type",
       key: "type",
+      align: "center",
     },
-    { title: "Mô tả", dataIndex: "description", key: "description" },
+    {
+      title: "Mô tả",
+      dataIndex: "description",
+      key: "description",
+      align: "center",
+    },
     {
       title: "Điểm",
       dataIndex: "point",
@@ -237,7 +285,23 @@ const Order = () => {
       key: "date",
       render: (date) => formatDate(date),
     },
-    { title: "Pod ID", dataIndex: "podId", key: "podId" },
+    {
+      title: "Pod",
+      dataIndex: "podId",
+      key: "podId",
+      render: (podId, record) => `${podId} - ${record.pod?.name || "N/A"}`,
+    },
+    {
+      title: "Slot",
+      dataIndex: "slotId",
+      key: "slotId",
+      render: (slotId, record) => {
+        const slot = record.slot;
+        return slot
+          ? `${slot.name} (${slot.startTime}:00 - ${slot.endTime}:00)`
+          : "N/A";
+      },
+    },
     {
       title: "Trạng thái",
       dataIndex: "status",
@@ -338,6 +402,7 @@ const Order = () => {
           columns={mainColumns}
           rowKey="id"
           pagination={{ pageSize: 7 }}
+          bordered
         />
       )}
       <Modal
@@ -349,28 +414,30 @@ const Order = () => {
       >
         {selectedBooking && (
           <>
-            <Card title="Thông tin khách hàng">
-              <Table
-                dataSource={[selectedBooking.user]}
-                columns={userColumns}
-                pagination={false}
-                rowKey="id"
-              />
-            </Card>
-            <Card title="Thông tin đặt chỗ" style={{ marginTop: 16 }}>
+            <Card title="Thông tin đặt chỗ" style={{ marginTop: 10 }}>
               <Table
                 dataSource={[selectedBooking]}
                 columns={bookingColumns}
                 pagination={false}
                 rowKey="id"
+                bordered
               />
             </Card>
-            <Card title="Chi tiết đơn hàng" style={{ marginTop: 16 }}>
+            <Card title="Chi tiết đơn hàng" style={{ marginTop: 10 }}>
               <Table
                 dataSource={selectedBooking.bookingOrders}
                 columns={orderColumns}
                 pagination={false}
                 rowKey="id"
+              />
+            </Card>
+            <Card title="Thông tin khách hàng" style={{ marginTop: 10 }}>
+              <Table
+                dataSource={[selectedBooking.user]}
+                columns={userColumns}
+                pagination={false}
+                rowKey="id"
+                bordered
               />
             </Card>
             <div style={{ marginTop: 16, textAlign: "right" }}>
@@ -380,7 +447,9 @@ const Order = () => {
                 okText="Đồng ý"
                 cancelText="Hủy"
               >
-                <Button type="primary">Duyệt</Button>
+                <Button type="primary">
+                  <FontAwesomeIcon icon={faCheck} /> Duyệt
+                </Button>
               </Popconfirm>
             </div>
           </>

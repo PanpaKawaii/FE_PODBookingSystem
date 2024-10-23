@@ -1,6 +1,6 @@
 .user-manage {
     padding: 20px;
-    background: rgba(255, 255, 255, 0.8); /* Nền trắng với độ trong suốt */
+    background: #F5F5F5;/* Nền trắng với độ trong suốt */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border: 1px solid grey;

@@ -9,6 +9,7 @@ import {
   Input,
   Select,
   Tag,
+  InputNumber,
 } from "antd";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,12 +21,13 @@ import des from "../ManagerImage/POD.jpg";
 export default function PODManage() {
   const [podData, setPodData] = useState([]);
   const [storeData, setStoreData] = useState([]);
+  const [utilityData, setUtilityData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const apiPod = "https://localhost:7166/api/Pod";
   const apiStore = "https://localhost:7166/api/Store";
-
+  const apiUtility = "https://localhost:7166/api/Utility";
   const fetchPODData = async () => {
     try {
       const response = await axios.get(apiPod);
@@ -44,7 +46,15 @@ export default function PODManage() {
       message.error("Không thể tải dữ liệu Store");
     }
   };
-
+  const fetchUtilityData = async () => {
+    try {
+      const response = await axios.get(apiUtility);
+      setUtilityData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch Utility data:", error);
+      message.error("Không thể tải dữ liệu Utility");
+    }
+  };
   const handleDelete = async (podId) => {
     try {
       await axios.delete(`${apiPod}/${podId}`);
@@ -59,15 +69,16 @@ export default function PODManage() {
   const handleEdit = async (values) => {
     try {
       setLoading(true);
-      console.log("Dữ liệu gửi đi:", values);
-
-      await axios.put(`${apiPod}/${values.id}`, values);
-      message.success("Cập nhật POD thành công");
+      const podId = form.getFieldValue("id");
+      const response = await axios.put(`${apiPod}/${podId}`, {
+        status: values.status,
+      });
+      message.success("Trạng thái POD được cập nhật thành công");
       fetchPODData();
       setIsModalVisible(false);
     } catch (error) {
-      console.error("Lỗi khi cập nhật POD:", error);
-      message.error("Cập nhật POD không thành công");
+      console.error("Chi tiết lỗi:", error.response?.data);
+      message.error(`Lỗi: ${error.response?.data?.title || error.message}`);
     } finally {
       setLoading(false);
     }
@@ -76,9 +87,14 @@ export default function PODManage() {
   useEffect(() => {
     fetchPODData();
     fetchStoreData();
+    fetchUtilityData();
   }, []);
 
-  if (podData.length === 0 && storeData.length === 0) {
+  if (
+    podData.length === 0 &&
+    storeData.length === 0 &&
+    utilityData.length === 0
+  ) {
     return (
       <p>
         Loading... <LoadingOutlined />
@@ -111,6 +127,7 @@ export default function PODManage() {
       dataIndex: "typeId",
       key: "typeId",
       align: "center",
+      hidden: true,
     },
     {
       title: "Tên",
@@ -126,7 +143,14 @@ export default function PODManage() {
       hidden: true,
     },
     {
-      title: "Cơ sở",
+      title: "Tiện ích",
+      dataIndex: "utilityId",
+      key: "utilityId",
+      align: "center",
+      hidden: true,
+    },
+    {
+      title: "Cửa hàng",
       dataIndex: "storeId", // Dùng storeId để tra cứu
       key: "storeName",
       align: "center",
@@ -170,7 +194,7 @@ export default function PODManage() {
       render: (id, record) => (
         <div className="action-buttons">
           <Button
-            style={{ backgroundColor: "cornflowerblue" }}
+            style={{ backgroundColor: "#007bff" }}
             onClick={() => {
               setIsModalVisible(true);
               form.setFieldsValue(record);
@@ -186,12 +210,17 @@ export default function PODManage() {
 
   return (
     <>
+      <h1 style={{ textAlign: "center", fontFamily: "Arial", fontSize: 30 }}>
+        Quản lí POD
+      </h1>
       <Table
         columns={columns}
         dataSource={podData}
         rowKey="id"
         pagination={{ pageSize: 7 }}
         bordered
+        scroll={{ x: 1000 }}
+        style={{ boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)" }}
       />
       <Button className="add-button" onClick={fetchPODData}>
         <ReloadOutlined />
@@ -206,10 +235,9 @@ export default function PODManage() {
         }}
         footer={null}
         confirmLoading={loading}
-        onOk={() => form.submit()}
       >
         <Form form={form} onFinish={handleEdit} layout="vertical">
-          <Form.Item name="id" label="Tên" hidden>
+          <Form.Item name="id" hidden>
             <Input />
           </Form.Item>
           <Form.Item
@@ -227,15 +255,20 @@ export default function PODManage() {
             <Select>
               <Select.Option value={1}>Loại 1</Select.Option>
               <Select.Option value={2}>Loại 2</Select.Option>
-              {/* Thêm các loại POD khác nếu cần */}
             </Select>
           </Form.Item>
           <Form.Item
             name="storeId"
-            label="Mã cơ sở"
-            rules={[{ required: true, message: "Vui lòng nhập mã cơ sở" }]}
+            label="Cơ sở"
+            rules={[{ required: true, message: "Vui lòng chọn cơ sở" }]}
           >
-            <Input />
+            <Select>
+              {storeData.map((store) => (
+                <Select.Option key={store.id} value={store.id}>
+                  {store.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             name="status"
@@ -252,10 +285,24 @@ export default function PODManage() {
             label="Đánh giá"
             rules={[{ required: true, message: "Vui lòng nhập đánh giá" }]}
           >
-            <Input type="number" min={1} max={5} step={1} />
+            <InputNumber min={1} max={5} step={1} />
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Mô tả"
+            rules={[{ required: true, message: "Vui lòng nhập mô tả POD" }]}
+          >
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item
+            name="utilityId"
+            label="utilityId"
+            rules={[{ required: true, message: "Vui lòng nhập tiện ích POD" }]}
+          >
+            <InputNumber />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loading}>
               Lưu thay đổi
             </Button>
           </Form.Item>

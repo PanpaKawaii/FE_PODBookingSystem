@@ -31,7 +31,8 @@ const OrderHistory = () => {
   const [paymentData, setPaymentData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [orderData, setOrderData] = useState([]);
-
+  const [slotData, setSlotData] = useState([]);
+  const [podData, setPodData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -46,7 +47,8 @@ const OrderHistory = () => {
   const apiPayment = "https://localhost:7166/api/Payment";
   const apiOrder = "https://localhost:7166/api/BookingOrder";
   const apiProduct = "https://localhost:7166/api/Product";
-
+  const apiSlot = "https://localhost:7166/api/Slot";
+  const apiPod = "https://localhost:7166/api/Pod";
   const fetchUserData = async () => {
     try {
       const response = await axios.get(apiUser);
@@ -91,6 +93,22 @@ const OrderHistory = () => {
       console.error("Failed to fetch payment data:", error);
     }
   };
+  const fetchPodData = async () => {
+    try {
+      const response = await axios.get(apiPod);
+      setPodData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch pod data:", error);
+    }
+  };
+  const fetchSlotData = async () => {
+    try {
+      const response = await axios.get(apiSlot);
+      setSlotData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch slot data:", error);
+    }
+  };
 
   useEffect(() => {
     fetchUserData();
@@ -98,6 +116,8 @@ const OrderHistory = () => {
     fetchPaymentData();
     fetchOrderData();
     fetchProductData();
+    fetchSlotData();
+    fetchPodData();
   }, []);
 
   if (
@@ -113,7 +133,19 @@ const OrderHistory = () => {
       </p>
     );
   }
-
+  const getSlotInfo = (bookingId) => {
+    const slot = slotData.find((slot) =>
+      slot.bookings.some((booking) => booking.id === bookingId)
+    );
+    if (slot) {
+      return {
+        name: slot.name,
+        startTime: slot.startTime,
+        endTime: slot.endTime,
+      };
+    }
+    return null;
+  };
   const filteredUsers = userData.filter((user) =>
     user.phoneNumber.includes(searchTerm)
   );
@@ -172,6 +204,7 @@ const OrderHistory = () => {
         return user ? user.name : "Không xác định";
       },
     },
+
     {
       title: "Số điện thoại",
       key: "phoneNumber",
@@ -179,6 +212,16 @@ const OrderHistory = () => {
       render: (_, record) => {
         const user = filteredUsers.find((u) => u.id === record.userId);
         return user ? user.phoneNumber : "Không xác định";
+      },
+    },
+    {
+      title: "Slot",
+      key: "slot",
+      render: (_, record) => {
+        const slotInfo = getSlotInfo(record.id);
+        return slotInfo
+          ? `${slotInfo.name} (${slotInfo.startTime}:00 - ${slotInfo.endTime}:00)`
+          : "Không có thông tin";
       },
     },
     {
@@ -203,6 +246,11 @@ const OrderHistory = () => {
           "Không xác định"
         );
       },
+    },
+    {
+      title: "Đánh giá",
+      dataIndex: "feedback",
+      key: "feedback",
     },
     {
       title: "Chi tiết",
@@ -249,8 +297,22 @@ const OrderHistory = () => {
         )}
       </p>
       <p>
-        <strong>Pod ID :</strong> {selectedBooking.podId}
+        <strong>Pod ID :</strong> {selectedBooking.podId} -{" "}
+        {podData.find((pod) => pod.id === selectedBooking.podId)?.name}
       </p>
+      {(() => {
+        const slotInfo = getSlotInfo(selectedBooking.id);
+        return slotInfo ? (
+          <div>
+            <p>
+              <strong>Slot:</strong> {slotInfo.name} ( {slotInfo.startTime}:00 -{" "}
+              {slotInfo.endTime}:00 )
+            </p>
+          </div>
+        ) : (
+          <p>Không có thông tin slot</p>
+        );
+      })()}
       <p>
         <strong>Trạng thái :</strong>{" "}
         {renderOrderStatus(selectedBooking.status)}
@@ -274,7 +336,6 @@ const OrderHistory = () => {
             product.id === order.productId &&
             selectedBooking.id === order.bookingId
         );
-
         return (
           <div key={order.id}>
             <p>
@@ -373,7 +434,14 @@ const OrderHistory = () => {
 
   return (
     <div className="user-manage">
-      <Title style={{ textAlign: "center" }} level={2}>
+      <Title
+        style={{
+          textAlign: "center",
+          fontFamily: "Arial",
+          fontSize: 30,
+        }}
+        level={2}
+      >
         Lịch sử đơn hàng
       </Title>
 
@@ -381,7 +449,7 @@ const OrderHistory = () => {
         placeholder="Tìm kiếm theo số điện thoại "
         value={searchTerm}
         onChange={handleSearch}
-        style={{ marginBottom: 20 }}
+        style={{ marginBottom: 20, height: "36px" }}
         prefix={<SearchOutlined />}
       />
       <Table

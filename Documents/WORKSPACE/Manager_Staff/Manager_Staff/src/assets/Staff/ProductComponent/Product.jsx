@@ -250,7 +250,9 @@ function Product() {
       }}
     >
       <div>
-        <h1 style={{ textAlign: "center" }}>Các sản phẩm kèm</h1>
+        <h1 style={{ textAlign: "center", fontFamily: "Arial", fontSize: 30 }}>
+          Các sản phẩm kèm
+        </h1>
         <Button
           type="primary"
           onClick={() => handleOpenModal(null)}

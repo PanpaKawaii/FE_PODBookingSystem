@@ -10,8 +10,9 @@ import {
   faFileClipboard,
   faFileInvoiceDollar,
   faMugHot,
+  faCommentDollar,
 } from "@fortawesome/free-solid-svg-icons";
-import { faCake } from "@fortawesome/free-solid-svg-icons/faCake";
+import { Badge } from "antd";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,13 +36,42 @@ const Sidebar = () => {
           <FontAwesomeIcon className="icon" icon={faMugHot} /> Quản lí sản phẩm
           kèm
         </Link>
-        <Link to="/order">
-          <FontAwesomeIcon className="icon" icon={faFileClipboard} /> Quản lí
-          đơn hàng
+        <Link
+          to="/order"
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <span>
+            <FontAwesomeIcon className="icon" icon={faFileClipboard} /> Đơn đang
+            chờ
+          </span>
+          <Badge
+            count={
+              <FontAwesomeIcon
+                icon={faCommentDollar}
+                style={{
+                  color: "#fff",
+                  fontSize: "10px",
+                }}
+              />
+            }
+            style={{
+              backgroundColor: "#52c41a",
+              fontSize: "10px",
+              height: "18px",
+              minWidth: "18px",
+              lineHeight: "18px",
+              padding: "0 4px",
+              marginBottom: "1.2rem",
+              borderRadius: "56%",
+            }}
+          />
         </Link>
         <Link to="/history">
-          <FontAwesomeIcon className="icon" icon={faFileInvoiceDollar} /> Lịch
-          sử khách hàng
+          <FontAwesomeIcon className="icon" icon={faFileInvoiceDollar} /> Quán
+          lý đơn hàng
         </Link>
         <Link to="/customer">
           <FontAwesomeIcon className="icon" icon={faUser} /> Quản lí khách hàng

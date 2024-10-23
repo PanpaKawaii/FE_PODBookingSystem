@@ -21,11 +21,11 @@ const Customer = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [totalUsers, setTotalUsers] = useState(0);
-
+  const [bookingData, setBookingData] = useState([]);
   const [editedUser, setEditedUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const apiUser = "https://localhost:7166/api/User";
-
+  const apiBooking = "https://localhost:7166/api/Booking";
   const formatNumber = (number) => {
     return new Intl.NumberFormat("vi-VN").format(number);
   };
@@ -38,9 +38,17 @@ const Customer = () => {
       console.error("Failed to fetch user data:", error);
     }
   };
-
+  const fetchBookingData = async () => {
+    try {
+      const response = await axios.get(apiBooking);
+      setBookingData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch booking data:", error);
+    }
+  };
   useEffect(() => {
     fetchUserData();
+    fetchBookingData();
     const userCount = userData.filter((u) => u.role === "User").length;
     setTotalUsers(userCount);
   }, [userData]);
@@ -114,7 +122,9 @@ const Customer = () => {
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.phoneNumber.includes(searchTerm)
   );
-
+  const calculateTotalBookings = (userId) => {
+    return bookingData.filter((booking) => booking.userId === userId).length;
+  };
   const columns = [
     {
       title: "ID",
@@ -153,7 +163,7 @@ const Customer = () => {
       ],
       onFilter: (value, record) => record.type === value,
       render: (type) => (
-        <Tag color={type === "VIP" ? "gold" : "blue"}>{type}</Tag>
+        <Tag color={type === "VIP" ? "#FAC140" : "#64A587"}>{type}</Tag>
       ),
     },
     {
@@ -165,23 +175,34 @@ const Customer = () => {
 
         switch (description) {
           case "Khách hàng ưu tiên":
-            color = "seagreen";
+            color = "#FFCB77";
             break;
           case "Khách hàng mới":
-            color = "blue";
+            color = "#17C3B2";
             break;
           case "Khách hàng cũ":
-            color = "grey";
+            color = "#227C9D";
             break;
           case "Khách hàng tiềm năng":
-            color = "purple";
+            color = "#FE6D73";
             break;
           default:
             color = "black";
         }
 
-        return <span style={{ color, fontWeight: "bold" }}>{description}</span>;
+        return (
+          <span style={{ color, fontFamily: "Arial", fontWeight: "bold" }}>
+            {description}
+          </span>
+        );
       },
+    },
+    {
+      title: "Tổng đơn hàng",
+      key: "totalBookings",
+      render: (_, record) => calculateTotalBookings(record.id),
+      sorter: (a, b) =>
+        calculateTotalBookings(a.id) - calculateTotalBookings(b.id),
     },
     {
       title: "Điểm",
@@ -193,6 +214,8 @@ const Customer = () => {
     {
       title: "Chỉnh sửa",
       key: "action",
+      width: 200,
+      align: "center",
       render: (_, record) => (
         <>
           <Button variant="primary" onClick={() => handleEdit(record)}>
