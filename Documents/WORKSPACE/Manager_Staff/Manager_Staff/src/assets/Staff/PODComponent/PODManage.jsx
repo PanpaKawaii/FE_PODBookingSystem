@@ -70,10 +70,19 @@ export default function PODManage() {
     try {
       setLoading(true);
       const podId = form.getFieldValue("id");
-      const response = await axios.put(`${apiPod}/${podId}`, {
+      const podData = {
+        id: podId,
+        name: values.name,
+        image: values.image || "string", // Giả sử chúng ta không có trường nhập hình ảnh
+        description: values.description,
+        rating: values.rating,
         status: values.status,
-      });
-      message.success("Trạng thái POD được cập nhật thành công");
+        typeId: values.typeId,
+        storeId: values.storeId,
+        utilityId: values.utilityId ? [values.utilityId] : [0], // Chuyển đổi thành mảng với giá trị mặc định là [0]
+      };
+      const response = await axios.put(`${apiPod}/${podId}`, podData);
+      message.success("Thông tin POD được cập nhật thành công");
       fetchPODData();
       setIsModalVisible(false);
     } catch (error) {
@@ -83,6 +92,99 @@ export default function PODManage() {
       setLoading(false);
     }
   };
+
+  // ... phần còn lại của mã ...
+
+  <Modal
+    title="Chỉnh sửa POD"
+    visible={isModalVisible}
+    onCancel={() => {
+      setIsModalVisible(false);
+      form.resetFields();
+    }}
+    footer={null}
+    confirmLoading={loading}
+  >
+    <Form form={form} onFinish={handleEdit} layout="vertical">
+      <Form.Item name="id" hidden>
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="name"
+        label="Tên"
+        rules={[{ required: true, message: "Vui lòng nhập tên POD" }]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="description"
+        label="Mô tả"
+        rules={[{ required: true, message: "Vui lòng nhập mô tả POD" }]}
+      >
+        <Input.TextArea />
+      </Form.Item>
+      <Form.Item
+        name="rating"
+        label="Đánh giá"
+        rules={[{ required: true, message: "Vui lòng nhập đánh giá" }]}
+      >
+        <InputNumber min={1} max={5} step={1} />
+      </Form.Item>
+      <Form.Item
+        name="status"
+        label="Trạng thái"
+        rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
+      >
+        <Select>
+          <Select.Option value="Còn trống">Còn trống</Select.Option>
+          <Select.Option value="Đang sử dụng">Đang sử dụng</Select.Option>
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name="typeId"
+        label="Loại POD"
+        rules={[{ required: true, message: "Vui lòng chọn loại POD" }]}
+      >
+        <Select>
+          <Select.Option value={1}>Loại 1</Select.Option>
+          <Select.Option value={2}>Loại 2</Select.Option>
+          <Select.Option value={3}>Loại 3</Select.Option>
+          <Select.Option value={4}>Loại 4</Select.Option>
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name="storeId"
+        label="Cơ sở"
+        rules={[{ required: true, message: "Vui lòng chọn cơ sở" }]}
+      >
+        <Select>
+          {storeData.map((store) => (
+            <Select.Option key={store.id} value={store.id}>
+              {store.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name="utilityId"
+        label="Tiện ích"
+        rules={[{ required: true, message: "Vui lòng chọn tiện ích" }]}
+      >
+        <Select>
+          {utilityData.map((utility) => (
+            <Select.Option key={utility.id} value={utility.id}>
+              {utility.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading}>
+          Lưu thay đổi
+        </Button>
+      </Form.Item>
+    </Form>
+  </Modal>;
 
   useEffect(() => {
     fetchPODData();
@@ -248,6 +350,30 @@ export default function PODManage() {
             <Input />
           </Form.Item>
           <Form.Item
+            name="description"
+            label="Mô tả"
+            rules={[{ required: true, message: "Vui lòng nhập mô tả POD" }]}
+          >
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item
+            name="rating"
+            label="Đánh giá"
+            rules={[{ required: true, message: "Vui lòng nhập đánh giá" }]}
+          >
+            <InputNumber min={1} max={5} step={1} />
+          </Form.Item>
+          <Form.Item
+            name="status"
+            label="Trạng thái"
+            rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
+          >
+            <Select>
+              <Select.Option value="Còn trống">Còn trống</Select.Option>
+              <Select.Option value="Đang sử dụng">Đang sử dụng</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
             name="typeId"
             label="Loại POD"
             rules={[{ required: true, message: "Vui lòng chọn loại POD" }]}
@@ -255,6 +381,8 @@ export default function PODManage() {
             <Select>
               <Select.Option value={1}>Loại 1</Select.Option>
               <Select.Option value={2}>Loại 2</Select.Option>
+              <Select.Option value={3}>Loại 3</Select.Option>
+              <Select.Option value={4}>Loại 4</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -271,35 +399,17 @@ export default function PODManage() {
             </Select>
           </Form.Item>
           <Form.Item
-            name="status"
-            label="Trạng thái"
-            rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
+            name="utilityId"
+            label="Tiện ích"
+            rules={[{ required: true, message: "Vui lòng chọn tiện ích" }]}
           >
             <Select>
-              <Select.Option value="Còn trống">Còn trống</Select.Option>
-              <Select.Option value="Đang sử dụng">Đang sử dụng</Select.Option>
+              {utilityData.map((utility) => (
+                <Select.Option key={utility.id} value={utility.id}>
+                  {utility.name}
+                </Select.Option>
+              ))}
             </Select>
-          </Form.Item>
-          <Form.Item
-            name="rating"
-            label="Đánh giá"
-            rules={[{ required: true, message: "Vui lòng nhập đánh giá" }]}
-          >
-            <InputNumber min={1} max={5} step={1} />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Mô tả"
-            rules={[{ required: true, message: "Vui lòng nhập mô tả POD" }]}
-          >
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item
-            name="utilityId"
-            label="utilityId"
-            rules={[{ required: true, message: "Vui lòng nhập tiện ích POD" }]}
-          >
-            <InputNumber />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={loading}>
