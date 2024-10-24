@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { message, Popconfirm, Table, Tag, Input } from "antd";
 import {
@@ -12,6 +12,7 @@ import {
   SearchOutlined,
   LoadingOutlined,
   UserOutlined,
+  EyeTwoTone,
 } from "@ant-design/icons";
 
 const { Search } = Input;
@@ -24,6 +25,8 @@ const Customer = () => {
   const [bookingData, setBookingData] = useState([]);
   const [editedUser, setEditedUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [selectedUserBookings, setSelectedUserBookings] = useState([]);
   const apiUser = "https://localhost:7166/api/User";
   const apiBooking = "https://localhost:7166/api/Booking";
   const formatNumber = (number) => {
@@ -112,7 +115,13 @@ const Customer = () => {
       console.error("Failed to update user:", error);
     }
   };
-
+  const handleViewBookings = (userId) => {
+    const userBookings = bookingData.filter(
+      (booking) => booking.userId === userId
+    );
+    setSelectedUserBookings(userBookings);
+    setShowBookingModal(true);
+  };
   const handleSearch = (value) => {
     setSearchTerm(value);
   };
@@ -200,7 +209,27 @@ const Customer = () => {
     {
       title: "Tổng đơn hàng",
       key: "totalBookings",
-      render: (_, record) => calculateTotalBookings(record.id),
+      width: 150,
+      render: (_, record) => (
+        <span>
+          {calculateTotalBookings(record.id)}{" "}
+          <Button
+            variant="info"
+            size="sm"
+            type="primary"
+            onClick={() => handleViewBookings(record.id)}
+            style={{
+              marginLeft: 5,
+              backgroundColor: "#FAFBFB",
+              border: "1px solid gray",
+              borderRadius: 5,
+              marginBottom: 1,
+            }}
+          >
+            <EyeTwoTone /> Chi tiết
+          </Button>
+        </span>
+      ),
       sorter: (a, b) =>
         calculateTotalBookings(a.id) - calculateTotalBookings(b.id),
     },
@@ -239,6 +268,62 @@ const Customer = () => {
   return (
     <div className="user-manage">
       <h1>Tài khoản khách hàng</h1>
+      <Modal
+        show={showBookingModal}
+        onHide={() => setShowBookingModal(false)}
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Chi tiết đơn đặt hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table
+            dataSource={selectedUserBookings}
+            columns={[
+              {
+                title: "ID",
+                dataIndex: "id",
+                key: "id",
+              },
+              {
+                title: "Ngày đặt",
+                dataIndex: "date",
+                key: "date",
+                render: (date) => new Date(date).toLocaleDateString(),
+              },
+              {
+                title: "Trạng thái",
+                dataIndex: "status",
+                key: "status",
+                render: (status) => (
+                  <Tag color={status === "Xác nhận" ? "green" : "blue"}>
+                    {status}
+                  </Tag>
+                ),
+              },
+              {
+                title: "Phản hồi",
+                dataIndex: "feedback",
+                key: "feedback",
+              },
+              {
+                title: "ID POD",
+                dataIndex: "podId",
+                key: "podId",
+              },
+            ]}
+            pagination={false}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowBookingModal(false)}
+          >
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Search
         placeholder="Tìm kiếm theo email hoặc số điện thoại"
         allowClear

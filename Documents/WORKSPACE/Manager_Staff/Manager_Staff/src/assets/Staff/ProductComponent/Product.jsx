@@ -291,7 +291,11 @@ function Product() {
             label="Giá"
             rules={[{ required: true, message: "Vui lòng nhập giá sản phẩm" }]}
           >
-            <Input placeholder="vnđ" onChange={handlePriceChange} />
+            <Input
+              placeholder="vnđ"
+              onChange={handlePriceChange}
+              step={10000}
+            />
           </Form.Item>
           <Form.Item
             name="description"

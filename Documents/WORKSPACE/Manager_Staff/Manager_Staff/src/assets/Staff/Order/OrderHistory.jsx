@@ -184,7 +184,21 @@ const OrderHistory = () => {
   };
 
   const renderOrderStatus = (status) => {
-    return <Tag color="seagreen">{status}</Tag>;
+    let color;
+    switch (status) {
+      case "Xác nhận":
+        color = "seagreen";
+        break;
+      case "Đã thanh toán":
+        color = "seagreen";
+        break;
+      case "Đang chờ":
+        color = "cornflowerblue";
+        break;
+      default:
+        color = "cornflowerblue";
+    }
+    return <Tag color={color}>{status}</Tag>;
   };
 
   const userColumns = [
@@ -346,8 +360,8 @@ const OrderHistory = () => {
             <p>- Số lượng : {formatNumber(order.quantity)}</p>
             <p>- Tổng tiền : {formatCurrency(order.amount)}</p>
             <p>
-              <strong>Trạng thái đơn hàng : </strong>{" "}
-              {renderOrderStatus(order.status)}
+              <strong>Trạng thái đơn hàng</strong>
+              {" (Sản phẩm thêm)  "} : {renderOrderStatus(order.status)}
             </p>
           </div>
         );

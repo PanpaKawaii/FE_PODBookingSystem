@@ -93,99 +93,6 @@ export default function PODManage() {
     }
   };
 
-  // ... phần còn lại của mã ...
-
-  <Modal
-    title="Chỉnh sửa POD"
-    visible={isModalVisible}
-    onCancel={() => {
-      setIsModalVisible(false);
-      form.resetFields();
-    }}
-    footer={null}
-    confirmLoading={loading}
-  >
-    <Form form={form} onFinish={handleEdit} layout="vertical">
-      <Form.Item name="id" hidden>
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="name"
-        label="Tên"
-        rules={[{ required: true, message: "Vui lòng nhập tên POD" }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="description"
-        label="Mô tả"
-        rules={[{ required: true, message: "Vui lòng nhập mô tả POD" }]}
-      >
-        <Input.TextArea />
-      </Form.Item>
-      <Form.Item
-        name="rating"
-        label="Đánh giá"
-        rules={[{ required: true, message: "Vui lòng nhập đánh giá" }]}
-      >
-        <InputNumber min={1} max={5} step={1} />
-      </Form.Item>
-      <Form.Item
-        name="status"
-        label="Trạng thái"
-        rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
-      >
-        <Select>
-          <Select.Option value="Còn trống">Còn trống</Select.Option>
-          <Select.Option value="Đang sử dụng">Đang sử dụng</Select.Option>
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="typeId"
-        label="Loại POD"
-        rules={[{ required: true, message: "Vui lòng chọn loại POD" }]}
-      >
-        <Select>
-          <Select.Option value={1}>Loại 1</Select.Option>
-          <Select.Option value={2}>Loại 2</Select.Option>
-          <Select.Option value={3}>Loại 3</Select.Option>
-          <Select.Option value={4}>Loại 4</Select.Option>
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="storeId"
-        label="Cơ sở"
-        rules={[{ required: true, message: "Vui lòng chọn cơ sở" }]}
-      >
-        <Select>
-          {storeData.map((store) => (
-            <Select.Option key={store.id} value={store.id}>
-              {store.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="utilityId"
-        label="Tiện ích"
-        rules={[{ required: true, message: "Vui lòng chọn tiện ích" }]}
-      >
-        <Select>
-          {utilityData.map((utility) => (
-            <Select.Option key={utility.id} value={utility.id}>
-              {utility.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit" loading={loading}>
-          Lưu thay đổi
-        </Button>
-      </Form.Item>
-    </Form>
-  </Modal>;
-
   useEffect(() => {
     fetchPODData();
     fetchStoreData();
@@ -272,7 +179,12 @@ export default function PODManage() {
       ],
       onFilter: (value, record) => record.status.includes(value),
       render: (status) => (
-        <Tag color={status === "Hoạt động" ? "blue" : "green"}>{status}</Tag>
+        <Tag
+          color={status === "Còn trống" ? "#17C3B2" : "#FE6D73"}
+          style={{ fontSize: "15px" }}
+        >
+          {status}
+        </Tag>
       ),
     },
     {
@@ -347,7 +259,7 @@ export default function PODManage() {
             label="Tên"
             rules={[{ required: true, message: "Vui lòng nhập tên POD" }]}
           >
-            <Input />
+            <Input readOnly />
           </Form.Item>
           <Form.Item
             name="description"

@@ -11,6 +11,7 @@ import {
   faFileInvoiceDollar,
   faMugHot,
   faCommentDollar,
+  faList,
 } from "@fortawesome/free-solid-svg-icons";
 import { Badge } from "antd";
 
@@ -86,7 +87,8 @@ const Sidebar = () => {
           style={{ fontSize: "30px", cursor: "pointer" }}
           onClick={toggleNav}
         >
-          &#9776;
+          {/* &#9776; */}
+          <FontAwesomeIcon icon={faList} />
         </span>
       </div>
     </div>
