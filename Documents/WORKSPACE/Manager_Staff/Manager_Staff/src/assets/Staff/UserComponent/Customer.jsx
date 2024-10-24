@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { message, Popconfirm, Table, Tag, Input } from "antd";
 import {

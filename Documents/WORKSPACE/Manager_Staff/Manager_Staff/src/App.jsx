@@ -21,6 +21,7 @@ import Staff from "./assets/Staff/UserComponent/Staff";
 import Customer from "./assets/Staff/UserComponent/Customer";
 import OrderHistory from "./assets/Staff/Order/OrderHistory";
 import Product from "./assets/Staff/ProductComponent/Product";
+import OrderProduct from "./assets/Staff/ProductComponent/OrderProduct";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
               <Route path="/staff" element={<Staff />}></Route>
               <Route path="/customer" element={<Customer />}></Route>
               <Route path="/product" element={<Product />}></Route>
+              <Route path="/booking-order" element={<OrderProduct />}></Route>
             </Routes>
           </div>
         </div>
