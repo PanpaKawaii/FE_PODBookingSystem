@@ -35,3 +35,21 @@ div.header-container {
   color: #6c757d; /* Màu cho chức vụ */
 }
 
+.inno {
+  margin-right: 30rem;
+  font-weight: bold;
+  font-size: 40px;
+  background: linear-gradient(90deg,#746C6B,#C49A68, #FFD66D);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientText 3s infinite;
+}
+
+@keyframes gradientText {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 100%;
+  }
+}

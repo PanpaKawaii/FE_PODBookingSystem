@@ -8,7 +8,9 @@
 }
 
 .store-card{
-padding:20px}
+padding:20px;
+height: 99%;
+}
 
 /* Thêm quy tắc cho responsive */
 @media screen and (max-width: 768px) {
@@ -24,7 +26,7 @@ padding:20px}
 
 form {
     max-width: 400px; /* Set a maximum width for the form */
-    margin: 20px auto; /* Center the form horizontally */
+    margin: 15px auto; /* Center the form horizontally */
     padding: 20px; /* Add padding inside the form */
     border: 1px solid #ccc; /* Add a border around the form */
     border-radius: 5px; /* Round the corners of the form */
@@ -66,14 +68,9 @@ div.card-body{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-family: Arial;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 5px;
 }
 
-.add-store-button{
-    color: black;
-    background-color: rgb(133, 71, 240);
-    border-color: rgb(133, 71, 290);
-    padding: 0.5rem 0.5rem;
-    border-radius: 0.5rem;
-    text-decoration: none;
-    margin-right: 32px;
-}

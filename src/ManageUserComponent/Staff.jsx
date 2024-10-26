@@ -1,62 +1,287 @@
-import React from 'react';
-import './UserManage.css'; // Thêm CSS cho component
-import Button from 'react-bootstrap/Button'; // Thêm import cho Button
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'; // Thêm import cho biểu tượng
-import { useState, useEffect } from 'react';
-import api from '../api/axios';
-import { Row } from 'react-bootstrap';
-import avatar from '../Admin_image/avt.jpg';
-import { Link } from 'react-router-dom';
-const Staff = () => {
-    const [staff, setStaff] = useState([]);
-    const fetchStaff = async () => {
-        try {
-            const response = await api.get("User");
-            const filteredUsers = response.data.filter(user => user.role === "Staff");
-            setStaff(filteredUsers);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    useEffect(() => {
-        fetchStaff();
-    }, []);
+import React, { useState, useEffect } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEdit,
+  faTrash,
+  faUserMinus,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import { message, Popconfirm, Table, Tag } from "antd";
+import {
+  ReloadOutlined,
+  PlusOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+import api from "../api/axios";
+import avatar from "../Admin_image/avt.jpg";
+import { Link } from "react-router-dom";
 
+const Staff = () => {
+  const [staffData, setStaffData] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [editedStaff, setEditedStaff] = useState(null);
+
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat("vi-VN").format(number);
+  };
+
+  const fetchStaffData = async () => {
+    try {
+      const response = await api.get("User");
+      setStaffData(response.data.filter((user) => user.role === "Staff"));
+    } catch (error) {
+      console.error("Failed to fetch staff data:", error);
+      // message.error("Không thể tải dữ liệu nhân viên");
+    }
+  };
+
+  useEffect(() => {
+    fetchStaffData();
+  }, []);
+
+  const handleEdit = (staff) => {
+    setSelectedStaff(staff);
+    setEditedStaff({ ...staff });
+    setShowModal(true);
+  };
+  if (staffData.length === 0) {
     return (
-        <>
-            <Row >
-            <div className="user-manage">
-                <h1>Tài khoản nhân viên</h1>
-                <div className="user-list">
-                    {staff.map((staff, index) => (
-                        <div key={index} className="user-card">
-                            <img src={avatar} alt={`${staff.name}'s avatar`} className="user-avatar" />
-                            <div className="user-info">
-                                <h3>{staff.name} !</h3>
-                                <p><strong>ID:</strong> {staff.id}</p>
-                                <p><strong>Tên:</strong> {staff.name}</p>
-                                <p><strong>Email:</strong> {staff.email}</p>
-                                <p><strong>Số điện thoại:</strong> {staff.phoneNumber}</p>
-                                <p><strong>Loại tài khoản:</strong> {staff.type}</p>
-                                <p><strong>Điểm thưởng:</strong> {staff.point}</p>
-                            </div>
-                            <div className="user-actions">
-                                <Button variant onClick={() => handleEdit(idx)}>
-                                    <FontAwesomeIcon icon={faEdit} /> {/* Biểu tượng sửa */}
-                                </Button>
-                                <Button variant onClick={() => handleDelete(idx)}>
-                                    <FontAwesomeIcon icon={faTrash} /> {/* Biểu tượng xóa */}
-                                </Button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <button className="add-button"><Link to="/addStaff">+</Link></button>
-            </div>
-        </Row >
-        </>
+      <p style={{ marginLeft: "1%" }}>
+        Loading... <LoadingOutlined />
+      </p>
     );
+  }
+
+  const handleDelete = async (staffId) => {
+    try {
+      await api.delete(`User/${staffId}`);
+      message.success("Xoá thành công");
+      fetchStaffData();
+    } catch (error) {
+      console.error("Error deleting staff:", error);
+      message.error("Xoá không thành công");
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedStaff(null);
+    setEditedStaff(null);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedStaff((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      const response = await api.put(`User/${editedStaff.id}`, editedStaff);
+      if (response.status === 200) {
+        setStaffData((prevData) =>
+          prevData.map((staff) =>
+            staff.id === editedStaff.id ? editedStaff : staff
+          )
+        );
+      }
+      handleCloseModal();
+      message.success("Thay đổi thành công");
+      fetchStaffData();
+    } catch (error) {
+      console.error("Failed to update staff:", error);
+      message.error("Cập nhật không thành công");
+    }
+  };
+
+  const handleAdd = () => {
+    setEditedStaff({
+      name: "",
+      email: "",
+      phoneNumber: "",
+      type: "",
+      point: 0,
+      role: "Staff",
+    });
+    setShowModal(true);
+  };
+
+  const columns = [
+    {
+      title: "Avatar",
+      key: "avatar",
+      render: () => (
+        <img
+          src={avatar}
+          alt="Avatar"
+          style={{ width: 50, height: 50, borderRadius: "50%" }}
+        />
+      ),
+    },
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+    },
+    {
+      title: "Loại tài khoản",
+      dataIndex: "type",
+      key: "type",
+      align: "center",
+      render: (type) => <Tag color="geekblue-inverse">ADMIN</Tag>,
+    },
+    {
+      title: "Điểm thưởng",
+      dataIndex: "point",
+      key: "point",
+      render: (point) => formatNumber(point),
+    },
+    {
+      title: "Thao tác",
+      key: "action",
+      render: (_, record) => (
+        <>
+          <Button variant="primary" onClick={() => handleEdit(record)}>
+            <FontAwesomeIcon icon={faEdit} /> Sửa
+          </Button>{" "}
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa nhân viên này?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Có"
+            cancelText="Không"
+          >
+            <Button variant="danger">
+              <FontAwesomeIcon icon={faUserMinus} />
+            </Button>
+          </Popconfirm>
+        </>
+      ),
+    },
+  ];
+
+  return (
+    <div
+      style={{
+        backgroundColor: "#F5F5F5",
+        borderRadius: "10px",
+        border: "1px solid #9da5ac",
+      }}
+      className="user-manage"
+    >
+      <h1 style={{ fontFamily: "Arial", fontSize: 30 }}>Tài khoản nhân viên</h1>
+      {/* <Button style={{ marginBottom: "10px" }} onClick={fetchStaffData}>
+        <ReloadOutlined />
+      </Button> */}
+      <Button style={{ marginLeft: "10px", marginBottom: "10px" }}>
+        <Link to="/addstaff" style={{ color: "#FAFBFB" }}>
+          <FontAwesomeIcon icon={faUserPlus} />
+        </Link>
+      </Button>
+      <Table
+        dataSource={staffData}
+        columns={columns}
+        rowKey="id"
+        pagination={{ pageSize: 10 }}
+        bordered
+        style={{ backgroundColor: "#FAFBFB" }}
+      />
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {selectedStaff
+              ? "Chỉnh sửa thông tin nhân viên"
+              : "Thêm nhân viên mới"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {editedStaff && (
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Label>Tên</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={editedStaff.name}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={editedStaff.email}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Số điện thoại</Form.Label>
+                <Form.Control
+                  type="tel"
+                  name="phoneNumber"
+                  value={editedStaff.phoneNumber}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Loại tài khoản</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="type"
+                  value={editedStaff.type}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Điểm thưởng</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="point"
+                  value={editedStaff.point}
+                  onChange={handleInputChange}
+                  step={100}
+                />
+              </Form.Group>
+            </Form>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Đóng
+          </Button>
+          <Popconfirm
+            title="Bạn có chắc chắn muốn lưu thay đổi không?"
+            onConfirm={handleSaveChanges}
+            okText="Có"
+            cancelText="Không"
+          >
+            <Button variant="primary">Lưu thay đổi</Button>
+          </Popconfirm>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
 };
 
 export default Staff;

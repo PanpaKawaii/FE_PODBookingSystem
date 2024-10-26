@@ -1,70 +1,200 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'; // Thêm import cho biểu tượng
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button'; // Thêm import cho Button
-import { Link } from 'react-router-dom';
-import './style.css';
-import api from '../api/axios';
-import space from '../Admin_image/space.jpg'
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
+import { Link } from "react-router-dom";
+import "./style.css";
+import api from "../api/axios";
+import space from "../Admin_image/space.jpg";
+import { message, Popconfirm } from "antd";
+
 export default function Store() {
+  const [stores, setStores] = useState([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingStore, setEditingStore] = useState(null);
 
-    const [store, setStore] = useState([]);
-
-  const fetchStore = async () => {
+  const fetchStores = async () => {
     try {
       const response = await api.get("Store");
-      setStore(response.data);
+      setStores(response.data);
     } catch (err) {
       console.log(err);
     }
-  }
-  useEffect(() => {
-    fetchStore();
-  }, [])
-    return (
-        <>
-        <div className='title-store'>
-            <h1>Cửa hàng</h1>
-            <button className='add-store-button'>
-                <Link to="/addstore">Thêm cửa hàng</Link>
-            </button>
-        </div>
-            <div className="container mt-4">
-                <div className="row">
-                    {store.map((store, idx) => (
-                    <div className="col-md-6" key={store.id || idx}>
-                        <div className="card store-card">
-                            <img src={space} alt="Store 1" className="store-img card-img-top" />
-                            <div className="card-body">
-                                <h5 className="card-title">{store.name}</h5>
-                                <p>Địa chỉ: {store.address}</p>
-                                <p>Số điện thoại: {store.contact}</p>
-                                <p>Giờ mở cửa: 7:00 - 00:00 </p>
-                                <p>Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                <Card.Footer className='d-flex justify-content-between'>
-                                    <Button variant onClick={() => handleEdit(idx)}>
-                                        <FontAwesomeIcon icon={faEdit} /> {/* Biểu tượng sửa */}
-                                    </Button>
-                                    <Button variant onClick={() => handleDelete(idx)}>
-                                        <FontAwesomeIcon icon={faTrash} /> {/* Biểu tượng xóa */}
-                                    </Button>
-                                </Card.Footer>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    ))} 
-                </div>
-            </div>
-          
+  };
 
-        </>
-    );
+  useEffect(() => {
+    fetchStores();
+  }, []);
+
+  const handleEdit = (store) => {
+    setEditingStore(store);
+    setShowEditModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowEditModal(false);
+    setEditingStore(null);
+  };
+
+  const handleUpdateStore = async () => {
+    try {
+      await api.put(`Store/${editingStore.id}`, editingStore);
+      setShowEditModal(false);
+      fetchStores(); // Refresh the stores list
+      message.success("Sửa thành công");
+    } catch (err) {
+      console.log(err);
+      message.error("Có lỗi xảy ra khi cập nhật");
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditingStore({ ...editingStore, [name]: value });
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`Store/${id}`);
+      fetchStores(); // Refresh the stores list
+      message.success("Xoá thành công");
+    } catch (err) {
+      console.log(err);
+      message.error("Có lỗi xảy ra khi xóa");
+    }
+  };
+
+  return (
+    <>
+      <div className="title-store">
+        <h1
+          style={{
+            marginLeft: "1rem",
+            alignItems: "center",
+            fontFamily: "Arial",
+          }}
+        >
+          Cửa hàng
+        </h1>
+        <Button
+          style={{
+            marginRight: "10px",
+            backgroundColor: "whiteblue",
+            borderColor: "#9da5ac",
+            borderRadius: "10px",
+            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Link style={{ color: "#FAFBFB" }} to="/addstore">
+            Thêm cửa hàng
+          </Link>
+        </Button>
+      </div>
+      <div
+        className="container"
+        style={{
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          marginTop: "0",
+          backgroundColor: "#F5F5F5",
+          borderRadius: "10px",
+          border: "1px solid #9da5ac",
+        }}
+      >
+        <div className="row" style={{ padding: "1rem", width: "100%" }}>
+          {stores.map((store) => (
+            <div className="col-md-6" key={store.id}>
+              <div className="card store-card">
+                <img
+                  src={space}
+                  alt="Store 1"
+                  className="store-img card-img-top"
+                  style={{
+                    width: "100%",
+                    height: "360px", // Điều chỉnh chiều cao theo ý muốn
+                    objectFit: "cover", // Đảm bảo hình ảnh lấp đầy không gian mà không bị méo
+                    borderTopLeftRadius: "10px",
+                    borderTopRightRadius: "10px",
+                  }}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{store.name}</h5>
+                  <p>Địa chỉ: {store.address}</p>
+                  <p>Số điện thoại: {store.contact}</p>
+                  <p>Giờ mở cửa: 7:00 - 00:00 </p>
+
+                  <Card.Footer className="d-flex justify-content-between">
+                    <Button variant="primary" onClick={() => handleEdit(store)}>
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Button>
+
+                    <Popconfirm
+                      title="Xác nhận xóa"
+                      description="Bạn có chắc chắn muốn xóa cửa hàng này?"
+                      onConfirm={() => handleDelete(store.id)}
+                      okText="Xóa"
+                      cancelText="Hủy"
+                    >
+                      <Button variant="danger">
+                        <FontAwesomeIcon icon={faTrash} />
+                      </Button>
+                    </Popconfirm>
+                  </Card.Footer>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Modal show={showEditModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Chỉnh sửa cửa hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Tên cửa hàng</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                value={editingStore?.name || ""}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Địa chỉ</Form.Label>
+              <Form.Control
+                type="text"
+                name="address"
+                value={editingStore?.address || ""}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Số điện thoại</Form.Label>
+              <Form.Control
+                type="text"
+                name="contact"
+                value={editingStore?.contact || ""}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Popconfirm
+              title="Xác nhận lưu thay đổi"
+              description="Bạn có chắc chắn muốn lưu những thay đổi này?"
+              onConfirm={handleUpdateStore}
+              okText="Lưu"
+              cancelText="Hủy"
+            >
+              <Button variant="primary">Lưu thay đổi</Button>
+            </Popconfirm>
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
 }
-// function navigateToAddStore() {
-//     // Logic to navigate to the add store form
-//     // For example, using react-router:
-//     // history.push('/add-store');
-// }
