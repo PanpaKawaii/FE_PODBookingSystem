@@ -12,6 +12,11 @@ import Manager from "./ManageUserComponent/Manager";
 import Customer from "./ManageUserComponent/Customer";
 import AddPOD from "./ManagePODComponent/AddPOD";
 import AddStaff from "./ManageUserComponent/AddStaff";
+import Product from "./ProductComponent/Product.jsx";
+import Order from "./Order/Order.jsx";
+import OrderHistory from "./Order/OrderHistory.jsx";
+
+import OrderProduct from "./ProductComponent/OrderProduct.jsx";
 function App() {
   return (
     <div className="admin-container">
@@ -31,6 +36,10 @@ function App() {
             <Route path="/customer" element={<Customer />}></Route>
             <Route path="/addpod" element={<AddPOD />}></Route>
             <Route path="/addstaff" element={<AddStaff />}></Route>
+            <Route path="/product" element={<Product />}></Route>
+            <Route path="/history" element={<OrderHistory />}></Route>
+            <Route path="/order" element={<Order />}></Route>
+            <Route path="/booking-order" element={<OrderProduct />}></Route>
           </Routes>
         </div>
       </div>

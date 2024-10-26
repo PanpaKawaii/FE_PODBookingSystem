@@ -1,0 +1,99 @@
+/* Order.css */
+.user-manage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .user-manage h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+  }
+  
+  .user-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  
+  .user-info {
+    padding: 20px;
+  }
+  
+  .user-info h3 {
+    color: #2c3e50;
+    margin-top: 0;
+  }
+  
+  .user-info p {
+    margin: 10px 0;
+    color: #34495e;
+  }
+  
+  .booking-info {
+    background-color: #ecf0f1;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 4px;
+  }
+  
+  .booking-info h4 {
+    color: #2980b9;
+    margin-top: 0;
+  }
+  
+  .order-info {
+    background-color: #ffffff;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .user-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    background-color: #e8e8e8;
+  }
+  
+  .user-actions button {
+    margin-left: 10px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .user-manage {
+      padding: 10px;
+    }
+    
+    .user-card {
+      margin-bottom: 15px;
+    }
+    
+    .user-info, .booking-info, .order-info {
+      padding: 10px;
+    }
+  }
+  .ant-card-head {
+    border: 1px solid grey !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  .ant-card-body {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 0.5px solid rgb(201, 197, 197) !important;
+  }
+  .ant-table-thead{
+    border-bottom: 1px solid rgb(201, 197, 197) !important;
+  }
+  .ant-modal-body{
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid grey;
+    margin: 5px;
+    padding: 7px !important;
+  }

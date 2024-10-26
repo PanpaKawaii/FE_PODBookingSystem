@@ -3,7 +3,7 @@ import "./UserManage.css";
 import Button from "react-bootstrap/Button";
 import api from "../api/axios";
 import { Form } from "react-bootstrap";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 
 const AddStaff = () => {
