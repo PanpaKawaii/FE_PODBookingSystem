@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Order.css";
 import {
   Table,
   Card,
@@ -11,15 +10,22 @@ import {
   Input,
   Space,
   DatePicker,
+  Popconfirm,
+  Form,
+  message,
 } from "antd";
-import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
 import {
+  SearchOutlined,
+  EyeOutlined,
+  DeleteFilled,
+  EditFilled,
   LoadingOutlined,
   EyeTwoTone,
   EyeInvisibleTwoTone,
+  ReloadOutlined,
 } from "@ant-design/icons";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
 const { Title } = Typography;
@@ -36,6 +42,8 @@ const OrderHistory = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editingOrder, setEditingOrder] = useState(null);
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -49,6 +57,7 @@ const OrderHistory = () => {
   const apiProduct = "https://localhost:7166/api/Product";
   const apiSlot = "https://localhost:7166/api/Slot";
   const apiPod = "https://localhost:7166/api/Pod";
+
   const fetchUserData = async () => {
     try {
       const response = await axios.get(apiUser);
@@ -93,6 +102,7 @@ const OrderHistory = () => {
       console.error("Failed to fetch payment data:", error);
     }
   };
+
   const fetchPodData = async () => {
     try {
       const response = await axios.get(apiPod);
@@ -101,6 +111,7 @@ const OrderHistory = () => {
       console.error("Failed to fetch pod data:", error);
     }
   };
+
   const fetchSlotData = async () => {
     try {
       const response = await axios.get(apiSlot);
@@ -120,6 +131,12 @@ const OrderHistory = () => {
     fetchPodData();
   }, []);
 
+  useEffect(() => {
+    if (startDate && endDate) {
+      calculateRevenue();
+    }
+  }, [startDate, endDate, paymentData, bookingData]);
+
   if (
     userData.length === 0 &&
     bookingData.length === 0 &&
@@ -133,6 +150,47 @@ const OrderHistory = () => {
       </p>
     );
   }
+
+  const handleOpenEditOrderProductModal = (record) => {
+    setEditingOrder(record);
+    setIsEditModalVisible(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalVisible(false);
+    setEditingOrder(null);
+  };
+
+  const handleEditOrderProduct = async (values) => {
+    try {
+      const response = await axios.put(`${apiOrder}/${editingOrder.id}`, {
+        ...editingOrder,
+        ...values,
+        date: dayjs(values.date).format(),
+      });
+      if (response.status === 200) {
+        message.success("Cập nhật đơn hàng thành công");
+        fetchOrderData();
+        handleCloseEditModal();
+      }
+    } catch (error) {
+      console.error("Lỗi khi cập nhật đơn hàng:", error);
+      message.error("Cập nhật đơn hàng thất bại");
+    }
+  };
+
+  const handleDeleteOrderProduct = async (id) => {
+    try {
+      const response = await axios.delete(`${apiOrder}/${id}`);
+      message.success("Xóa đơn hàng thành công");
+      setIsModalVisible(false);
+      fetchOrderData();
+    } catch (error) {
+      console.error("Lỗi khi xóa đơn hàng:", error);
+      message.error("Xóa đơn hàng thất bại");
+    }
+  };
+
   const getSlotInfo = (bookingId) => {
     const slot = slotData.find((slot) =>
       slot.bookings.some((booking) => booking.id === bookingId)
@@ -146,13 +204,19 @@ const OrderHistory = () => {
     }
     return null;
   };
+
   const filteredUsers = userData.filter((user) =>
     user.phoneNumber.includes(searchTerm)
   );
 
-  const filteredBookings = bookingData.filter((booking) =>
-    filteredUsers.some((user) => user.id === booking.userId)
+  const filteredBookings = bookingData.filter(
+    (booking) =>
+      filteredUsers.some((user) => user.id === booking.userId) &&
+      booking.status === "Xác nhận"
   );
+  // const filteredBookings = bookingData.filter((booking) =>
+  //   filteredUsers.some((user) => user.id === booking.userId)
+  // );
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -166,6 +230,40 @@ const OrderHistory = () => {
   const handleCloseModal = () => {
     setIsModalVisible(false);
     setSelectedBooking(null);
+  };
+
+  const handleUpdatePayment = async () => {
+    const totalAmount =
+      (paymentData.find((payment) => payment.bookingId === selectedBooking.id)
+        ?.amount || 0) +
+      (selectedBooking.bookingOrders?.reduce(
+        (total, order) => total + order.amount,
+        0
+      ) || 0);
+
+    const paymentToUpdate = paymentData.find(
+      (payment) => payment.bookingId === selectedBooking.id
+    );
+
+    if (!paymentToUpdate) {
+      message.error("Không tìm thấy thông tin thanh toán");
+      return;
+    }
+
+    try {
+      const response = await axios.put(`${apiPayment}/${paymentToUpdate.id}`, {
+        ...paymentToUpdate,
+        amount: totalAmount,
+        date: dayjs().format(),
+      });
+
+      message.success("Cập nhật thanh toán thành công");
+      fetchPaymentData();
+      handleCloseModal();
+    } catch (error) {
+      console.error("Lỗi khi cập nhật thanh toán:", error);
+      message.error("Cập nhật thanh toán thất bại");
+    }
   };
 
   const formatCurrency = (amount) => {
@@ -187,8 +285,6 @@ const OrderHistory = () => {
     let color;
     switch (status) {
       case "Xác nhận":
-        color = "seagreen";
-        break;
       case "Đã thanh toán":
         color = "seagreen";
         break;
@@ -218,7 +314,6 @@ const OrderHistory = () => {
         return user ? user.name : "Không xác định";
       },
     },
-
     {
       title: "Số điện thoại",
       key: "phoneNumber",
@@ -281,129 +376,233 @@ const OrderHistory = () => {
     },
   ];
 
+  const orderColumns = [
+    { title: "OrderId", dataIndex: "id", key: "id" },
+    { title: "BookingId", dataIndex: "bookingId", key: "bookingId" },
+    {
+      title: "Ngày đặt",
+      dataIndex: "date",
+      key: "date",
+      render: (date) => formatDate(date),
+    },
+    { title: "ProductId", dataIndex: "productId", key: "productId" },
+    {
+      title: "Tên sản phẩm",
+      key: "productName",
+      render: (_, record) => {
+        const product = productData.find((p) => p.id === record.productId);
+        return product ? product.name : "Không xác định";
+      },
+    },
+    { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
+    {
+      title: "Tổng tiền",
+      dataIndex: "amount",
+      key: "amount",
+      render: (amount) => formatCurrency(amount),
+    },
+    {
+      title: "Trạng thái đơn hàng",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => renderOrderStatus(status),
+    },
+    {
+      title: "Chỉnh sửa",
+      key: "actions",
+      render: (_, record) => (
+        <Space>
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa sản phẩm này?"
+            onConfirm={() => handleDeleteOrderProduct(record.id)}
+            okText="Có"
+            cancelText="Không"
+          >
+            <Button type="primary" danger>
+              <DeleteFilled />
+            </Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   const modalContent = selectedBooking ? (
     <div>
-      <p>
-        <strong>Booking ID : </strong> {selectedBooking.id}
-      </p>
-      <p>
-        <strong>Ngày đặt : </strong> {formatDate(selectedBooking.date)}
-      </p>
-      <p>
-        <strong>Tên khách hàng : </strong>{" "}
-        {userData.find((user) => user.id === selectedBooking.userId)?.name}
-      </p>
-      <p>
-        <strong>Email : </strong>{" "}
-        {userData.find((user) => user.id === selectedBooking.userId)?.email}
-      </p>
-      <p>
-        <strong>Số điện thoại : </strong>{" "}
-        {
-          userData.find((user) => user.id === selectedBooking.userId)
-            ?.phoneNumber
-        }
-      </p>
-      <p>
-        <strong>Điểm tích lũy : </strong>{" "}
-        {formatNumber(
-          userData.find((user) => user.id === selectedBooking.userId)?.point
-        )}
-      </p>
-      <p>
-        <strong>Pod ID :</strong> {selectedBooking.podId} -{" "}
-        {podData.find((pod) => pod.id === selectedBooking.podId)?.name}
-      </p>
-      {(() => {
-        const slotInfo = getSlotInfo(selectedBooking.id);
-        return slotInfo ? (
-          <div>
-            <p>
-              <strong>Slot:</strong> {slotInfo.name} ( {slotInfo.startTime}:00 -{" "}
-              {slotInfo.endTime}:00 )
-            </p>
-          </div>
-        ) : (
-          <p>Không có thông tin slot</p>
-        );
-      })()}
-      <p>
-        <strong>Trạng thái :</strong>{" "}
-        {renderOrderStatus(selectedBooking.status)}
-      </p>
-      <p>
-        <strong>Phương thức thanh toán:</strong>{" "}
-        {paymentData.find((payment) => payment.bookingId === selectedBooking.id)
-          ?.method || "Không có thông tin"}
-      </p>
-      <p>
-        <strong>Số tiền thanh toán:</strong>{" "}
-        {formatCurrency(
-          paymentData.find(
-            (payment) => payment.bookingId === selectedBooking.id
-          )?.amount || 0
-        )}
-      </p>
-      {selectedBooking.bookingOrders?.map((order) => {
-        const product = productData.find(
-          (product) =>
-            product.id === order.productId &&
-            selectedBooking.id === order.bookingId
-        );
-        return (
-          <div key={order.id}>
-            <p>
-              <strong>Đồ thêm:</strong>
-            </p>
-            <p>- Mã sản phẩm : {order.productId}</p>
-            <p>- Sản phẩm : {product ? product.name : "Không có thông tin"}</p>
-            <p>- Số lượng : {formatNumber(order.quantity)}</p>
-            <p>- Tổng tiền : {formatCurrency(order.amount)}</p>
-            <p>
-              <strong>Trạng thái đơn hàng</strong>
-              {" (Sản phẩm thêm)  "} : {renderOrderStatus(order.status)}
-            </p>
-          </div>
-        );
-      })}
-      <p>
-        <strong>Tổng số tiền thanh toán : </strong>{" "}
-        {formatCurrency(
-          (paymentData.find(
-            (payment) => payment.bookingId === selectedBooking.id
-          )?.amount || 0) +
-            (selectedBooking.bookingOrders?.reduce(
+      <Card title="Thông tin đặt chỗ" style={{ marginBottom: 10 }}>
+        <Table
+          dataSource={[selectedBooking]}
+          columns={[
+            {
+              title: "Ngày đặt",
+              dataIndex: "date",
+              key: "date",
+              render: (date) => formatDate(date),
+            },
+            {
+              title: "Pod",
+              key: "pod",
+              render: (_, record) => {
+                const pod = podData.find((p) => p.id === record.podId);
+                return pod ? `${record.podId} - ${pod.name}` : "Không xác định";
+              },
+            },
+            {
+              title: "Slot",
+              key: "slot",
+              render: (_, record) => {
+                const slotInfo = getSlotInfo(record.id);
+                return slotInfo ? slotInfo.name : "N/A";
+              },
+            },
+            {
+              title: "Trạng thái",
+              dataIndex: "status",
+              key: "status",
+              render: (status) => renderOrderStatus(status),
+            },
+            {
+              title: "Phương thức thanh toán",
+              key: "paymentMethod",
+              render: (_, record) => {
+                const payment = paymentData.find(
+                  (p) => p.bookingId === record.id
+                );
+                return payment ? payment.method : "Không có thông tin";
+              },
+            },
+            {
+              title: "Feedback",
+              dataIndex: "feedback",
+              key: "feedback",
+              render: (feedback) => feedback || "Chưa có feedback",
+            },
+          ]}
+          pagination={false}
+          bordered
+        />
+      </Card>
+      <Card title="Order thêm">
+        <Table
+          dataSource={selectedBooking.bookingOrders}
+          columns={orderColumns}
+          pagination={false}
+          bordered
+        />
+      </Card>
+      <Card
+        title="Thông tin khách hàng"
+        style={{ marginBottom: 10, marginTop: 10 }}
+      >
+        <p>
+          <strong>Tên khách hàng:</strong>{" "}
+          {userData.find((user) => user.id === selectedBooking.userId)?.name}
+        </p>
+        <p>
+          <strong>Email:</strong>{" "}
+          {userData.find((user) => user.id === selectedBooking.userId)?.email}
+        </p>
+        <p>
+          <strong>Số điện thoại:</strong>{" "}
+          {
+            userData.find((user) => user.id === selectedBooking.userId)
+              ?.phoneNumber
+          }
+        </p>
+        <p>
+          <strong>Điểm tích lũy:</strong>{" "}
+          {formatNumber(
+            userData.find((user) => user.id === selectedBooking.userId)?.point
+          )}
+        </p>
+      </Card>
+      <Card>
+        <p>
+          <strong>Tổng số tiền sản phẩm:</strong>{" "}
+          {formatCurrency(
+            selectedBooking.bookingOrders?.reduce(
               (total, order) => total + order.amount,
               0
-            ) || 0)
-        )}
-      </p>
+            ) || 0
+          )}
+        </p>
+        <p>
+          <strong>Số tiền thanh toán cho POD: </strong>{" "}
+          {formatCurrency(
+            paymentData.find(
+              (payment) => payment.bookingId === selectedBooking.id
+            )?.amount || 0
+          )}
+        </p>
+        <p>
+          <strong>Tổng số tiền phải thanh toán:</strong>{" "}
+          {formatCurrency(
+            (paymentData.find(
+              (payment) => payment.bookingId === selectedBooking.id
+            )?.amount || 0) +
+              (selectedBooking.bookingOrders?.reduce(
+                (total, order) => total + order.amount,
+                0
+              ) || 0)
+          )}
+        </p>
+        <Button type="primary" onClick={handleUpdatePayment}>
+          Cập nhật thanh toán
+        </Button>
+      </Card>
     </div>
   ) : null;
 
   const calculateRevenue = () => {
+    console.log("Calculating revenue...");
+    console.log("Start date:", startDate);
+    console.log("End date:", endDate);
+    console.log("Payment data:", paymentData);
+    console.log("Booking data:", bookingData);
+
     if (!startDate || !endDate) {
-      alert("Vui lòng chọn khoảng thời gian");
+      message.warning("Vui lòng chọn khoảng thời gian");
       return;
     }
 
-    const filteredPayments = paymentData.filter((payment) => {
-      const paymentDate = dayjs(payment.date);
-      return paymentDate.isBetween(startDate, endDate, null, "[]");
-    });
-
-    console.log("Filtered Payments:", filteredPayments);
+    // Lọc các booking có trạng thái "Xác nhận"
+    const confirmedBookings = bookingData.filter(
+      (booking) => booking.status === "Xác nhận"
+    );
 
     const dailyRevenue = {};
-    filteredPayments.forEach((payment) => {
-      const date = dayjs(payment.date).format("YYYY-MM-DD");
-      dailyRevenue[date] = (dailyRevenue[date] || 0) + payment.amount;
+
+    paymentData.forEach((payment) => {
+      const paymentDate = dayjs(payment.date);
+      if (paymentDate.isBetween(startDate, endDate, null, "[]")) {
+        // Chỉ tính doanh thu cho các payment liên quan đến booking đã xác nhận
+        const relatedBooking = confirmedBookings.find(
+          (booking) => booking.id === payment.bookingId
+        );
+        if (relatedBooking) {
+          const date = paymentDate.format("YYYY-MM-DD");
+          dailyRevenue[date] = (dailyRevenue[date] || 0) + payment.amount;
+        }
+      }
     });
+
+    confirmedBookings.forEach((booking) => {
+      const bookingDate = dayjs(booking.date);
+      if (bookingDate.isBetween(startDate, endDate, null, "[]")) {
+        booking.bookingOrders
+          .filter((order) => order.status === "Đã thanh toán")
+          .forEach((order) => {
+            const orderDate = bookingDate.format("YYYY-MM-DD");
+            dailyRevenue[orderDate] =
+              (dailyRevenue[orderDate] || 0) + order.amount;
+          });
+      }
+    });
+
     setRevenueData(
       Object.entries(dailyRevenue).map(([date, amount]) => ({ date, amount }))
     );
 
-    console.log("Revenue Data:", revenueData);
     setShowRevenue(true);
   };
 
@@ -416,7 +615,7 @@ const OrderHistory = () => {
         render: (date) => formatDate(date),
       },
       {
-        title: "Doanh thu",
+        title: "Doanh thu ",
         dataIndex: "amount",
         key: "amount",
         render: (amount) => formatCurrency(amount),
@@ -444,6 +643,55 @@ const OrderHistory = () => {
         }}
       />
     );
+  };
+  const editModalContent = (
+    <Modal
+      title="Chỉnh sửa đơn hàng"
+      visible={isEditModalVisible}
+      onCancel={handleCloseEditModal}
+      footer={null}
+    >
+      {editingOrder && (
+        <Form
+          initialValues={{
+            ...editingOrder,
+            date: dayjs(editingOrder.date),
+          }}
+          onFinish={handleEditOrderProduct}
+        >
+          <Form.Item name="amount" label="Số tiền">
+            <Input type="number" />
+          </Form.Item>
+          <Form.Item name="quantity" label="Số lượng">
+            <Input type="number" min={1} />
+          </Form.Item>
+          <Form.Item name="status" label="Trạng thái">
+            <Input />
+          </Form.Item>
+          <Form.Item name="date" label="Ngày">
+            <DatePicker />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Cập nhật
+            </Button>
+          </Form.Item>
+        </Form>
+      )}
+    </Modal>
+  );
+
+  const handleDateChange = (dates) => {
+    setStartDate(dates ? dates[0] : null);
+    setEndDate(dates ? dates[1] : null);
+  };
+
+  const handleRefresh = () => {
+    fetchPaymentData();
+    fetchBookingData();
+    if (startDate && endDate) {
+      calculateRevenue();
+    }
   };
 
   return (
@@ -475,12 +723,7 @@ const OrderHistory = () => {
       />
       <Card title="Thống kê doanh thu" style={{ marginBottom: 20 }}>
         <Space direction="vertical" size="middle" style={{ display: "flex" }}>
-          <RangePicker
-            onChange={(dates) => {
-              setStartDate(dates ? dates[0] : null);
-              setEndDate(dates ? dates[1] : null);
-            }}
-          />
+          <RangePicker onChange={handleDateChange} />
           <Space>
             <Button onClick={calculateRevenue}>
               <EyeTwoTone />
@@ -492,6 +735,9 @@ const OrderHistory = () => {
                 Ẩn
               </Button>
             )}
+            <Button onClick={handleRefresh} icon={<ReloadOutlined />}>
+              Làm mới dữ liệu
+            </Button>
           </Space>
           {showRevenue && revenueData.length > 0 && renderRevenueTable()}
         </Space>
@@ -511,10 +757,16 @@ const OrderHistory = () => {
         }
         visible={isModalVisible}
         onCancel={handleCloseModal}
-        footer={null}
+        footer={[
+          <Button key="close" onClick={handleCloseModal}>
+            Đóng
+          </Button>,
+        ]}
+        width={1000}
       >
         {modalContent}
       </Modal>
+      {editModalContent}
     </div>
   );
 };

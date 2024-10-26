@@ -8,6 +8,7 @@ import {
   InputNumber,
   Button,
   message,
+  Popconfirm,
 } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -175,14 +176,20 @@ const OrderProduct = () => {
           />
         </Form.Item>
         <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            icon={<FontAwesomeIcon icon={faBoxOpen} />}
-            block
+          <Popconfirm
+            title="Bạn có chắc chắn muốn thêm BookingOrder này không?"
+            onConfirm={() => form.submit()}
+            okText="Có"
+            cancelText="Không"
           >
-            Thêm BookingOrder
-          </Button>
+            <Button
+              type="primary"
+              icon={<FontAwesomeIcon icon={faBoxOpen} />}
+              block
+            >
+              Thêm BookingOrder
+            </Button>
+          </Popconfirm>
         </Form.Item>
       </Form>
     </div>

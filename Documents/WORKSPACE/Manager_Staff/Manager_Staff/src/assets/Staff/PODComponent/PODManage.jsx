@@ -180,7 +180,7 @@ export default function PODManage() {
       onFilter: (value, record) => record.status.includes(value),
       render: (status) => (
         <Tag
-          color={status === "Còn trống" ? "#17C3B2" : "#FE6D73"}
+          color={status === "Còn trống" ? "#64A587" : "#FE6D73"}
           style={{ fontSize: "15px" }}
         >
           {status}
@@ -231,10 +231,16 @@ export default function PODManage() {
         columns={columns}
         dataSource={podData}
         rowKey="id"
-        pagination={{ pageSize: 7 }}
+        pagination={{ pageSize: 4 }}
         bordered
         scroll={{ x: 1000 }}
-        style={{ boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)" }}
+        style={{
+          boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+          padding: "20px 20px 0px 20px",
+          borderRadius: "10px",
+          backgroundColor: "#F5F5F5",
+          border: "1px solid #E0E0E0",
+        }}
       />
       <Button className="add-button" onClick={fetchPODData}>
         <ReloadOutlined />

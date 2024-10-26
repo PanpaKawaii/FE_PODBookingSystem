@@ -376,7 +376,14 @@ const Order = () => {
   ];
 
   return (
-    <div>
+    <div
+      style={{
+        padding: "20px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
+        backgroundColor: "#F5F5F5",
+      }}
+    >
       <Title level={2}>Đơn đang chờ xử lý</Title>
       <Input
         placeholder="Tìm kiếm theo số điện thoại hoặc email"

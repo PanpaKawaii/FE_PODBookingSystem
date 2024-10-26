@@ -243,10 +243,9 @@ function Product() {
     <div
       style={{
         padding: "20px",
-        background: "rgba(255, 255, 255, 0.8)",
         borderRadius: "10px",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-        border: "1px solid grey",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
+        backgroundColor: "#F5F5F5",
       }}
     >
       <div>
@@ -256,7 +255,7 @@ function Product() {
         <Button
           type="primary"
           onClick={() => handleOpenModal(null)}
-          style={{ marginBottom: 16 }}
+          style={{ marginBottom: 10 }}
         >
           <PlusCircleFilled />
           Thêm sản phẩm mới
@@ -268,7 +267,12 @@ function Product() {
         columns={columns}
         bordered
         rowKey="id"
-        pagination={{ pageSize: 7 }}
+        pagination={{ pageSize: 5 }}
+        style={{
+          border: "1px solid grey",
+          borderRadius: "10px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+        }}
       />
 
       <Modal
