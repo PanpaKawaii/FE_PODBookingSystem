@@ -11,6 +11,7 @@ import {
   Space,
   DatePicker,
   message,
+  Select,
 } from "antd";
 import {
   SearchOutlined,
@@ -218,6 +219,21 @@ const OrderHistory = () => {
       case "Chưa thanh toán":
         color = "orange";
         break;
+      case "Đã đặt":
+        color = "cornflowerblue";
+        break;
+      case "Chưa diễn ra":
+        color = "#faad14";
+        break;
+      case "Đã huỷ":
+        color = "red";
+        break;
+      case "Đã checkin":
+        color = "seagreen";
+        break;
+      case "Không checkin":
+        color = "#ff4d4f";
+        break;
       default:
         color = "cornflowerblue";
     }
@@ -240,12 +256,34 @@ const OrderHistory = () => {
     user.phoneNumber.includes(searchTerm)
   );
 
-  const filteredBookings = bookingData.filter(
-    (booking) =>
-      filteredUsers.some((user) => user.id === booking.userId) &&
-      booking.status === "Đã xác nhận"
+  const filteredBookings = bookingData.filter((booking) =>
+    filteredUsers.some((user) => user.id === booking.userId)
   );
+  const handleUpdateBookingStatus = async (bookingId, newStatus) => {
+    try {
+      const booking = bookingData.find((b) => b.id === bookingId);
+      if (!booking) {
+        message.error("Không tìm thấy thông tin đặt chỗ");
+        return;
+      }
 
+      await axios.put(`${apiBooking}/${bookingId}`, {
+        ...booking,
+        status: newStatus,
+      });
+
+      message.success("Cập nhật trạng thái thành công");
+      await fetchBookingData();
+
+      // Nếu đang xem chi tiết booking thì cập nhật lại selected booking
+      if (selectedBooking?.id === bookingId) {
+        setSelectedBooking((prev) => ({ ...prev, status: newStatus }));
+      }
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái:", error);
+      message.error("Cập nhật trạng thái thất bại");
+    }
+  };
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -260,8 +298,29 @@ const OrderHistory = () => {
     setIsModalVisible(false);
     setSelectedBooking(null);
   };
+  // Khởi tạo state cho totalAmount
+  const [totalAmount, setTotalAmount] = useState(0);
 
-  const handleUpdatePayment = async () => {
+  // Sử dụng useEffect để theo dõi sự thay đổi trong orderData và paymentData
+  useEffect(() => {
+    if (selectedBooking) {
+      const payment = paymentData.find(
+        (p) => p.bookingId === selectedBooking.id
+      );
+      const orderTotal =
+        orderData
+          .filter((order) => order.bookingId === selectedBooking.id)
+          .reduce((sum, order) => sum + order.amount, 0) || 0;
+      const podAmount = payment ? payment.amount : 0;
+      const newTotalAmount = orderTotal + podAmount;
+
+      // Cập nhật lại giá tiền trong modal
+      setTotalAmount(newTotalAmount);
+    }
+  }, [orderData, paymentData, selectedBooking]);
+
+  // Cập nhật lại hàm handleUpdatePaymentAmount
+  const handleUpdatePaymentAmount = async (amount) => {
     if (!selectedBooking) return;
 
     const payment = paymentData.find(
@@ -272,30 +331,22 @@ const OrderHistory = () => {
       return;
     }
 
-    const totalAmount =
-      payment.amount +
-      (selectedBooking.bookingOrders?.reduce(
-        (total, order) => total + order.amount,
-        0
-      ) || 0);
-
     try {
       await axios.put(`${apiPayment}/${payment.id}`, {
         ...payment,
         status: "Đã thanh toán",
-        amount: totalAmount,
+        amount: amount, // Sử dụng giá trị amount được truyền vào
         date: dayjs().format(),
       });
 
       message.success("Cập nhật thanh toán thành công");
-      fetchPaymentData();
+      fetchPaymentData(); // Fetch lại dữ liệu thanh toán
       handleCloseModal();
     } catch (error) {
       console.error("Lỗi khi cập nhật thanh toán:", error);
       message.error("Cập nhật thanh toán thất bại");
     }
   };
-
   // Table Columns
   const userColumns = [
     {
@@ -344,7 +395,7 @@ const OrderHistory = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status) => renderOrderStatus(status),
+      render: (status) => renderOrderStatus(status), // Sử dụng hàm renderOrderStatus để hiển thị trạng thái
     },
     {
       title: "Nhóm tài khoản",
@@ -366,7 +417,6 @@ const OrderHistory = () => {
               color: user.type === "VIP" ? "#FFD700" : "cornflowerblue",
               fontSize: "17px",
               fontWeight: "bold",
-              // Thêm text-shadow cho VIP để làm nổi bật
               textShadow:
                 user.type === "VIP"
                   ? "0.5px 0.5px 1px rgba(0,0,0,0.2)"
@@ -449,6 +499,22 @@ const OrderHistory = () => {
               },
             },
             {
+              title: "Hình ảnh Pod", // Cột mới cho hình ảnh
+              key: "podImage",
+              render: (_, record) => {
+                const pod = podData.find((p) => p.id === record.podId);
+                return pod ? (
+                  <img
+                    src={pod.image} // Giả sử thuộc tính hình ảnh là 'image'
+                    alt={`Pod ${pod.id}`}
+                    style={{ width: "100px", height: "auto" }} // Điều chỉnh kích thước hình ảnh
+                  />
+                ) : (
+                  "Không có hình ảnh"
+                );
+              },
+            },
+            {
               title: "Slot",
               key: "slot",
               render: (_, record) => {
@@ -462,9 +528,39 @@ const OrderHistory = () => {
             },
             {
               title: "Trạng thái",
-              dataIndex: "status",
               key: "status",
-              render: (status) => renderOrderStatus(status),
+              align: "center",
+              render: (_, record) => (
+                <Space>
+                  <span
+                    style={{
+                      color: renderOrderStatus(record.status),
+                      fontSize: "15px",
+                      fontStyle: "italic",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {record.status}
+                  </span>
+                  <Select
+                    defaultValue={record.status}
+                    style={{ width: 150 }}
+                    onChange={(value) =>
+                      handleUpdateBookingStatus(record.id, value)
+                    }
+                  >
+                    <Select.Option value="Đã đặt">Đã đặt</Select.Option>
+                    <Select.Option value="Chưa diễn ra">
+                      Chưa diễn ra
+                    </Select.Option>
+                    <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
+                    <Select.Option value="Đã checkin">Đã checkin</Select.Option>
+                    <Select.Option value="Không checkin">
+                      Không checkin
+                    </Select.Option>
+                  </Select>
+                </Space>
+              ),
             },
           ]}
           pagination={false}
@@ -495,6 +591,12 @@ const OrderHistory = () => {
           const podAmount = payment ? payment.amount : 0;
           const totalAmount = orderTotal + podAmount;
 
+          const handleConvertToNegative = () => {
+            const negativeAmount = -totalAmount; // Chuyển đổi thành số âm
+            // Cập nhật thông tin thanh toán với số âm
+            handleUpdatePaymentAmount(negativeAmount);
+          };
+
           return (
             <>
               <p>
@@ -502,11 +604,18 @@ const OrderHistory = () => {
                 {formatCurrency(orderTotal)}
               </p>
               <p>
-                <strong>Tiền Pod:</strong> {formatCurrency(podAmount)}
+                <strong>Tiền Pod:</strong>
+                {formatCurrency(podAmount)}
               </p>
-              <p>
-                <strong>Tổng cộng:</strong> {formatCurrency(totalAmount)}
-              </p>
+              <strong>Tổng cộng:</strong>{" "}
+              <span
+                style={{
+                  color: totalAmount < 0 ? "red" : "black",
+                  fontWeight: "bold",
+                }}
+              >
+                {formatCurrency(totalAmount)}
+              </span>
               <p>
                 <strong>Trạng thái thanh toán:</strong>{" "}
                 {payment ? (
@@ -526,9 +635,15 @@ const OrderHistory = () => {
                 ) : (
                   "Không có thông tin"
                 )}
+                <Button type="danger" onClick={handleConvertToNegative}>
+                  Hoàn tiền
+                </Button>
               </p>
-
-              <Button type="primary" style={{}} onClick={handleUpdatePayment}>
+              <Button
+                type="primary"
+                style={{ marginRight: 10 }}
+                onClick={() => handleUpdatePaymentAmount(totalAmount)} // Cập nhật lại số tiền
+              >
                 <FontAwesomeIcon icon={faMoneyBillWheat} />
                 Cập nhật lại số tiền
               </Button>
@@ -627,7 +742,14 @@ const OrderHistory = () => {
     );
   };
   return (
-    <div className="user-manage">
+    <div
+      style={{
+        padding: "20px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
+        backgroundColor: "#F5F5F5",
+      }}
+    >
       <Title level={2} style={{ textAlign: "center", marginBottom: 20 }}>
         Lịch sử đơn hàng
       </Title>

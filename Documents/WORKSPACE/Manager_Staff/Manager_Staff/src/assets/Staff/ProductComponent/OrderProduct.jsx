@@ -29,6 +29,7 @@ const OrderProduct = () => {
   const [products, setProducts] = useState([]);
   const [nextBookingOrderId, setNextBookingOrderId] = useState(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     fetchProducts();
     fetchNextBookingOrderId();
@@ -98,6 +99,11 @@ const OrderProduct = () => {
     }).format(value);
   };
 
+  // Hàm để vô hiệu hóa các ngày không phải là hôm nay
+  const disabledDate = (current) => {
+    return current && current < moment().startOf("day"); // Chỉ cho phép chọn ngày hôm nay
+  };
+
   return (
     <div
       style={{
@@ -156,7 +162,7 @@ const OrderProduct = () => {
           <InputNumber style={{ width: "100%" }} />
         </Form.Item>
         <Form.Item name="date" label="Ngày" rules={[{ required: true }]}>
-          <DatePicker style={{ width: "100%" }} />
+          <DatePicker style={{ width: "100%" }} disabledDate={disabledDate} />
         </Form.Item>
 
         <Form.Item
@@ -165,7 +171,6 @@ const OrderProduct = () => {
           rules={[{ required: true }]}
         >
           <Select>
-            {/* <Option value="Chưa thanh toán">Chưa thanh toán</Option> */}
             <Option value="Đã thanh toán">Đã thanh toán</Option>
           </Select>
         </Form.Item>

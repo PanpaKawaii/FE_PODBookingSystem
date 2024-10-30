@@ -313,7 +313,14 @@ const Customer = () => {
   ];
 
   return (
-    <div className="user-manage">
+    <div
+      style={{
+        padding: "20px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
+        backgroundColor: "#F5F5F5",
+      }}
+    >
       <h1>Tài khoản khách hàng</h1>
       <Modal
         show={showBookingModal}
