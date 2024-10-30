@@ -27,12 +27,21 @@ const Customer = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedUserBookings, setSelectedUserBookings] = useState([]);
+  const [podData, setPodData] = useState([]);
+  const apiPod = "https://localhost:7166/api/Pod";
   const apiUser = "https://localhost:7166/api/User";
   const apiBooking = "https://localhost:7166/api/Booking";
   const formatNumber = (number) => {
     return new Intl.NumberFormat("vi-VN").format(number);
   };
-
+  const fetchPodData = async () => {
+    try {
+      const response = await axios.get(apiPod);
+      setPodData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch pod data:", error);
+    }
+  };
   const fetchUserData = async () => {
     try {
       const response = await axios.get(apiUser);
@@ -52,6 +61,7 @@ const Customer = () => {
   useEffect(() => {
     fetchUserData();
     fetchBookingData();
+    fetchPodData();
     const userCount = userData.filter((u) => u.role === "User").length;
     setTotalUsers(userCount);
   }, [userData]);
@@ -115,6 +125,7 @@ const Customer = () => {
       console.error("Failed to update user:", error);
     }
   };
+  // hàm sử lý data để lưu vào tương ứng với từng User
   const handleViewBookings = (userId) => {
     const userBookings = bookingData.filter(
       (booking) => booking.userId === userId
@@ -139,6 +150,15 @@ const Customer = () => {
       title: "ID",
       dataIndex: "id",
       key: "id",
+      hidden: true,
+    },
+    {
+      title: "Hình ảnh",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => (
+        <img src={image} alt="User" style={{ width: 100, height: 100 }} />
+      ),
     },
     {
       title: "Tên",
@@ -172,7 +192,18 @@ const Customer = () => {
       ],
       onFilter: (value, record) => record.type === value,
       render: (type) => (
-        <Tag color={type === "VIP" ? "#FAC140" : "#64A587"}>{type}</Tag>
+        <span
+          style={{
+            color: type === "VIP" ? "#FAC140" : "#64A587",
+            fontSize: "15px",
+            fontWeight: "500",
+            // Thêm text-shadow để làm nổi bật chữ VIP
+            textShadow:
+              type === "VIP" ? "0.5px 0.5px 1px rgba(0,0,0,0.2)" : "none",
+          }}
+        >
+          {type}
+        </span>
       ),
     },
     {
@@ -184,7 +215,7 @@ const Customer = () => {
 
         switch (description) {
           case "Khách hàng ưu tiên":
-            color = "#FFCB77";
+            color = "#FAC140";
             break;
           case "Khách hàng mới":
             color = "#17C3B2";
@@ -243,12 +274,20 @@ const Customer = () => {
     {
       title: "Chỉnh sửa",
       key: "action",
-      width: 200,
       align: "center",
       render: (_, record) => (
         <>
-          <Button variant="primary" onClick={() => handleEdit(record)}>
-            <FontAwesomeIcon icon={faEdit} /> Sửa
+          <Button
+            variant="primary"
+            onClick={() => handleEdit(record)}
+            style={{
+              marginTop: 5,
+              backgroundColor: "transparent",
+              border: "none",
+              color: "black",
+            }}
+          >
+            <FontAwesomeIcon icon={faEdit} />
           </Button>{" "}
           <Popconfirm
             title="Are you sure to delete this company?"
@@ -256,8 +295,16 @@ const Customer = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button variant="danger">
-              <FontAwesomeIcon icon={faTrash} /> Xóa
+            <Button
+              variant="danger"
+              style={{
+                marginTop: 5,
+                backgroundColor: "transparent",
+                border: "none",
+                color: "black",
+              }}
+            >
+              <FontAwesomeIcon icon={faTrash} />
             </Button>
           </Popconfirm>
         </>
@@ -296,7 +343,7 @@ const Customer = () => {
                 dataIndex: "status",
                 key: "status",
                 render: (status) => (
-                  <Tag color={status === "Xác nhận" ? "green" : "blue"}>
+                  <Tag color={status === "Đã xác nhận" ? "#64A587" : "#227C9D"}>
                     {status}
                   </Tag>
                 ),
@@ -310,6 +357,40 @@ const Customer = () => {
                 title: "ID POD",
                 dataIndex: "podId",
                 key: "podId",
+              },
+              {
+                title: "Hình ảnh POD",
+                dataIndex: "podId",
+                key: "podImage",
+                width: 120,
+                render: (podId) => {
+                  const pod = podData.find((pod) => pod.id === podId);
+                  return (
+                    <img
+                      src={pod?.image || "https://placehold.co/100x100"}
+                      alt="POD"
+                      style={{
+                        width: 100,
+                        height: 100,
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                      }}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://placehold.co/100x100";
+                      }}
+                    />
+                  );
+                },
+              },
+              {
+                title: "Tên POD",
+                dataIndex: "podId",
+                key: "podName",
+                render: (podId) => {
+                  const pod = podData.find((pod) => pod.id === podId);
+                  return pod ? pod.name : "Không có dữ liệu";
+                },
               },
             ]}
             pagination={false}

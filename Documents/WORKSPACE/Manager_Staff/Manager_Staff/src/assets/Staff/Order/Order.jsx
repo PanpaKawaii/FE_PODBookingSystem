@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Order.css";
 import {
@@ -33,7 +34,7 @@ const Order = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const navigate = useNavigate();
   const apiUser = "https://localhost:7166/api/User";
   const apiBooking = "https://localhost:7166/api/Booking";
   const apiPayment = "https://localhost:7166/api/Payment";
@@ -43,6 +44,7 @@ const Order = () => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(apiUser);
+      console.log("Users:", response.data);
       setUserData(response.data);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
@@ -52,6 +54,7 @@ const Order = () => {
   const fetchBookingData = async () => {
     try {
       const response = await axios.get(apiBooking);
+      console.log("Bookings:", response.data);
       setBookingData(response.data);
     } catch (error) {
       console.error("Failed to fetch booking data:", error);
@@ -61,6 +64,7 @@ const Order = () => {
   const fetchPaymentData = async () => {
     try {
       const response = await axios.get(apiPayment);
+      console.log("Payments:", response.data);
       setPaymentData(response.data);
     } catch (error) {
       console.error("Failed to fetch payment data:", error);
@@ -70,6 +74,7 @@ const Order = () => {
   const fetchPodData = async () => {
     try {
       const response = await axios.get(apiPod);
+      console.log("Pods:", response.data);
       setPodData(response.data);
     } catch (error) {
       console.error("Failed to fetch pod data:", error);
@@ -79,6 +84,7 @@ const Order = () => {
   const fetchSlotData = async () => {
     try {
       const response = await axios.get(apiSlot);
+      console.log("Slots:", response.data);
       setSlotData(response.data);
     } catch (error) {
       console.error("Failed to fetch slot data:", error);
@@ -106,12 +112,11 @@ const Order = () => {
       </p>
     );
   }
-
   const handleAcceptBooking = async (booking) => {
     try {
       const updatedBooking = {
         ...booking,
-        status: "Xác nhận",
+        status: "Đã xác nhận",
         feedback: booking.feedback || "",
       };
 
@@ -132,6 +137,7 @@ const Order = () => {
 
       fetchUserData();
       fetchBookingData();
+      navigate("/history");
       message.success("Duyệt đơn thành công");
       setModalVisible(false);
     } catch (error) {
@@ -160,18 +166,29 @@ const Order = () => {
   };
 
   const showDetailModal = (booking) => {
+    console.log("Selected booking:", booking);
     setSelectedBooking(booking);
     setModalVisible(true);
   };
 
   const pendingBookings = bookingData
-    .filter((booking) => booking.status === "Đang chờ")
-    .map((booking) => ({
-      ...booking,
-      user: userData.find((user) => user.id === booking.userId),
-      pod: podData.find((pod) => pod.id === booking.podId),
-      slot: slotData.find((slot) => slot.id === booking.slotId),
-    }));
+    .filter((booking) => booking.status === "Chờ xác nhận")
+    .map((booking) => {
+      const user = userData.find((u) => u.id === booking.userId);
+      const pod = podData.find((p) => p.id === booking.podId);
+      const slot = slotData.find((s) =>
+        s.bookings.some((b) => b.id === booking.id)
+      );
+
+      console.log(`Mapping booking ${booking.id}:`, { user, pod, slot });
+
+      return {
+        ...booking,
+        user,
+        pod,
+        slot,
+      };
+    });
 
   const filteredPendingBookings = pendingBookings.filter(
     (booking) =>
@@ -199,23 +216,12 @@ const Order = () => {
       key: "type",
       align: "center",
       filters: [
-        {
-          text: "V.I.P",
-          value: "VIP",
-        },
-        {
-          text: "Khách hàng thường",
-          value: "Regular",
-        },
+        { text: "V.I.P", value: "VIP" },
+        { text: "Khách hàng thường", value: "Regular" },
       ],
       onFilter: (value, record) => record.user.type === value,
       render: (type) => (
-        <Tag
-          style={{ fontSize: "14px" }}
-          color={type === "VIP" ? "#F28705" : "cornflowerblue"}
-        >
-          {type}
-        </Tag>
+        <Tag color={type === "VIP" ? "#F28705" : "cornflowerblue"}>{type}</Tag>
       ),
     },
     {
@@ -228,14 +234,37 @@ const Order = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status) => (
-        <Tag color={status === "Xác nhận" ? "green" : "blue"}>{status}</Tag>
-      ),
+      render: (status) => {
+        let color;
+        switch (status) {
+          case "Đã xác nhận":
+            color = "green";
+            break;
+          case "Chờ xác nhận":
+            color = "#fb8b24";
+            break;
+          default:
+            color = "default";
+        }
+        return (
+          <span
+            style={{
+              color: color,
+              fontSize: "15px",
+              fontStyle: "italic",
+              fontWeight: "500",
+            }}
+          >
+            {status}
+          </span>
+        );
+      },
     },
     {
       title: "Đánh giá",
       dataIndex: "feedback",
       key: "feedback",
+      render: (feedback) => feedback || "Chưa có feedback",
     },
     {
       title: "Chi tiết",
@@ -246,6 +275,68 @@ const Order = () => {
           Xem
         </Button>
       ),
+    },
+  ];
+
+  const bookingColumns = [
+    {
+      title: "Ngày đặt",
+      dataIndex: "date",
+      key: "date",
+      render: (date) => formatDate(date),
+    },
+    {
+      title: "Pod",
+      key: "pod",
+      render: (_, record) => {
+        const pod = podData.find((p) => p.id === record.podId);
+        return pod ? `Pod ${pod.id}` : "N/A";
+      },
+    },
+    {
+      title: "Slot",
+      key: "slot",
+      render: (_, record) => {
+        const slot = slotData.find((s) =>
+          s.bookings.some((b) => b.id === record.id)
+        );
+        return slot
+          ? `${slot.name} (${slot.startTime}:00 - ${slot.endTime}:00)`
+          : "N/A";
+      },
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => {
+        let color;
+        switch (status) {
+          case "Đã xác nhận":
+            color = "green";
+            break;
+          case "Chờ xác nhận":
+            color = "blue";
+            break;
+          default:
+            color = "default";
+        }
+        return <Tag color={color}>{status}</Tag>;
+      },
+    },
+    {
+      title: "Phương thức thanh toán",
+      key: "payment",
+      render: (_, record) => {
+        const payment = paymentData.find((p) => p.bookingId === record.id);
+        return payment ? payment.method : "Chưa thanh toán";
+      },
+    },
+    {
+      title: "Feedback",
+      dataIndex: "feedback",
+      key: "feedback",
+      render: (feedback) => feedback || "Chưa có feedback",
     },
   ];
 
@@ -263,6 +354,9 @@ const Order = () => {
       dataIndex: "type",
       key: "type",
       align: "center",
+      render: (type) => (
+        <Tag color={type === "VIP" ? "#F28705" : "cornflowerblue"}>{type}</Tag>
+      ),
     },
     {
       title: "Mô tả",
@@ -275,103 +369,6 @@ const Order = () => {
       dataIndex: "point",
       key: "point",
       render: (point) => formatNumber(point),
-    },
-  ];
-
-  const bookingColumns = [
-    {
-      title: "Ngày đặt",
-      dataIndex: "date",
-      key: "date",
-      render: (date) => formatDate(date),
-    },
-    {
-      title: "Pod",
-      dataIndex: "podId",
-      key: "podId",
-      render: (podId, record) => `${podId} - ${record.pod?.name || "N/A"}`,
-    },
-    {
-      title: "Slot",
-      dataIndex: "slotId",
-      key: "slotId",
-      render: (slotId, record) => {
-        const slot = record.slot;
-        return slot
-          ? `${slot.name} (${slot.startTime}:00 - ${slot.endTime}:00)`
-          : "N/A";
-      },
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag color={status === "Xác nhận" ? "green" : "blue"}>{status}</Tag>
-      ),
-    },
-    {
-      title: "Phương thức thanh toán",
-      dataIndex: "paymentMethod",
-      key: "paymentMethod",
-      render: (_, booking) => {
-        const payment = paymentData.find(
-          (payment) => payment.bookingId === booking.id
-        );
-        return payment ? payment.method : "Chưa thanh toán";
-      },
-    },
-    {
-      title: "Feedback",
-      dataIndex: "feedback",
-      key: "feedback",
-      render: (feedback) => feedback || "Chưa có feedback",
-    },
-  ];
-
-  const orderColumns = [
-    {
-      title: "OrderId",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "BookingId",
-      dataIndex: "bookingId",
-      key: "bookingId",
-    },
-    {
-      title: "Ngày đặt",
-      dataIndex: "date",
-      key: "date",
-      render: (date) => formatDate(date),
-    },
-    {
-      title: "ProductId",
-      dataIndex: "productId",
-      key: "productId",
-    },
-    {
-      title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
-      render: (quantity) => formatNumber(quantity),
-    },
-    {
-      title: "Tổng tiền",
-      dataIndex: "amount",
-      key: "amount",
-      render: (amount) => formatCurrency(amount),
-    },
-    {
-      title: "Trạng thái đơn hàng",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag color={status === "Đã thanh toán" ? "seagreen" : "blue"}>
-          {status}
-        </Tag>
-      ),
     },
   ];
 
@@ -428,14 +425,6 @@ const Order = () => {
                 pagination={false}
                 rowKey="id"
                 bordered
-              />
-            </Card>
-            <Card title="Chi tiết đơn hàng" style={{ marginTop: 10 }}>
-              <Table
-                dataSource={selectedBooking.bookingOrders}
-                columns={orderColumns}
-                pagination={false}
-                rowKey="id"
               />
             </Card>
             <Card title="Thông tin khách hàng" style={{ marginTop: 10 }}>

@@ -3,7 +3,6 @@ import "./Header.css"; // Nhập file CSS
 import avatar from "../ManagerImage/avatar.jpg"; // Nhập file CSS
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Nhập FontAwesomeIcon
 // import { faSearch } from '@fortawesome/free-solid-svg-icons'; // Nhập biểu tượng kính lúp
-import { CDBInput } from "cdbreact";
 export default function Header() {
   return (
     <div className="header-container">

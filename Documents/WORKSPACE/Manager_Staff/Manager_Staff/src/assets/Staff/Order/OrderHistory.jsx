@@ -10,26 +10,27 @@ import {
   Input,
   Space,
   DatePicker,
-  Popconfirm,
-  Form,
   message,
 } from "antd";
 import {
   SearchOutlined,
   EyeOutlined,
-  DeleteFilled,
-  EditFilled,
-  LoadingOutlined,
   EyeTwoTone,
   EyeInvisibleTwoTone,
   ReloadOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-dayjs.extend(isBetween);
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFloppyDisk,
+  faMoneyBill,
+  faMoneyBillWheat,
+} from "@fortawesome/free-solid-svg-icons";
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
+dayjs.extend(isBetween);
 
 const OrderHistory = () => {
   const [userData, setUserData] = useState([]);
@@ -42,9 +43,6 @@ const OrderHistory = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [editingOrder, setEditingOrder] = useState(null);
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [revenueData, setRevenueData] = useState([]);
@@ -58,10 +56,13 @@ const OrderHistory = () => {
   const apiSlot = "https://localhost:7166/api/Slot";
   const apiPod = "https://localhost:7166/api/Pod";
 
+  // API calls
   const fetchUserData = async () => {
     try {
       const response = await axios.get(apiUser);
-      setUserData(response.data.filter((user) => user.role === "User"));
+      const users = response.data.filter((user) => user.role === "User");
+      console.log("Fetched users:", users);
+      setUserData(users);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
     }
@@ -70,6 +71,7 @@ const OrderHistory = () => {
   const fetchBookingData = async () => {
     try {
       const response = await axios.get(apiBooking);
+      console.log("Fetched bookings:", response.data);
       setBookingData(response.data);
     } catch (error) {
       console.error("Failed to fetch booking data:", error);
@@ -79,6 +81,7 @@ const OrderHistory = () => {
   const fetchOrderData = async () => {
     try {
       const response = await axios.get(apiOrder);
+      console.log("Fetched orders:", response.data);
       setOrderData(response.data);
     } catch (error) {
       console.error("Failed to fetch order data:", error);
@@ -88,6 +91,7 @@ const OrderHistory = () => {
   const fetchProductData = async () => {
     try {
       const response = await axios.get(apiProduct);
+      console.log("Fetched products:", response.data);
       setProductData(response.data);
     } catch (error) {
       console.error("Failed to fetch product data:", error);
@@ -97,6 +101,7 @@ const OrderHistory = () => {
   const fetchPaymentData = async () => {
     try {
       const response = await axios.get(apiPayment);
+      console.log("Fetched payments:", response.data);
       setPaymentData(response.data);
     } catch (error) {
       console.error("Failed to fetch payment data:", error);
@@ -106,6 +111,7 @@ const OrderHistory = () => {
   const fetchPodData = async () => {
     try {
       const response = await axios.get(apiPod);
+      console.log("Fetched pods:", response.data);
       setPodData(response.data);
     } catch (error) {
       console.error("Failed to fetch pod data:", error);
@@ -115,6 +121,7 @@ const OrderHistory = () => {
   const fetchSlotData = async () => {
     try {
       const response = await axios.get(apiSlot);
+      console.log("Fetched slots:", response.data);
       setSlotData(response.data);
     } catch (error) {
       console.error("Failed to fetch slot data:", error);
@@ -130,81 +137,105 @@ const OrderHistory = () => {
     fetchSlotData();
     fetchPodData();
   }, []);
+  // Hàm xử lý khi người dùng chọn khoảng thời gian
+  const handleDateChange = (dates) => {
+    if (dates) {
+      // Nếu có chọn dates thì set startDate và endDate
+      setStartDate(dates[0]); // dates[0] là ngày bắt đầu
+      setEndDate(dates[1]); // dates[1] là ngày kết thúc
 
-  useEffect(() => {
-    if (startDate && endDate) {
-      calculateRevenue();
-    }
-  }, [startDate, endDate, paymentData, bookingData]);
-
-  if (
-    userData.length === 0 &&
-    bookingData.length === 0 &&
-    paymentData.length === 0 &&
-    productData.length === 0 &&
-    orderData.length === 0
-  ) {
-    return (
-      <p>
-        Loading... <LoadingOutlined />
-      </p>
-    );
-  }
-
-  const handleOpenEditOrderProductModal = (record) => {
-    setEditingOrder(record);
-    setIsEditModalVisible(true);
-  };
-
-  const handleCloseEditModal = () => {
-    setIsEditModalVisible(false);
-    setEditingOrder(null);
-  };
-
-  const handleEditOrderProduct = async (values) => {
-    try {
-      const response = await axios.put(`${apiOrder}/${editingOrder.id}`, {
-        ...editingOrder,
-        ...values,
-        date: dayjs(values.date).format(),
+      // Log để debug
+      console.log("Selected date range:", {
+        start: dates[0]?.format("YYYY-MM-DD"),
+        end: dates[1]?.format("YYYY-MM-DD"),
       });
-      if (response.status === 200) {
-        message.success("Cập nhật đơn hàng thành công");
-        fetchOrderData();
-        handleCloseEditModal();
-      }
-    } catch (error) {
-      console.error("Lỗi khi cập nhật đơn hàng:", error);
-      message.error("Cập nhật đơn hàng thất bại");
+    } else {
+      // Nếu không chọn dates (người dùng clear date picker) thì reset về null
+      setStartDate(null);
+      setEndDate(null);
+      setShowRevenue(false); // Ẩn bảng doanh thu
+      setRevenueData([]); // Reset dữ liệu doanh thu
     }
   };
 
-  const handleDeleteOrderProduct = async (id) => {
+  // Hàm làm mới dữ liệu
+  const handleRefresh = async () => {
     try {
-      const response = await axios.delete(`${apiOrder}/${id}`);
-      message.success("Xóa đơn hàng thành công");
-      setIsModalVisible(false);
-      fetchOrderData();
+      // Hiển thị loading message
+      message.loading("Đang làm mới dữ liệu...", 0);
+
+      // Fetch lại tất cả dữ liệu cần thiết
+      await Promise.all([
+        fetchBookingData(),
+        fetchPaymentData(),
+        fetchOrderData(),
+        fetchProductData(),
+        fetchUserData(),
+        fetchSlotData(),
+        fetchPodData(),
+      ]);
+
+      // Nếu đang có khoảng thời gian được chọn thì tính toán lại doanh thu
+      if (startDate && endDate) {
+        calculateRevenue();
+      }
+
+      // Hiển thị thông báo thành công
+      message.success("Làm mới dữ liệu thành công");
     } catch (error) {
-      console.error("Lỗi khi xóa đơn hàng:", error);
-      message.error("Xóa đơn hàng thất bại");
+      // Xử lý lỗi nếu có
+      console.error("Error refreshing data:", error);
+      message.error("Làm mới dữ liệu thất bại");
+    } finally {
+      // Đóng loading message
+      message.destroy();
     }
   };
+  // Helper functions
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
 
-  const getSlotInfo = (bookingId) => {
-    const slot = slotData.find((slot) =>
-      slot.bookings.some((booking) => booking.id === bookingId)
+  const formatDate = (dateString) => {
+    return dayjs(dateString).format("DD/MM/YYYY");
+  };
+
+  const renderOrderStatus = (status) => {
+    let color;
+    switch (status) {
+      case "Đã xác nhận":
+        color = "seagreen";
+        break;
+      case "Chờ xác nhận":
+        color = "cornflowerblue";
+        break;
+      case "Đã thanh toán":
+        color = "seagreen";
+        break;
+      case "Chưa thanh toán":
+        color = "orange";
+        break;
+      default:
+        color = "cornflowerblue";
+    }
+    return (
+      <span
+        style={{
+          color: color,
+          fontSize: "15px",
+          fontStyle: "italic",
+          fontWeight: "500",
+        }}
+      >
+        {status}
+      </span>
     );
-    if (slot) {
-      return {
-        name: slot.name,
-        startTime: slot.startTime,
-        endTime: slot.endTime,
-      };
-    }
-    return null;
   };
 
+  // Filtering and handlers
   const filteredUsers = userData.filter((user) =>
     user.phoneNumber.includes(searchTerm)
   );
@@ -212,17 +243,15 @@ const OrderHistory = () => {
   const filteredBookings = bookingData.filter(
     (booking) =>
       filteredUsers.some((user) => user.id === booking.userId) &&
-      booking.status === "Xác nhận"
+      booking.status === "Đã xác nhận"
   );
-  // const filteredBookings = bookingData.filter((booking) =>
-  //   filteredUsers.some((user) => user.id === booking.userId)
-  // );
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
   const handleViewDetails = (booking) => {
+    console.log("Selected booking:", booking);
     setSelectedBooking(booking);
     setIsModalVisible(true);
   };
@@ -233,26 +262,27 @@ const OrderHistory = () => {
   };
 
   const handleUpdatePayment = async () => {
+    if (!selectedBooking) return;
+
+    const payment = paymentData.find(
+      (payment) => payment.bookingId === selectedBooking.id
+    );
+    if (!payment) {
+      message.error("Không tìm thấy thông tin thanh toán");
+      return;
+    }
+
     const totalAmount =
-      (paymentData.find((payment) => payment.bookingId === selectedBooking.id)
-        ?.amount || 0) +
+      payment.amount +
       (selectedBooking.bookingOrders?.reduce(
         (total, order) => total + order.amount,
         0
       ) || 0);
 
-    const paymentToUpdate = paymentData.find(
-      (payment) => payment.bookingId === selectedBooking.id
-    );
-
-    if (!paymentToUpdate) {
-      message.error("Không tìm thấy thông tin thanh toán");
-      return;
-    }
-
     try {
-      const response = await axios.put(`${apiPayment}/${paymentToUpdate.id}`, {
-        ...paymentToUpdate,
+      await axios.put(`${apiPayment}/${payment.id}`, {
+        ...payment,
+        status: "Đã thanh toán",
         amount: totalAmount,
         date: dayjs().format(),
       });
@@ -266,39 +296,14 @@ const OrderHistory = () => {
     }
   };
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(amount);
-  };
-
-  const formatNumber = (number) => {
-    return new Intl.NumberFormat("vi-VN").format(number);
-  };
-
-  const formatDate = (dateString) => {
-    return dayjs(dateString).format("DD/MM/YYYY");
-  };
-
-  const renderOrderStatus = (status) => {
-    let color;
-    switch (status) {
-      case "Xác nhận":
-      case "Đã thanh toán":
-        color = "seagreen";
-        break;
-      case "Đang chờ":
-        color = "cornflowerblue";
-        break;
-      default:
-        color = "cornflowerblue";
-    }
-    return <Tag color={color}>{status}</Tag>;
-  };
-
+  // Table Columns
   const userColumns = [
-    { title: "Booking ID", dataIndex: "id", key: "id", align: "center" },
+    {
+      title: "Booking ID",
+      dataIndex: "id",
+      key: "id",
+      align: "center",
+    },
     {
       title: "Ngày đặt",
       dataIndex: "date",
@@ -307,7 +312,6 @@ const OrderHistory = () => {
     },
     {
       title: "Tên",
-      dataIndex: "name",
       key: "name",
       render: (_, record) => {
         const user = filteredUsers.find((u) => u.id === record.userId);
@@ -326,12 +330,21 @@ const OrderHistory = () => {
     {
       title: "Slot",
       key: "slot",
+      hidden: true,
       render: (_, record) => {
-        const slotInfo = getSlotInfo(record.id);
-        return slotInfo
-          ? `${slotInfo.name} (${slotInfo.startTime}:00 - ${slotInfo.endTime}:00)`
+        const slot = slotData.find((slot) =>
+          slot.bookings.some((booking) => booking.id === record.id)
+        );
+        return slot
+          ? `${slot.name} (${slot.startTime}:00 - ${slot.endTime}:00)`
           : "Không có thông tin";
       },
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => renderOrderStatus(status),
     },
     {
       title: "Nhóm tài khoản",
@@ -348,18 +361,24 @@ const OrderHistory = () => {
       render: (_, record) => {
         const user = filteredUsers.find((u) => u.id === record.userId);
         return user ? (
-          <Tag color={user.type === "VIP" ? "#FFD700" : "cornflowerblue"}>
+          <span
+            style={{
+              color: user.type === "VIP" ? "#FFD700" : "cornflowerblue",
+              fontSize: "17px",
+              fontWeight: "bold",
+              // Thêm text-shadow cho VIP để làm nổi bật
+              textShadow:
+                user.type === "VIP"
+                  ? "0.5px 0.5px 1px rgba(0,0,0,0.2)"
+                  : "none",
+            }}
+          >
             {user.type}
-          </Tag>
+          </span>
         ) : (
           "Không xác định"
         );
       },
-    },
-    {
-      title: "Đánh giá",
-      dataIndex: "feedback",
-      key: "feedback",
     },
     {
       title: "Chi tiết",
@@ -385,7 +404,6 @@ const OrderHistory = () => {
       key: "date",
       render: (date) => formatDate(date),
     },
-    { title: "ProductId", dataIndex: "productId", key: "productId" },
     {
       title: "Tên sản phẩm",
       key: "productName",
@@ -402,31 +420,14 @@ const OrderHistory = () => {
       render: (amount) => formatCurrency(amount),
     },
     {
-      title: "Trạng thái đơn hàng",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       render: (status) => renderOrderStatus(status),
     },
-    {
-      title: "Chỉnh sửa",
-      key: "actions",
-      render: (_, record) => (
-        <Space>
-          <Popconfirm
-            title="Bạn có chắc chắn muốn xóa sản phẩm này?"
-            onConfirm={() => handleDeleteOrderProduct(record.id)}
-            okText="Có"
-            cancelText="Không"
-          >
-            <Button type="primary" danger>
-              <DeleteFilled />
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
   ];
 
+  // Modal Content
   const modalContent = selectedBooking ? (
     <div>
       <Card title="Thông tin đặt chỗ" style={{ marginBottom: 10 }}>
@@ -444,15 +445,19 @@ const OrderHistory = () => {
               key: "pod",
               render: (_, record) => {
                 const pod = podData.find((p) => p.id === record.podId);
-                return pod ? `${record.podId} - ${pod.name}` : "Không xác định";
+                return pod ? `Pod ${pod.id}` : "Không xác định";
               },
             },
             {
               title: "Slot",
               key: "slot",
               render: (_, record) => {
-                const slotInfo = getSlotInfo(record.id);
-                return slotInfo ? slotInfo.name : "N/A";
+                const slot = slotData.find((slot) =>
+                  slot.bookings.some((booking) => booking.id === record.id)
+                );
+                return slot
+                  ? `${slot.name} (${slot.startTime}:00 - ${slot.endTime}:00)`
+                  : "Không có thông tin";
               },
             },
             {
@@ -461,121 +466,97 @@ const OrderHistory = () => {
               key: "status",
               render: (status) => renderOrderStatus(status),
             },
-            {
-              title: "Phương thức thanh toán",
-              key: "paymentMethod",
-              render: (_, record) => {
-                const payment = paymentData.find(
-                  (p) => p.bookingId === record.id
-                );
-                return payment ? payment.method : "Không có thông tin";
-              },
-            },
-            {
-              title: "Feedback",
-              dataIndex: "feedback",
-              key: "feedback",
-              render: (feedback) => feedback || "Chưa có feedback",
-            },
           ]}
           pagination={false}
           bordered
         />
       </Card>
-      <Card title="Order thêm">
+
+      <Card title="Order thêm" style={{ marginBottom: 10 }}>
         <Table
-          dataSource={selectedBooking.bookingOrders}
+          dataSource={orderData.filter(
+            (order) => order.bookingId === selectedBooking.id
+          )}
           columns={orderColumns}
           pagination={false}
           bordered
         />
       </Card>
-      <Card
-        title="Thông tin khách hàng"
-        style={{ marginBottom: 10, marginTop: 10 }}
-      >
-        <p>
-          <strong>Tên khách hàng:</strong>{" "}
-          {userData.find((user) => user.id === selectedBooking.userId)?.name}
-        </p>
-        <p>
-          <strong>Email:</strong>{" "}
-          {userData.find((user) => user.id === selectedBooking.userId)?.email}
-        </p>
-        <p>
-          <strong>Số điện thoại:</strong>{" "}
-          {
-            userData.find((user) => user.id === selectedBooking.userId)
-              ?.phoneNumber
-          }
-        </p>
-        <p>
-          <strong>Điểm tích lũy:</strong>{" "}
-          {formatNumber(
-            userData.find((user) => user.id === selectedBooking.userId)?.point
-          )}
-        </p>
-      </Card>
-      <Card>
-        <p>
-          <strong>Tổng số tiền sản phẩm:</strong>{" "}
-          {formatCurrency(
-            selectedBooking.bookingOrders?.reduce(
-              (total, order) => total + order.amount,
-              0
-            ) || 0
-          )}
-        </p>
-        <p>
-          <strong>Số tiền thanh toán cho POD: </strong>{" "}
-          {formatCurrency(
-            paymentData.find(
-              (payment) => payment.bookingId === selectedBooking.id
-            )?.amount || 0
-          )}
-        </p>
-        <p>
-          <strong>Tổng số tiền phải thanh toán:</strong>{" "}
-          {formatCurrency(
-            (paymentData.find(
-              (payment) => payment.bookingId === selectedBooking.id
-            )?.amount || 0) +
-              (selectedBooking.bookingOrders?.reduce(
-                (total, order) => total + order.amount,
-                0
-              ) || 0)
-          )}
-        </p>
-        <Button type="primary" onClick={handleUpdatePayment}>
-          Cập nhật thanh toán
-        </Button>
+
+      <Card title="Thông tin thanh toán">
+        {(() => {
+          const payment = paymentData.find(
+            (p) => p.bookingId === selectedBooking.id
+          );
+          const orderTotal =
+            orderData
+              .filter((order) => order.bookingId === selectedBooking.id)
+              .reduce((sum, order) => sum + order.amount, 0) || 0;
+          const podAmount = payment ? payment.amount : 0;
+          const totalAmount = orderTotal + podAmount;
+
+          return (
+            <>
+              <p>
+                <strong>Tổng tiền sản phẩm:</strong>{" "}
+                {formatCurrency(orderTotal)}
+              </p>
+              <p>
+                <strong>Tiền Pod:</strong> {formatCurrency(podAmount)}
+              </p>
+              <p>
+                <strong>Tổng cộng:</strong> {formatCurrency(totalAmount)}
+              </p>
+              <p>
+                <strong>Trạng thái thanh toán:</strong>{" "}
+                {payment ? (
+                  <span
+                    style={{
+                      color:
+                        payment.status === "Đã thanh toán"
+                          ? "seagreen"
+                          : "orange",
+                      fontSize: "15px",
+                      fontStyle: "italic",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {payment.status}
+                  </span>
+                ) : (
+                  "Không có thông tin"
+                )}
+              </p>
+
+              <Button type="primary" style={{}} onClick={handleUpdatePayment}>
+                <FontAwesomeIcon icon={faMoneyBillWheat} />
+                Cập nhật lại số tiền
+              </Button>
+            </>
+          );
+        })()}
       </Card>
     </div>
   ) : null;
-
+  // Hàm tính toán doanh thu
   const calculateRevenue = () => {
-    console.log("Calculating revenue...");
-    console.log("Start date:", startDate);
-    console.log("End date:", endDate);
-    console.log("Payment data:", paymentData);
-    console.log("Booking data:", bookingData);
-
+    // Kiểm tra đã chọn khoảng thời gian chưa
     if (!startDate || !endDate) {
       message.warning("Vui lòng chọn khoảng thời gian");
       return;
     }
 
-    // Lọc các booking có trạng thái "Xác nhận"
+    // Lọc các booking đã xác nhận
     const confirmedBookings = bookingData.filter(
-      (booking) => booking.status === "Xác nhận"
+      (booking) => booking.status === "Đã xác nhận"
     );
 
     const dailyRevenue = {};
 
+    // Tính doanh thu từ payments
     paymentData.forEach((payment) => {
       const paymentDate = dayjs(payment.date);
       if (paymentDate.isBetween(startDate, endDate, null, "[]")) {
-        // Chỉ tính doanh thu cho các payment liên quan đến booking đã xác nhận
         const relatedBooking = confirmedBookings.find(
           (booking) => booking.id === payment.bookingId
         );
@@ -586,6 +567,7 @@ const OrderHistory = () => {
       }
     });
 
+    // Tính doanh thu từ orders
     confirmedBookings.forEach((booking) => {
       const bookingDate = dayjs(booking.date);
       if (bookingDate.isBetween(startDate, endDate, null, "[]")) {
@@ -599,13 +581,13 @@ const OrderHistory = () => {
       }
     });
 
+    // Chuyển đổi dữ liệu để hiển thị
     setRevenueData(
       Object.entries(dailyRevenue).map(([date, amount]) => ({ date, amount }))
     );
-
     setShowRevenue(true);
   };
-
+  // Hàm render bảng doanh thu
   const renderRevenueTable = () => {
     const columns = [
       {
@@ -615,7 +597,7 @@ const OrderHistory = () => {
         render: (date) => formatDate(date),
       },
       {
-        title: "Doanh thu ",
+        title: "Doanh thu",
         dataIndex: "amount",
         key: "amount",
         render: (amount) => formatCurrency(amount),
@@ -644,76 +626,21 @@ const OrderHistory = () => {
       />
     );
   };
-  const editModalContent = (
-    <Modal
-      title="Chỉnh sửa đơn hàng"
-      visible={isEditModalVisible}
-      onCancel={handleCloseEditModal}
-      footer={null}
-    >
-      {editingOrder && (
-        <Form
-          initialValues={{
-            ...editingOrder,
-            date: dayjs(editingOrder.date),
-          }}
-          onFinish={handleEditOrderProduct}
-        >
-          <Form.Item name="amount" label="Số tiền">
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item name="quantity" label="Số lượng">
-            <Input type="number" min={1} />
-          </Form.Item>
-          <Form.Item name="status" label="Trạng thái">
-            <Input />
-          </Form.Item>
-          <Form.Item name="date" label="Ngày">
-            <DatePicker />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Cập nhật
-            </Button>
-          </Form.Item>
-        </Form>
-      )}
-    </Modal>
-  );
-
-  const handleDateChange = (dates) => {
-    setStartDate(dates ? dates[0] : null);
-    setEndDate(dates ? dates[1] : null);
-  };
-
-  const handleRefresh = () => {
-    fetchPaymentData();
-    fetchBookingData();
-    if (startDate && endDate) {
-      calculateRevenue();
-    }
-  };
-
   return (
     <div className="user-manage">
-      <Title
-        style={{
-          textAlign: "center",
-          fontFamily: "Arial",
-          fontSize: 30,
-        }}
-        level={2}
-      >
+      <Title level={2} style={{ textAlign: "center", marginBottom: 20 }}>
         Lịch sử đơn hàng
       </Title>
 
-      <Input
-        placeholder="Tìm kiếm theo số điện thoại "
-        value={searchTerm}
-        onChange={handleSearch}
-        style={{ marginBottom: 20, height: "36px" }}
-        prefix={<SearchOutlined />}
-      />
+      <Space direction="vertical" style={{ width: "100%", marginBottom: 20 }}>
+        <Input
+          placeholder="Tìm kiếm theo số điện thoại"
+          value={searchTerm}
+          onChange={handleSearch}
+          prefix={<SearchOutlined />}
+        />
+      </Space>
+
       <Table
         dataSource={filteredBookings}
         columns={userColumns}
@@ -743,18 +670,7 @@ const OrderHistory = () => {
         </Space>
       </Card>
       <Modal
-        title={
-          <div
-            style={{
-              textAlign: "center",
-              fontWeight: "bold",
-              borderBottom: "1px solid black",
-              paddingBottom: "4px",
-            }}
-          >
-            Chi tiết đơn hàng
-          </div>
-        }
+        title="Chi tiết đơn hàng"
         visible={isModalVisible}
         onCancel={handleCloseModal}
         footer={[
@@ -766,7 +682,6 @@ const OrderHistory = () => {
       >
         {modalContent}
       </Modal>
-      {editModalContent}
     </div>
   );
 };

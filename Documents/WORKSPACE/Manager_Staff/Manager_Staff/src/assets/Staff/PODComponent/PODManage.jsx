@@ -73,7 +73,7 @@ export default function PODManage() {
       const podData = {
         id: podId,
         name: values.name,
-        image: values.image || "string", // Giả sử chúng ta không có trường nhập hình ảnh
+        image: values.image,
         description: values.description,
         rating: values.rating,
         status: values.status,
@@ -113,12 +113,25 @@ export default function PODManage() {
   const columns = [
     {
       title: "Hình ảnh",
+      dataIndex: "image", // Thêm dataIndex
       key: "image",
-      render: () => (
+      render: (
+        image // Thay đổi render để nhận image từ data
+      ) => (
         <img
-          src={des}
+          src={image || "https://placehold.co/100x100"} // Thêm ảnh placeholder nếu không có image
           alt="POD"
-          style={{ width: 100, height: 100, objectFit: "cover" }}
+          style={{
+            width: 100,
+            height: 100,
+            objectFit: "cover",
+            borderRadius: "8px", // Thêm bo góc cho đẹp
+          }}
+          onError={(e) => {
+            // Xử lý khi ảnh lỗi
+            e.target.onerror = null;
+            e.target.src = "https://placehold.co/100x100";
+          }}
         />
       ),
       width: 100,
@@ -160,13 +173,47 @@ export default function PODManage() {
     },
     {
       title: "Cửa hàng",
-      dataIndex: "storeId", // Dùng storeId để tra cứu
+      dataIndex: "storeId",
       key: "storeName",
       align: "center",
+      filters: storeData.map((store) => ({
+        // Tạo filters động từ storeData
+        text: store.name,
+        value: store.id, // Sử dụng store.id làm value
+      })),
+      onFilter: (value, record) => {
+        // So sánh storeId của record với value (store.id) từ filter
+        return record.storeId === value;
+      },
       render: (storeId) => {
         const store = storeData.find((store) => store.id === storeId);
         return store ? store.name : "Không có dữ liệu";
       },
+    },
+    {
+      title: "Hình ảnh cửa hàng",
+      dataIndex: "storeId",
+      key: "storeImage",
+      render: (storeId) => {
+        const store = storeData.find((store) => store.id === storeId);
+        return (
+          <img
+            src={store?.image || "https://placehold.co/100x100"}
+            alt="Store"
+            style={{
+              width: 100,
+              height: 100,
+              objectFit: "cover",
+              borderRadius: "8px",
+            }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://placehold.co/100x100";
+            }}
+          />
+        );
+      },
+      width: 100,
     },
     {
       title: "Trạng thái",
@@ -179,12 +226,16 @@ export default function PODManage() {
       ],
       onFilter: (value, record) => record.status.includes(value),
       render: (status) => (
-        <Tag
-          color={status === "Còn trống" ? "#64A587" : "#FE6D73"}
-          style={{ fontSize: "15px" }}
+        <span
+          style={{
+            color: status === "Đang hoạt động" ? "#64A587" : "#fb8b24 ",
+            fontSize: "15px",
+            fontStyle: "italic",
+            fontWeight: "500",
+          }}
         >
           {status}
-        </Tag>
+        </span>
       ),
     },
     {
@@ -208,13 +259,17 @@ export default function PODManage() {
       render: (id, record) => (
         <div className="action-buttons">
           <Button
-            style={{ backgroundColor: "#007bff" }}
             onClick={() => {
               setIsModalVisible(true);
               form.setFieldsValue(record);
             }}
+            style={{
+              backgroundColor: "transparent",
+              border: "none",
+              color: "black",
+            }}
           >
-            <FontAwesomeIcon style={{ color: "#FAFBFB" }} icon={faEdit} />
+            <FontAwesomeIcon style={{ color: "black" }} icon={faEdit} />
           </Button>
         </div>
       ),
@@ -242,9 +297,6 @@ export default function PODManage() {
           border: "1px solid #E0E0E0",
         }}
       />
-      <Button className="add-button" onClick={fetchPODData}>
-        <ReloadOutlined />
-      </Button>
 
       <Modal
         title="Chỉnh sửa POD"
@@ -260,6 +312,9 @@ export default function PODManage() {
           <Form.Item name="id" hidden>
             <Input />
           </Form.Item>
+          <Form.Item name="image" label="Hình ảnh">
+            <Input readOnly /> {/* Thêm readOnly để không cho chỉnh sửa */}
+          </Form.Item>
           <Form.Item
             name="name"
             label="Tên"
@@ -267,6 +322,7 @@ export default function PODManage() {
           >
             <Input readOnly />
           </Form.Item>
+
           <Form.Item
             name="description"
             label="Mô tả"

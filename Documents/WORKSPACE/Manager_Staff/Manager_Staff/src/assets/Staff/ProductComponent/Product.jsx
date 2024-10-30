@@ -24,35 +24,36 @@ import "./Product.css";
 function Product() {
   const apiProduct = "https://localhost:7166/api/Product";
   const apiCategory = "https://localhost:7166/api/Category";
+  const apiStore = "https://localhost:7166/api/Store";
   const [product, setProduct] = useState([]);
   const [category, setCategory] = useState([]);
+  const [store, setStore] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formVariable] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [maxProductId, setMaxProductId] = useState(0);
 
-  const storeOptions = [
-    { value: 1, label: "Cơ sở 1" },
-    { value: 2, label: "Cơ sở 2" },
-  ];
-
   const fetchProductData = async () => {
     try {
       const productResponse = await axios.get(apiProduct);
       const categoryResponse = await axios.get(apiCategory);
-
+      const storeResponse = await axios.get(apiStore);
       setCategory(categoryResponse.data);
-
+      setStore(storeResponse.data);
       const productsWithCategory = productResponse.data.map((product) => ({
         ...product,
         categoryName:
           categoryResponse.data.find((cat) => cat.id === product.categoryId)
             ?.name || "Không xác định",
+        categoryStatus:
+          product.stock === 0
+            ? "Đã hết"
+            : categoryResponse.data.find((cat) => cat.id === product.categoryId)
+                ?.status || "Không xác định",
       }));
 
       setProduct(productsWithCategory);
-      // Tìm ID lớn nhất
       const maxId = Math.max(...productsWithCategory.map((p) => p.id), 0);
       setMaxProductId(maxId);
     } catch (error) {
@@ -64,6 +65,7 @@ function Product() {
   useEffect(() => {
     fetchProductData();
   }, []);
+
   if (category.length === 0 && product.length === 0) {
     return (
       <p>
@@ -71,19 +73,21 @@ function Product() {
       </p>
     );
   }
+
   const handleOpenModal = (record) => {
     setShowModal(true);
     setEditingProduct(record);
     if (record) {
       formVariable.setFieldsValue({
         ...record,
-        price: formatCurrency(record.price),
+        price: formatInputPrice(record.price),
       });
     } else {
       formVariable.resetFields();
     }
   };
 
+  // Định dạng giá tiền cho hiển thị trong bảng
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -91,10 +95,15 @@ function Product() {
     }).format(amount);
   };
 
+  // Định dạng giá tiền cho input
+  const formatInputPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price);
+  };
+
   const handlePriceChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
     formVariable.setFieldsValue({
-      price: formatCurrency(value),
+      price: formatInputPrice(value),
     });
   };
 
@@ -110,7 +119,6 @@ function Product() {
       let productData = { ...values };
 
       if (!editingProduct) {
-        // Nếu đang thêm mới, tạo ID mới
         productData.id = maxProductId + 1;
         setMaxProductId(productData.id);
       }
@@ -143,6 +151,7 @@ function Product() {
       setSubmitting(false);
     }
   };
+
   const handleDelete = async (productId) => {
     try {
       await axios.delete(`${apiProduct}/${productId}`);
@@ -197,6 +206,27 @@ function Product() {
       sorter: (a, b) => a.stock - b.stock,
     },
     {
+      title: "Trạng thái",
+      dataIndex: "categoryStatus",
+      key: "categoryStatus",
+      align: "center",
+      render: (status, record) => (
+        <span
+          style={{
+            color: record.stock === 0 ? "red" : "green",
+            fontWeight: "bold",
+          }}
+        >
+          {status}
+        </span>
+      ),
+      filters: [
+        { text: "Vẫn còn", value: "Vẫn còn" },
+        { text: "Đã hết", value: "Đã hết" },
+      ],
+      onFilter: (value, record) => record.categoryStatus === value,
+    },
+    {
       title: "Đánh giá",
       dataIndex: "rating",
       key: "rating",
@@ -212,15 +242,18 @@ function Product() {
       title: "Actions",
       key: "actions",
       align: "center",
-      render: (text, record) => (
+      render: (record) => (
         <div>
           <Button
-            type="primary"
             onClick={() => handleOpenModal(record)}
-            style={{ marginRight: 8 }}
+            style={{
+              marginRight: 8,
+              backgroundColor: "transparent",
+              border: "none",
+              color: "black",
+            }}
           >
             <EditFilled />
-            Điều chỉnh
           </Button>
 
           <Popconfirm
@@ -229,9 +262,14 @@ function Product() {
             okText="Yes"
             cancelText="No"
           >
-            <Button type="primary" danger>
+            <Button
+              style={{
+                backgroundColor: "transparent",
+                border: "none",
+                color: "black",
+              }}
+            >
               <DeleteFilled />
-              Xoá
             </Button>
           </Popconfirm>
         </div>
@@ -269,9 +307,9 @@ function Product() {
         rowKey="id"
         pagination={{ pageSize: 5 }}
         style={{
-          border: "1px solid grey",
+          // border: "1px solid grey",
           borderRadius: "10px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          // boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
         }}
       />
 
@@ -296,7 +334,7 @@ function Product() {
             rules={[{ required: true, message: "Vui lòng nhập giá sản phẩm" }]}
           >
             <Input
-              placeholder="vnđ"
+              placeholder="VNĐ"
               onChange={handlePriceChange}
               step={10000}
             />
@@ -335,9 +373,9 @@ function Product() {
             rules={[{ required: true, message: "Vui lòng chọn cơ sở" }]}
           >
             <Select>
-              {storeOptions.map((store) => (
-                <Select.Option key={store.value} value={store.value}>
-                  {store.label}
+              {store.map((store) => (
+                <Select.Option key={store.id} value={store.id}>
+                  {store.name}
                 </Select.Option>
               ))}
             </Select>

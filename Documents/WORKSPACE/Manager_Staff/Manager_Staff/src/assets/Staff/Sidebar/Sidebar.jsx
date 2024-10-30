@@ -42,27 +42,6 @@ const Sidebar = () => {
             <FontAwesomeIcon className="icon" icon={faFileClipboard} /> Đơn đang
             chờ
           </span>
-          <Badge
-            count={
-              <FontAwesomeIcon
-                icon={faCommentDollar}
-                style={{
-                  color: "#fff",
-                  fontSize: "10px",
-                }}
-              />
-            }
-            style={{
-              backgroundColor: "#52c41a",
-              fontSize: "10px",
-              height: "18px",
-              minWidth: "18px",
-              lineHeight: "18px",
-              padding: "0 4px",
-              marginBottom: "1.2rem",
-              borderRadius: "56%",
-            }}
-          />
         </Link>
         <Link
           to="/booking-order"
@@ -74,27 +53,6 @@ const Sidebar = () => {
           <span>
             <FontAwesomeIcon className="icon" icon={faBurger} /> Order thêm
           </span>
-          <Badge
-            count={
-              <FontAwesomeIcon
-                icon={faCommentDollar}
-                style={{
-                  color: "#fff",
-                  fontSize: "10px",
-                }}
-              />
-            }
-            style={{
-              backgroundColor: "#52c41a",
-              fontSize: "10px",
-              height: "18px",
-              minWidth: "18px",
-              lineHeight: "18px",
-              padding: "0 4px",
-              marginBottom: "1.2rem",
-              borderRadius: "56%",
-            }}
-          />
         </Link>
 
         <Link to="/pod">
@@ -112,7 +70,7 @@ const Sidebar = () => {
         <Link to="/customer">
           <FontAwesomeIcon className="icon" icon={faUser} /> Quản lí khách hàng
         </Link>
-        <Link to="/" style={{ color: "firebrick" }}>
+        <Link to="/">
           <FontAwesomeIcon className="icon" icon={faSignOutAlt} /> Đăng xuất
         </Link>
       </div>

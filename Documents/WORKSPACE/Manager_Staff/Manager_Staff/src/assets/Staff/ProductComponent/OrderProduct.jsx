@@ -18,7 +18,7 @@ import {
   faBoxOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-
+import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 
 const OrderProduct = () => {
@@ -28,7 +28,7 @@ const OrderProduct = () => {
   const [form] = Form.useForm();
   const [products, setProducts] = useState([]);
   const [nextBookingOrderId, setNextBookingOrderId] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     fetchProducts();
     fetchNextBookingOrderId();
@@ -65,6 +65,7 @@ const OrderProduct = () => {
       };
       await axios.post(apiOrderProduct, bookingOrder);
       message.success("Đã thêm BookingOrder thành công!");
+      navigate("/history");
       form.resetFields();
       fetchNextBookingOrderId(); // Cập nhật ID cho lần thêm tiếp theo
     } catch (error) {
@@ -81,6 +82,7 @@ const OrderProduct = () => {
     }
   };
 
+  // điều chỉnh giá theo số lượng
   const handleQuantityChange = (value) => {
     const productId = form.getFieldValue("productId");
     const selectedProduct = products.find((p) => p.id === productId);
@@ -163,7 +165,7 @@ const OrderProduct = () => {
           rules={[{ required: true }]}
         >
           <Select>
-            <Option value="Chưa thanh toán">Chưa thanh toán</Option>
+            {/* <Option value="Chưa thanh toán">Chưa thanh toán</Option> */}
             <Option value="Đã thanh toán">Đã thanh toán</Option>
           </Select>
         </Form.Item>
