@@ -12,6 +12,7 @@ import {
   DatePicker,
   message,
   Select,
+  Popconfirm,
 } from "antd";
 import {
   SearchOutlined,
@@ -19,6 +20,7 @@ import {
   EyeTwoTone,
   EyeInvisibleTwoTone,
   ReloadOutlined,
+  MinusCircleOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
@@ -347,6 +349,28 @@ const OrderHistory = () => {
       message.error("Cập nhật thanh toán thất bại");
     }
   };
+  // điều chỉnh trạng thái thanh toán
+  const handleUpdatePaymentStatus = async (paymentId, newStatus) => {
+    try {
+      const payment = paymentData.find((p) => p.id === paymentId);
+      if (!payment) {
+        message.error("Không tìm thấy thông tin thanh toán");
+        return;
+      }
+
+      await axios.put(`${apiPayment}/${paymentId}`, {
+        ...payment,
+        status: newStatus,
+      });
+
+      fetchPaymentData(); // Fetch lại dữ liệu thanh toán
+      message.success("Cập nhật trạng thái thanh toán thành công");
+      handleCloseModal();
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái thanh toán:", error);
+      message.error("Cập nhật trạng thái thanh toán thất bại");
+    }
+  };
   // Table Columns
   const userColumns = [
     {
@@ -469,6 +493,7 @@ const OrderHistory = () => {
       key: "amount",
       render: (amount) => formatCurrency(amount),
     },
+
     {
       title: "Trạng thái",
       dataIndex: "status",
@@ -600,12 +625,11 @@ const OrderHistory = () => {
           return (
             <>
               <p>
-                <strong>Tổng tiền sản phẩm:</strong>{" "}
+                <strong>Tổng tiền Order thêm:</strong>{" "}
                 {formatCurrency(orderTotal)}
               </p>
               <p>
-                <strong>Tiền Pod:</strong>
-                {formatCurrency(podAmount)}
+                <strong>Tiền Pod:</strong> {formatCurrency(podAmount)}
               </p>
               <strong>Tổng cộng:</strong>{" "}
               <span
@@ -616,28 +640,66 @@ const OrderHistory = () => {
               >
                 {formatCurrency(totalAmount)}
               </span>
-              <p>
-                <strong>Trạng thái thanh toán:</strong>{" "}
+              <Popconfirm
+                title="Bạn có chắc chắn muốn hoàn tiền không?"
+                onConfirm={handleConvertToNegative}
+                okText="Có"
+                cancelText="Không"
+              >
+                <Button
+                  type="danger"
+                  style={{
+                    marginLeft: "5px",
+                    backgroundColor: "transparent",
+                    color: "black",
+                  }}
+                >
+                  <MinusCircleOutlined /> Hoàn tiền
+                </Button>
+              </Popconfirm>
+              <p style={{ margin: "10px 0" }}>
+                <strong>Phương thức thanh toán:</strong>{" "}
                 {payment ? (
-                  <span
-                    style={{
-                      color:
-                        payment.status === "Đã thanh toán"
-                          ? "seagreen"
-                          : "orange",
-                      fontSize: "15px",
-                      fontStyle: "italic",
-                      fontWeight: "500",
-                    }}
-                  >
-                    {payment.status}
-                  </span>
+                  <span>{payment.method || "Không xác định"}</span>
                 ) : (
                   "Không có thông tin"
                 )}
-                <Button type="danger" onClick={handleConvertToNegative}>
-                  Hoàn tiền
-                </Button>
+              </p>
+              <p>
+                <strong>Trạng thái thanh toán:</strong>{" "}
+                {payment ? (
+                  <Space>
+                    <span
+                      style={{
+                        color:
+                          payment.status === "Đã thanh toán"
+                            ? "seagreen"
+                            : "red",
+                        fontSize: "15px",
+                        fontStyle: "italic",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {payment.status}
+                    </span>
+                    <Select
+                      defaultValue={payment.status}
+                      style={{ width: 150 }}
+                      onChange={(value) =>
+                        handleUpdatePaymentStatus(payment.id, value)
+                      }
+                    >
+                      <Select.Option value="Đã thanh toán">
+                        Đã thanh toán
+                      </Select.Option>
+                      <Select.Option value="Chưa thanh toán">
+                        Chưa thanh toán
+                      </Select.Option>
+                    </Select>
+                  </Space>
+                ) : (
+                  "Không có thông tin"
+                )}
               </p>
               <Button
                 type="primary"
