@@ -1,0 +1,82 @@
+.container {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8); /* Nền trắng với độ trong suốt */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid grey;
+}
+.ant-table-cell {
+    border-bottom: 0.5px solid rgb(201, 197, 197) !important;
+}
+.ant-modal-body {
+    padding: 20px !important;
+    background-color: #FAFBFB;
+}
+
+.one-button {
+  background-color: transparent;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+
+
+/* src/ManageStoreComponent/style.css */
+.store-img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover; /* Cắt ảnh để phù hợp với kích thước */
+    object-position: center;
+    display: block;
+}
+
+.store-card{
+padding:20px;
+height: 99%;
+}
+
+/* Thêm quy tắc cho responsive */
+@media screen and (max-width: 768px) {
+    .card-img-top {
+        height: auto; /* Chiều cao tự động cho màn hình nhỏ */
+    }
+}
+
+
+
+
+
+
+/* FE_PODBookingSystem/src/ProductComponent/AddProduct.css */
+
+.add-product-container {
+    border-radius: 10px;
+    justify-content: center;
+    display: flex;
+    max-width: 100%; /* Giới hạn chiều rộng tối đa */
+
+}
+
+.add-product-title {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 30px;
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+
+.add-product-form {
+    padding: 20px;
+    margin: 0 auto; /* Căn giữa */
+
+}
+
+.add-product-button {
+    width: 100%; /* Đặt chiều rộng nút là 100% */
+    margin-top: 20px; /* Khoảng cách trên nút */
+}
+
+.ant-form-item-label {
+    display: block; /* Đặt label thành block để xuống hàng */
+    margin-bottom: 8px; /* Khoảng cách giữa label và input */
+}

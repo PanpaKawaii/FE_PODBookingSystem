@@ -46,15 +46,7 @@ div.card-body{
     align-items: center;
 }
 
-.add-pod-button{
-    color: black;
-    background-color: rgb(133, 71, 240);
-    border-color: rgb(133, 71, 290);
-    padding: 0.5rem 0.5rem;
-    border-radius: 0.5rem;
-    text-decoration: none;
-    margin-right: 32px;
-}
+
 
 .pod-manage {
     margin: 15px 15px;
@@ -66,3 +58,16 @@ div.card-body{
     overflow-y: auto;
     margin: 20px 20px;
 }
+
+.one-button {
+    background-color: transparent;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.one-pod{
+    max-width: 100%;
+    
+}
+

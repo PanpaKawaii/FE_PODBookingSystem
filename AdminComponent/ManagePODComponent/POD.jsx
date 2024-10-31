@@ -11,12 +11,11 @@ import {
   Tag,
   InputNumber,
 } from "antd";
-import axios from "axios";
+import api from "../../AdminComponent/api/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faStar, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ReloadOutlined, LoadingOutlined } from "@ant-design/icons";
 import "./PODManage.css";
-import des from "../Admin_image/space.jpg";
 import { Link } from "react-router-dom";
 
 export default function POD() {
@@ -26,12 +25,11 @@ export default function POD() {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
-  const apiPod = "https://localhost:7166/api/Pod";
-  const apiStore = "https://localhost:7166/api/Store";
-  const apiUtility = "https://localhost:7166/api/Utility";
+  const [types, setTypes] = useState([]);
+
   const fetchPODData = async () => {
     try {
-      const response = await axios.get(apiPod);
+      const response = await api.get("Pod");
       setPodData(response.data);
     } catch (error) {
       console.error("Failed to fetch POD data:", error);
@@ -40,7 +38,7 @@ export default function POD() {
   };
   const fetchStoreData = async () => {
     try {
-      const response = await axios.get(apiStore);
+      const response = await api.get("Store");
       setStoreData(response.data);
     } catch (error) {
       console.error("Failed to fetch Store data:", error);
@@ -49,7 +47,7 @@ export default function POD() {
   };
   const fetchUtilityData = async () => {
     try {
-      const response = await axios.get(apiUtility);
+      const response = await api.get("Utility");
       setUtilityData(response.data);
     } catch (error) {
       console.error("Failed to fetch Utility data:", error);
@@ -58,7 +56,7 @@ export default function POD() {
   };
   const handleDelete = async (podId) => {
     try {
-      await axios.delete(`${apiPod}/${podId}`);
+      await api.delete(`${apiPod}/${podId}`);
       message.success("Xoá thành công");
       fetchPODData();
     } catch (error) {
@@ -74,13 +72,13 @@ export default function POD() {
       const podData = {
         id: podId,
         name: values.name,
-        image: values.image || "string", // Giả sử chúng ta không có trường nhập hình ảnh
+        image: values.image || "string",
         description: values.description,
         rating: values.rating,
         status: values.status,
         typeId: values.typeId,
         storeId: values.storeId,
-        utilityId: values.utilityId ? [values.utilityId] : [0], // Chuyển đổi thành mảng với giá trị mặc định là [0]
+        utilityId: values.utilityId ? [values.utilityId] : [0],
       };
       const response = await axios.put(`${apiPod}/${podId}`, podData);
       message.success("Thông tin POD được cập nhật thành công");
@@ -94,13 +92,29 @@ export default function POD() {
     }
   };
 
-  // ... phần còn lại của mã ...
-
   useEffect(() => {
     fetchPODData();
     fetchStoreData();
     fetchUtilityData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const typeResponse = await api.get("Type");
+        setTypes(typeResponse.data);
+      } catch (err) {
+        console.log(err);
+        message.error("Có lỗi xảy ra khi lấy dữ liệu");
+      }
+    };
+    fetchData();
+  }, []);
+
+  const getPodTypeName = (typeId) => {
+    const type = types.find((t) => t.id === typeId);
+    return type ? type.name : "Không có dữ liệu";
+  };
 
   if (
     podData.length === 0 &&
@@ -117,9 +131,9 @@ export default function POD() {
     {
       title: "Hình ảnh",
       key: "image",
-      render: () => (
+      render: (text, record) => (
         <img
-          src={des}
+          src={record.image}
           alt="POD"
           style={{ width: 100, height: 100, objectFit: "cover" }}
         />
@@ -133,13 +147,12 @@ export default function POD() {
       align: "center",
       hidden: true,
     },
-
     {
       title: "Loại POD",
       dataIndex: "typeId",
       key: "typeId",
       align: "center",
-      hidden: true,
+      render: (typeId) => getPodTypeName(typeId),
     },
     {
       title: "Tên",
@@ -149,22 +162,28 @@ export default function POD() {
       render: (text) => <span style={{ fontSize: "16px" }}>{text}</span>,
     },
     {
-      title: "Mã cơ sở",
-      dataIndex: "storeId",
-      key: "storeId",
+      title: "Mô tả",
+      dataIndex: "description",
+      key: "description",
       align: "center",
-      hidden: true,
+      render: (text) => <span style={{ fontSize: "14px" }}>{text}</span>,
     },
     {
-      title: "Tiện ích",
-      dataIndex: "utilityId",
-      key: "utilityId",
+      title: "Đánh giá",
+      dataIndex: "rating",
+      key: "rating",
       align: "center",
-      hidden: true,
+      render: (rating) => (
+        <>
+          {rating}{" "}
+          <FontAwesomeIcon icon={faStar} style={{ color: "#F2D338" }} />
+        </>
+      ),
+      sorter: (a, b) => a.rating - b.rating,
     },
     {
       title: "Cửa hàng",
-      dataIndex: "storeId", // Dùng storeId để tra cứu
+      dataIndex: "storeId",
       key: "storeName",
       align: "center",
       render: (storeId) => {
@@ -175,6 +194,13 @@ export default function POD() {
           </span>
         );
       },
+    },
+    {
+      title: "Tiện ích",
+      dataIndex: "utilityId",
+      key: "utilityId",
+      align: "center",
+      hidden: true,
     },
     {
       title: "Trạng thái",
@@ -196,50 +222,21 @@ export default function POD() {
       ),
     },
     {
-      title: "Đánh giá",
-      dataIndex: "rating",
-      key: "rating",
-      align: "center",
-      hidden: true,
-      render: (rating) => (
-        <>
-          {rating}{" "}
-          <FontAwesomeIcon icon={faStar} style={{ color: "#F2D338" }} />
-        </>
-      ),
-      sorter: (a, b) => a.rating - b.rating,
-    },
-    {
       title: "Điều chỉnh",
       key: "id",
       dataIndex: "id",
       align: "center",
       width: 200,
       render: (id, record) => (
-        <div className="action-buttons">
-          <Button
-            style={{ backgroundColor: "#007bff" }}
+        <div>
+          <button className="one-button"
             onClick={() => {
               setIsModalVisible(true);
               form.setFieldsValue(record);
             }}
           >
-            <FontAwesomeIcon style={{ color: "#FAFBFB" }} icon={faEdit} />
-          </Button>
-          {/* 
-          <Popconfirm
-            title="Bạn có chắc chắn muốn xóa nhân viên này?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Có"
-            cancelText="Không"
-          >
-            <Button
-              variant="danger"
-              style={{ marginLeft: "5px", backgroundColor: "#dc3545" }}
-            >
-              <FontAwesomeIcon style={{ color: "#FAFBFB" }} icon={faTrash} />
-            </Button>
-          </Popconfirm> */}
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
         </div>
       ),
     },
@@ -247,50 +244,32 @@ export default function POD() {
 
   return (
     <>
-      <div
-        style={{
-          backgroundColor: "#F5F5F5",
-          borderRadius: "10px",
-          border: "1px solid #9da5ac",
-        }}
-      >
+      <div>
+        <div className="title-store">
         <h1
-          style={{
-            textAlign: "center",
-            fontFamily: "Arial",
-            fontSize: 30,
-            paddingTop: "1rem",
-          }}
+        
         >
           Quản lí POD
-        </h1>
-        <Button
+          </h1>
+          <Button
           type="primary"
-          className="add-button"
-          style={{
-            padding: "5px 5px",
-            marginLeft: "1rem",
-            backgroundColor: "#FAFBFB",
-          }}
+        style={{
+          marginRight: "10px",
+        }}
         >
           <Link to="/addpod">Thêm POD</Link>
         </Button>
-        <Table
-          columns={columns}
-          dataSource={podData}
-          rowKey="id"
-          pagination={{ pageSize: 4 }}
-          bordered
-          scroll={{ x: 1000 }}
-          style={{
-            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
-            margin: "20px 20px",
-            padding: "20px 20px",
-            border: "1px solid #9da5ac",
-            borderRadius: "10px",
-            backgroundColor: "#F5F5F5",
-          }}
-        />
+        </div>
+        <div style={{ overflowX: "auto" }}>
+          <Table
+            columns={columns}
+            dataSource={podData}
+            rowKey="id"
+            pagination={{ pageSize: 5 }}
+            size="small"
+            bordered
+          />
+        </div>
 
         <Modal
           title="Chỉnh sửa POD"
@@ -382,9 +361,9 @@ export default function POD() {
               </Select>
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading}>
+              <button type="primary" htmlType="submit" loading={loading}>
                 Lưu thay đổi
-              </Button>
+              </button>
             </Form.Item>
           </Form>
         </Modal>

@@ -20,22 +20,30 @@ import {
 } from "@ant-design/icons";
 import axios from "axios";
 import "./Product.css";
+import { Link } from "react-router-dom";
 
 function Product() {
   const apiProduct = "https://localhost:7166/api/Product";
   const apiCategory = "https://localhost:7166/api/Category";
+  const apiStore = "https://localhost:7166/api/Store";
   const [product, setProduct] = useState([]);
   const [category, setCategory] = useState([]);
+  const [store, setStore] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formVariable] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [maxProductId, setMaxProductId] = useState(0);
 
-  const storeOptions = [
-    { value: 1, label: "Cơ sở 1" },
-    { value: 2, label: "Cơ sở 2" },
-  ];
+  const fetchStoreData = async () => {
+    try {
+      const response = await axios.get(apiStore);
+      setStore(response.data);
+    } catch (error) {
+      console.error("Error fetching store data:", error);
+    }
+  };
+
 
   const fetchProductData = async () => {
     try {
@@ -49,10 +57,14 @@ function Product() {
         categoryName:
           categoryResponse.data.find((cat) => cat.id === product.categoryId)
             ?.name || "Không xác định",
+        categoryStatus:
+          product.stock === 0
+            ? "Đã hết"
+            : categoryResponse.data.find((cat) => cat.id === product.categoryId)
+              ?.status || "Không xác định",
       }));
 
       setProduct(productsWithCategory);
-      // Tìm ID lớn nhất
       const maxId = Math.max(...productsWithCategory.map((p) => p.id), 0);
       setMaxProductId(maxId);
     } catch (error) {
@@ -63,7 +75,9 @@ function Product() {
 
   useEffect(() => {
     fetchProductData();
+    fetchStoreData();
   }, []);
+
   if (category.length === 0 && product.length === 0) {
     return (
       <p>
@@ -71,19 +85,21 @@ function Product() {
       </p>
     );
   }
+
   const handleOpenModal = (record) => {
     setShowModal(true);
     setEditingProduct(record);
     if (record) {
       formVariable.setFieldsValue({
         ...record,
-        price: formatCurrency(record.price),
+        price: formatInputPrice(record.price),
       });
     } else {
       formVariable.resetFields();
     }
   };
 
+  // Định dạng giá tiền cho hiển thị trong bảng
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -91,13 +107,17 @@ function Product() {
     }).format(amount);
   };
 
+  // Định dạng giá tiền cho input
+  const formatInputPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price);
+  };
+
   const handlePriceChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
     formVariable.setFieldsValue({
-      price: formatCurrency(value),
+      price: formatInputPrice(value),
     });
   };
-
   const handleHideModal = () => {
     setShowModal(false);
     formVariable.resetFields();
@@ -110,7 +130,6 @@ function Product() {
       let productData = { ...values };
 
       if (!editingProduct) {
-        // Nếu đang thêm mới, tạo ID mới
         productData.id = maxProductId + 1;
         setMaxProductId(productData.id);
       }
@@ -143,6 +162,7 @@ function Product() {
       setSubmitting(false);
     }
   };
+
   const handleDelete = async (productId) => {
     try {
       await axios.delete(`${apiProduct}/${productId}`);
@@ -197,6 +217,27 @@ function Product() {
       sorter: (a, b) => a.stock - b.stock,
     },
     {
+      title: "Trạng thái",
+      dataIndex: "categoryStatus",
+      key: "categoryStatus",
+      align: "center",
+      render: (status, record) => (
+        <span
+          style={{
+            color: record.stock === 0 ? "red" : "green",
+            fontWeight: "bold",
+          }}
+        >
+          {status}
+        </span>
+      ),
+      filters: [
+        { text: "Vẫn còn", value: "Vẫn còn" },
+        { text: "Đã hết", value: "Đã hết" },
+      ],
+      onFilter: (value, record) => record.categoryStatus === value,
+    },
+    {
       title: "Đánh giá",
       dataIndex: "rating",
       key: "rating",
@@ -214,14 +255,13 @@ function Product() {
       align: "center",
       render: (text, record) => (
         <div>
-          <Button
-            type="primary"
+          <button className="one-button"
+
             onClick={() => handleOpenModal(record)}
             style={{ marginRight: 8 }}
           >
             <EditFilled />
-            Điều chỉnh
-          </Button>
+          </button>
 
           <Popconfirm
             title="Are you sure to delete this product?"
@@ -229,10 +269,9 @@ function Product() {
             okText="Yes"
             cancelText="No"
           >
-            <Button type="primary" danger>
+            <button className="one-button" >
               <DeleteFilled />
-              Xoá
-            </Button>
+            </button>
           </Popconfirm>
         </div>
       ),
@@ -248,18 +287,16 @@ function Product() {
         backgroundColor: "#F5F5F5",
       }}
     >
-      <div>
-        <h1 style={{ textAlign: "center", fontFamily: "Arial", fontSize: 30 }}>
+      <div className="title-store">
+        <h1 >
           Các sản phẩm kèm
         </h1>
-        <Button
-          type="primary"
-          onClick={() => handleOpenModal(null)}
-          style={{ marginBottom: 10 }}
-        >
-          <PlusCircleFilled />
-          Thêm sản phẩm mới
-        </Button>
+        <Link to="/addproduct">
+          <Button type="primary" >
+            <PlusCircleFilled />
+            Thêm sản phẩm mới
+          </Button>
+        </Link>
       </div>
       <br />
       <Table
@@ -281,8 +318,13 @@ function Product() {
         onCancel={handleHideModal}
         onOk={() => formVariable.submit()}
         confirmLoading={submitting}
+        width={470}
       >
-        <Form form={formVariable} onFinish={handleSubmitValue}>
+        <Form
+          form={formVariable}
+          onFinish={handleSubmitValue}
+          style={{ padding: "10px 10px" }}
+        >
           <Form.Item
             name="name"
             label="Tên sản phẩm"
@@ -296,9 +338,10 @@ function Product() {
             rules={[{ required: true, message: "Vui lòng nhập giá sản phẩm" }]}
           >
             <Input
-              placeholder="vnđ"
+              placeholder="VNĐ"
               onChange={handlePriceChange}
               step={10000}
+              min={0}
             />
           </Form.Item>
           <Form.Item
@@ -335,9 +378,9 @@ function Product() {
             rules={[{ required: true, message: "Vui lòng chọn cơ sở" }]}
           >
             <Select>
-              {storeOptions.map((store) => (
-                <Select.Option key={store.value} value={store.value}>
-                  {store.label}
+              {store.map((store) => (
+                <Select.Option key={store.id} value={store.id}>
+                  {store.name}
                 </Select.Option>
               ))}
             </Select>

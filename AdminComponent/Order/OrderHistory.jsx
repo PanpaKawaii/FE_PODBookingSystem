@@ -61,6 +61,7 @@ const OrderHistory = () => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(apiUser);
+      console.log("User Data:", response.data);
       setUserData(response.data.filter((user) => user.role === "User"));
     } catch (error) {
       console.error("Failed to fetch user data:", error);
@@ -70,6 +71,7 @@ const OrderHistory = () => {
   const fetchBookingData = async () => {
     try {
       const response = await axios.get(apiBooking);
+      console.log("Booking Data:", response.data);
       setBookingData(response.data);
     } catch (error) {
       console.error("Failed to fetch booking data:", error);
@@ -209,14 +211,12 @@ const OrderHistory = () => {
     user.phoneNumber.includes(searchTerm)
   );
 
-  const filteredBookings = bookingData.filter(
-    (booking) =>
+  const filteredBookings = bookingData.filter((booking) => {
+    return (
       filteredUsers.some((user) => user.id === booking.userId) &&
-      booking.status === "Xác nhận"
-  );
-  // const filteredBookings = bookingData.filter((booking) =>
-  //   filteredUsers.some((user) => user.id === booking.userId)
-  // );
+      booking.status === "Đã xác nhận"
+    );
+  });
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -284,11 +284,11 @@ const OrderHistory = () => {
   const renderOrderStatus = (status) => {
     let color;
     switch (status) {
-      case "Xác nhận":
+      case "Đã xác nhận":
       case "Đã thanh toán":
         color = "seagreen";
         break;
-      case "Đang chờ":
+      case "Chờ xác nhận":
         color = "cornflowerblue";
         break;
       default:
@@ -546,9 +546,9 @@ const OrderHistory = () => {
               ) || 0)
           )}
         </p>
-        <Button type="primary" onClick={handleUpdatePayment}>
+        {/* <Button type="primary" onClick={handleUpdatePayment}>
           Cập nhật thanh toán
-        </Button>
+        </Button> */}
       </Card>
     </div>
   ) : null;
@@ -681,18 +681,18 @@ const OrderHistory = () => {
     </Modal>
   );
 
-  const handleDateChange = (dates) => {
-    setStartDate(dates ? dates[0] : null);
-    setEndDate(dates ? dates[1] : null);
-  };
+  // const handleDateChange = (dates) => {
+  //   setStartDate(dates ? dates[0] : null);
+  //   setEndDate(dates ? dates[1] : null);
+  // };
 
-  const handleRefresh = () => {
-    fetchPaymentData();
-    fetchBookingData();
-    if (startDate && endDate) {
-      calculateRevenue();
-    }
-  };
+  // const handleRefresh = () => {
+  //   fetchPaymentData();
+  //   fetchBookingData();
+  //   if (startDate && endDate) {
+  //     calculateRevenue();
+  //   }
+  // };
 
   return (
     <div className="user-manage">
@@ -721,7 +721,7 @@ const OrderHistory = () => {
         pagination={{ pageSize: 5 }}
         bordered
       />
-      <Card title="Thống kê doanh thu" style={{ marginBottom: 20 }}>
+      {/* <Card title="Thống kê doanh thu" style={{ marginBottom: 20 }}>
         <Space direction="vertical" size="middle" style={{ display: "flex" }}>
           <RangePicker onChange={handleDateChange} />
           <Space>
@@ -741,7 +741,7 @@ const OrderHistory = () => {
           </Space>
           {showRevenue && revenueData.length > 0 && renderRevenueTable()}
         </Space>
-      </Card>
+      </Card> */}
       <Modal
         title={
           <div

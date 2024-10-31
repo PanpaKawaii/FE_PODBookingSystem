@@ -111,7 +111,7 @@ const Order = () => {
     try {
       const updatedBooking = {
         ...booking,
-        status: "Xác nhận",
+        status: "Đã xác nhận",
         feedback: booking.feedback || "",
       };
 
@@ -165,7 +165,7 @@ const Order = () => {
   };
 
   const pendingBookings = bookingData
-    .filter((booking) => booking.status === "Đang chờ")
+    .filter((booking) => booking.status === "Chờ xác nhận")
     .map((booking) => ({
       ...booking,
       user: userData.find((user) => user.id === booking.userId),
@@ -329,51 +329,51 @@ const Order = () => {
     },
   ];
 
-  const orderColumns = [
-    {
-      title: "OrderId",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "BookingId",
-      dataIndex: "bookingId",
-      key: "bookingId",
-    },
-    {
-      title: "Ngày đặt",
-      dataIndex: "date",
-      key: "date",
-      render: (date) => formatDate(date),
-    },
-    {
-      title: "ProductId",
-      dataIndex: "productId",
-      key: "productId",
-    },
-    {
-      title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
-      render: (quantity) => formatNumber(quantity),
-    },
-    {
-      title: "Tổng tiền",
-      dataIndex: "amount",
-      key: "amount",
-      render: (amount) => formatCurrency(amount),
-    },
-    {
-      title: "Trạng thái đơn hàng",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag color={status === "Đã thanh toán" ? "seagreen" : "blue"}>
-          {status}
-        </Tag>
-      ),
-    },
-  ];
+  // const orderColumns = [
+  //   {
+  //     title: "OrderId",
+  //     dataIndex: "id",
+  //     key: "id",
+  //   },
+  //   {
+  //     title: "BookingId",
+  //     dataIndex: "bookingId",
+  //     key: "bookingId",
+  //   },
+  //   {
+  //     title: "Ngày đặt",
+  //     dataIndex: "date",
+  //     key: "date",
+  //     render: (date) => formatDate(date),
+  //   },
+  //   {
+  //     title: "ProductId",
+  //     dataIndex: "productId",
+  //     key: "productId",
+  //   },
+  //   {
+  //     title: "Số lượng",
+  //     dataIndex: "quantity",
+  //     key: "quantity",
+  //     render: (quantity) => formatNumber(quantity),
+  //   },
+  //   {
+  //     title: "Tổng tiền",
+  //     dataIndex: "amount",
+  //     key: "amount",
+  //     render: (amount) => formatCurrency(amount),
+  //   },
+  //   {
+  //     title: "Trạng thái đơn hàng",
+  //     dataIndex: "status",
+  //     key: "status",
+  //     render: (status) => (
+  //       <Tag color={status === "Đã thanh toán" ? "seagreen" : "blue"}>
+  //         {status}
+  //       </Tag>
+  //     ),
+  //   },
+  // ];
 
   return (
     <div
@@ -430,14 +430,14 @@ const Order = () => {
                 bordered
               />
             </Card>
-            <Card title="Chi tiết đơn hàng" style={{ marginTop: 10 }}>
+            {/* <Card title="Chi tiết đơn hàng" style={{ marginTop: 10 }}>
               <Table
                 dataSource={selectedBooking.bookingOrders}
                 columns={orderColumns}
                 pagination={false}
                 rowKey="id"
               />
-            </Card>
+            </Card> */}
             <Card title="Thông tin khách hàng" style={{ marginTop: 10 }}>
               <Table
                 dataSource={[selectedBooking.user]}

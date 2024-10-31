@@ -9,8 +9,7 @@ import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
 import "./style.css";
 import api from "../api/axios";
-import space from "../Admin_image/space.jpg";
-import { message, Popconfirm } from "antd";
+import { message, Popconfirm, Checkbox } from "antd";
 
 export default function Store() {
   const [stores, setStores] = useState([]);
@@ -41,8 +40,22 @@ export default function Store() {
   };
 
   const handleUpdateStore = async () => {
+    const missingFields = [];
+    if (!editingStore.name) missingFields.push("Tên cửa hàng");
+    if (!editingStore.address) missingFields.push("Địa chỉ");
+    if (!editingStore.contact) missingFields.push("Số điện thoại");
+    if (!editingStore.image) missingFields.push("URL hình ảnh");
+
+    if (missingFields.length > 0) {
+      message.error(`Vui lòng nhập ${missingFields.join(", ")}`);
+      return;
+    }
+
     try {
-      await api.put(`Store/${editingStore.id}`, editingStore);
+      await api.put(`Store/${editingStore.id}`, {
+        ...editingStore,
+        status: editingStore.status === "Đang hoạt động" ? "Đang hoạt động" : "Dừng hoạt động", // Cập nhật trạng thái
+      });
       setShowEditModal(false);
       fetchStores(); // Refresh the stores list
       message.success("Sửa thành công");
@@ -53,8 +66,14 @@ export default function Store() {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditingStore({ ...editingStore, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setEditingStore({ ...editingStore, [name]: type === "checkbox" ? checked : value });
+  };
+
+  const handleCheckboxChange = (e) => {
+    // Cập nhật trạng thái dựa trên checkbox
+    const isChecked = e.target.checked;
+    setEditingStore({ ...editingStore, status: isChecked ? "Đang hoạt động" : "Dừng hoạt động" });
   };
 
   const handleDelete = async (id) => {
@@ -109,7 +128,7 @@ export default function Store() {
             <div className="col-md-6" key={store.id}>
               <div className="card store-card">
                 <img
-                  src={space}
+                  src={store.image}
                   alt="Store 1"
                   className="store-img card-img-top"
                   style={{
@@ -125,11 +144,20 @@ export default function Store() {
                   <p>Địa chỉ: {store.address}</p>
                   <p>Số điện thoại: {store.contact}</p>
                   <p>Giờ mở cửa: 7:00 - 00:00 </p>
+                  <p style={{
+                    color: store.status === "Đang hoạt động" ? "green" : 
+                           store.status === "Dừng hoạt động" ? "red" : "black",
+                    padding: "5px",
+                    borderRadius: "5px",
+                    fontStyle: "italic",
+                  }}>
+                    {store.status}
+                  </p>
 
                   <Card.Footer className="d-flex justify-content-between">
-                    <Button variant="primary" onClick={() => handleEdit(store)}>
+                    <button className="one-button" onClick={() => handleEdit(store)}>
                       <FontAwesomeIcon icon={faEdit} />
-                    </Button>
+                    </button>
 
                     <Popconfirm
                       title="Xác nhận xóa"
@@ -138,9 +166,9 @@ export default function Store() {
                       okText="Xóa"
                       cancelText="Hủy"
                     >
-                      <Button variant="danger">
+                      <button className="one-button">
                         <FontAwesomeIcon icon={faTrash} />
-                      </Button>
+                      </button>
                     </Popconfirm>
                   </Card.Footer>
                 </div>
@@ -163,6 +191,7 @@ export default function Store() {
                 name="name"
                 value={editingStore?.name || ""}
                 onChange={handleInputChange}
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -172,6 +201,7 @@ export default function Store() {
                 name="address"
                 value={editingStore?.address || ""}
                 onChange={handleInputChange}
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -181,7 +211,26 @@ export default function Store() {
                 name="contact"
                 value={editingStore?.contact || ""}
                 onChange={handleInputChange}
+                required
               />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>URL hình ảnh</Form.Label>
+              <Form.Control
+                type="text"
+                name="image"
+                value={editingStore?.image || ""}
+                onChange={handleInputChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Checkbox
+                checked={editingStore?.status === "Đang hoạt động"}
+                onChange={handleCheckboxChange}
+              >
+                Đang hoạt động
+              </Checkbox>
             </Form.Group>
             <Popconfirm
               title="Xác nhận lưu thay đổi"

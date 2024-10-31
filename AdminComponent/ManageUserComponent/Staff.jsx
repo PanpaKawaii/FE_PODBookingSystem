@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faTrash,
-  faUserMinus,
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { message, Popconfirm, Table, Tag } from "antd";
@@ -116,11 +115,11 @@ const Staff = () => {
     {
       title: "Avatar",
       key: "avatar",
-      render: () => (
+      render: (record) => (
         <img
-          src={avatar}
+          src={record.image}
           alt="Avatar"
-          style={{ width: 50, height: 50, borderRadius: "50%" }}
+          style={{ width: 100, borderRadius: "50%" }}
         />
       ),
     },
@@ -146,10 +145,10 @@ const Staff = () => {
     },
     {
       title: "Loại tài khoản",
-      dataIndex: "type",
-      key: "type",
+      dataIndex: "role",
+      key: "role",
       align: "center",
-      render: (type) => <Tag color="geekblue-inverse">ADMIN</Tag>,
+      render: (role) => <Tag color="geekblue-inverse">{role}</Tag>,
     },
     {
       title: "Điểm thưởng",
@@ -162,18 +161,18 @@ const Staff = () => {
       key: "action",
       render: (_, record) => (
         <>
-          <Button variant="primary" onClick={() => handleEdit(record)}>
-            <FontAwesomeIcon icon={faEdit} /> Sửa
-          </Button>{" "}
+          <button className="one-button" onClick={() => handleEdit(record)}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>{" "}
           <Popconfirm
             title="Bạn có chắc chắn muốn xóa nhân viên này?"
             onConfirm={() => handleDelete(record.id)}
             okText="Có"
             cancelText="Không"
           >
-            <Button variant="danger">
-              <FontAwesomeIcon icon={faUserMinus} />
-            </Button>
+            <button className="one-button">
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
           </Popconfirm>
         </>
       ),
@@ -182,22 +181,17 @@ const Staff = () => {
 
   return (
     <div
-      style={{
-        backgroundColor: "#F5F5F5",
-        borderRadius: "10px",
-        border: "1px solid #9da5ac",
-      }}
+     
       className="user-manage"
     >
-      <h1 style={{ fontFamily: "Arial", fontSize: 30 }}>Tài khoản nhân viên</h1>
-      {/* <Button style={{ marginBottom: "10px" }} onClick={fetchStaffData}>
-        <ReloadOutlined />
-      </Button> */}
-      <Button style={{ marginLeft: "10px", marginBottom: "10px" }}>
+      <div className="title-store">
+        <h1>Tài khoản nhân viên</h1>
+      <Button >
         <Link to="/addstaff" style={{ color: "#FAFBFB" }}>
           <FontAwesomeIcon icon={faUserPlus} />
         </Link>
-      </Button>
+        </Button>
+      </div>
       <Table
         dataSource={staffData}
         columns={columns}

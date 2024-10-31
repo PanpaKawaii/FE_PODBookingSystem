@@ -54,32 +54,11 @@ const Sidebar = () => {
           }}
         >
           <span>
-            <FontAwesomeIcon className="icon" icon={faFileClipboard} /> Đơn đang
-            chờ
+            <FontAwesomeIcon className="icon" icon={faFileClipboard} /> Đơn đang chờ
           </span>
-          <Badge
-            count={
-              <FontAwesomeIcon
-                icon={faCommentDollar}
-                style={{
-                  color: "#fff",
-                  fontSize: "10px",
-                }}
-              />
-            }
-            style={{
-              backgroundColor: "#52c41a",
-              fontSize: "10px",
-              height: "18px",
-              minWidth: "18px",
-              lineHeight: "18px",
-              padding: "0 4px",
-              marginBottom: "1.2rem",
-              borderRadius: "56%",
-            }}
-          />
+         
         </Link>
-        <Link
+        {/* <Link
           to="/booking-order"
           style={{
             display: "flex",
@@ -110,7 +89,7 @@ const Sidebar = () => {
               borderRadius: "56%",
             }}
           />
-        </Link>
+        </Link> */}
         <Link to="/history">
           <FontAwesomeIcon className="icon" icon={faFileInvoiceDollar} /> Quán
           lý đơn hàng

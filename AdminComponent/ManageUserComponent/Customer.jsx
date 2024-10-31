@@ -128,6 +128,7 @@ const Customer = () => {
 
   const filteredUserData = userData.filter(
     (user) =>
+      
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.phoneNumber.includes(searchTerm)
   );
@@ -138,9 +139,9 @@ const Customer = () => {
     {
       title: "Avatar",
       key: "avatar",
-      render: () => (
+      render: ( record) => (
         <img
-          src={avatar}
+          src={record.image}
           alt="Avatar"
           style={{ width: 50, height: 50, borderRadius: "50%" }}
         />
@@ -252,24 +253,24 @@ const Customer = () => {
       sorter: (a, b) => a.point - b.point,
     },
     {
-      title: "Chỉnh sửa",
+      title: "Thao tác",
       key: "action",
       width: 200,
       align: "center",
       render: (_, record) => (
         <>
-          <Button variant="primary" onClick={() => handleEdit(record)}>
-            <FontAwesomeIcon icon={faEdit} /> Sửa
-          </Button>{" "}
+          <button className="one-button" onClick={() => handleEdit(record)}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>{" "}
           <Popconfirm
             title="Are you sure to delete this company?"
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
             cancelText="No"
           >
-            <Button variant="danger">
-              <FontAwesomeIcon icon={faTrash} /> Xóa
-            </Button>
+            <button className="one-button">
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
           </Popconfirm>
         </>
       ),
@@ -278,13 +279,8 @@ const Customer = () => {
 
   return (
     <div
-      className="user-manage"
-      style={{
-        backgroundColor: "#F5F5F5",
-        borderRadius: 10,
-        border: "1px solid #E0E0E0",
-        width: "100%",
-      }}
+      className="one-user"
+      
     >
       <h1 style={{ fontFamily: "Arial" }}>Tài khoản khách hàng</h1>
       <Modal
@@ -297,6 +293,7 @@ const Customer = () => {
         </Modal.Header>
         <Modal.Body>
           <Table
+            className="one-booking"
             dataSource={selectedUserBookings}
             columns={[
               {
