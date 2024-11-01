@@ -32,7 +32,12 @@ const AddStaff = () => {
   useEffect(() => {
     const fetchMaxStaffId = async () => {
       try {
-        const staffResponse = await api.get("User");
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYW5nbmdvY2hhaXRyaWV1QGdtYWlsLmNvbSIsImp0aSI6ImE5MmUwOTBkLTQ2NmEtNDE2My1hMDQ3LWUyOWNjYjExOGE2OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiOSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzMzMDc1ODUxLCJpc3MiOiJQb2RCb29raW5nIiwiYXVkIjoiUG9kV2ViIn0.SljDy518ZlaoY5hp6kKZvBp3-j5vXItyHQ0H7Y0ik3o"; // Thay thế bằng token thực tế của bạn
+        const staffResponse = await api.get("User", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào header
+          },
+        });
         const maxId = Math.max(
           ...staffResponse.data.map((staff) => staff.id),
           0
@@ -99,7 +104,12 @@ const AddStaff = () => {
     };
 
     try {
-      const response = await api.post("/User", newStaff); // Gửi yêu cầu POST đến API
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+      const response = await api.post("/User", newStaff, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Thêm token vào header
+        },
+      }); // Gửi yêu cầu POST đến API
       console.log("Nhân viên mới đã được thêm:", response.data);
       message.success("Thêm nhân viên thành công!");
       navigate("/staff"); // Chuyển hướng đến trang danh sách nhân viên

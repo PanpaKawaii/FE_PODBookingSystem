@@ -10,8 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { message, Popconfirm, Table, Tag } from "antd";
 import {
-  ReloadOutlined,
-  PlusOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
 import api from "../api/axios";
@@ -29,7 +27,12 @@ const Staff = () => {
 
   const fetchStaffData = async () => {
     try {
-      const response = await api.get("User");
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYW5nbmdvY2hhaXRyaWV1QGdtYWlsLmNvbSIsImp0aSI6ImE5MmUwOTBkLTQ2NmEtNDE2My1hMDQ3LWUyOWNjYjExOGE2OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiOSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzMzMDc1ODUxLCJpc3MiOiJQb2RCb29raW5nIiwiYXVkIjoiUG9kV2ViIn0.SljDy518ZlaoY5hp6kKZvBp3-j5vXItyHQ0H7Y0ik3o"; // Thay thế bằng token thực tế của bạn
+      const response = await api.get("User", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Thêm token vào header
+        },
+      });
       setStaffData(response.data.filter((user) => user.role === "Staff"));
     } catch (error) {
       console.error("Failed to fetch staff data:", error);
@@ -46,6 +49,7 @@ const Staff = () => {
     setEditedStaff({ ...staff });
     setShowModal(true);
   };
+
   if (staffData.length === 0) {
     return (
       <p style={{ marginLeft: "1%" }}>
@@ -56,7 +60,12 @@ const Staff = () => {
 
   const handleDelete = async (staffId) => {
     try {
-      await api.delete(`User/${staffId}`);
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+      await api.delete(`User/${staffId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Thêm token vào header
+        },
+      });
       message.success("Xoá thành công");
       fetchStaffData();
     } catch (error) {
@@ -81,7 +90,12 @@ const Staff = () => {
 
   const handleSaveChanges = async () => {
     try {
-      const response = await api.put(`User/${editedStaff.id}`, editedStaff);
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+      const response = await api.put(`User/${editedStaff.id}`, editedStaff, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Thêm token vào header
+        },
+      });
       if (response.status === 200) {
         setStaffData((prevData) =>
           prevData.map((staff) =>
@@ -179,16 +193,11 @@ const Staff = () => {
   ];
 
   return (
-    <div
-     
-      className="user-manage"
-    >
+    <div className="user-manage">
       <div className="title-store">
         <h1>Tài khoản nhân viên</h1>
-      <Button >
-        <Link to="/addstaff" style={{ color: "#FAFBFB" }}>
+        <Button onClick={handleAdd}>
           <FontAwesomeIcon icon={faUserPlus} />
-        </Link>
         </Button>
       </div>
       <Table

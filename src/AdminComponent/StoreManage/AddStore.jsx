@@ -71,14 +71,15 @@ export default function AddStore() {
     }
     const newStore = {
       id: maxId + 1,
-      name: name,
-      address: address,
-      contact: contact,
-      image: image,
-      status: status ? "Đang hoạt động" : "Dừng hoạt động",
+      name: "Test Store",
+      address: "123 Test St",
+      contact: "123456789",
+      image: "https://i.pinimg.com/564x/34/32/07/343207752d6e8ab0ef1a7baec5aef621.jpg",
+      status: "Đang hoạt động",
     };
     try {
       console.log(newStore);
+      console.log("Giá trị của image:", image);
       const response = await api.post("/Store", newStore);
       console.log("Store added successfully:", response.data);
       message.success("Store added successfully!");
@@ -90,7 +91,9 @@ export default function AddStore() {
       navigate("/store");
     } catch (error) {
       console.error("Error adding Store:", error);
-      alert("Failed to add Store. Please try again.");
+      if (error.response) {
+        console.error("Dữ liệu phản hồi:", error.response.data);
+      }
     }
   };
 

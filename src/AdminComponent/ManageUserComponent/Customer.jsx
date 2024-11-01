@@ -5,7 +5,6 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import { message, Popconfirm, Table, Tag, Input } from "antd";
 import {
   SearchOutlined,
@@ -13,6 +12,7 @@ import {
   UserOutlined,
   EyeTwoTone,
 } from "@ant-design/icons";
+import api from "../api/axios"; // Import Axios đã cấu hình
 
 const { Search } = Input;
 
@@ -34,23 +34,38 @@ const Customer = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(apiUser);
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYW5nbmdvY2hhaXRyaWV1QGdtYWlsLmNvbSIsImp0aSI6ImE5MmUwOTBkLTQ2NmEtNDE2My1hMDQ3LWUyOWNjYjExOGE2OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiOSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzMzMDc1ODUxLCJpc3MiOiJQb2RCb29raW5nIiwiYXVkIjoiUG9kV2ViIn0.SljDy518ZlaoY5hp6kKZvBp3-j5vXItyHQ0H7Y0ik3o"; // Thay thế bằng token thực tế của bạn    
+        const response = await api.get(apiUser, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Thêm token vào header
+        },
+      });
       setUserData(response.data.filter((user) => user.role === "User"));
     } catch (error) {
       console.error("Failed to fetch user data:", error);
     }
   };
+
   const fetchBookingData = async () => {
     try {
-      const response = await axios.get(apiBooking);
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+      const response = await api.get(apiBooking, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Thêm token vào header
+        },
+      });
       setBookingData(response.data);
     } catch (error) {
       console.error("Failed to fetch booking data:", error);
     }
   };
+
   useEffect(() => {
     fetchUserData();
     fetchBookingData();
+  }, []);
+
+  useEffect(() => {
     const userCount = userData.filter((u) => u.role === "User").length;
     setTotalUsers(userCount);
   }, [userData]);
@@ -71,11 +86,16 @@ const Customer = () => {
 
   const handleDelete = async (userId) => {
     try {
-      await axios.delete(`${apiUser}/${userId}`);
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+      await api.delete(`${apiUser}/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Thêm token vào header
+        },
+      });
       message.success("Xoá thành công");
       fetchUserData();
     } catch (error) {
-      console.error("Error deleting company:", error);
+      console.error("Error deleting user:", error);
       message.error("Xoá không thành công");
     }
   };
@@ -96,9 +116,15 @@ const Customer = () => {
 
   const handleSaveChanges = async () => {
     try {
-      const response = await axios.put(
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+      const response = await api.put(
         `${apiUser}/${editedUser.id}`,
-        editedUser
+        editedUser,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào header
+          },
+        }
       );
       if (response.status === 200) {
         setUserData((prevData) =>

@@ -1,21 +1,21 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "../AdminComponent/AdminHome/Home.jsx";
-import POD from "../AdminComponent/ManagePODComponent/POD.jsx";
-import Sidebar from "../AdminComponent/AdminBar/Sidebar.jsx";
+import Home from "./AdminComponent/AdminHome/Home.jsx";
+import POD from "./AdminComponent/ManagePODComponent/POD.jsx";
+import Sidebar from "./AdminComponent/AdminBar/Sidebar.jsx";
 import "./App.css";
-import Header from "../AdminComponent/HeadFootComponent/Header.jsx";
-import Report from "../AdminComponent/ManageReportComponent/ReportManage.jsx";
-import Store from "../AdminComponent/StoreManage/Store.jsx";
-import AddStore from "../AdminComponent/StoreManage/AddStore.jsx";
-import Staff from "../AdminComponent/ManageUserComponent/Staff.jsx";
+import Header from "./AdminComponent/HeadFootComponent/Header.jsx";
+import Report from "./AdminComponent/ManageReportComponent/ReportManage.jsx";
+import Store from "./AdminComponent/StoreManage/Store.jsx";
+import AddStore from "./AdminComponent/StoreManage/AddStore.jsx";
+import Staff from "./AdminComponent/ManageUserComponent/Staff.jsx";
 // import Manager from "../AdminComponent/ManageUserComponent/Manager.jsx";
-import Customer from "../AdminComponent/ManageUserComponent/Customer.jsx";
-import AddPOD from "../AdminComponent/ManagePODComponent/AddPOD.jsx";
-import AddStaff from "../AdminComponent/ManageUserComponent/AddStaff.jsx";
-import Product from "../AdminComponent/ProductComponent/Product.jsx";
+import Customer from "./AdminComponent/ManageUserComponent/Customer.jsx";
+import AddPOD from "./AdminComponent/ManagePODComponent/AddPOD.jsx";
+import AddStaff from "./AdminComponent/ManageUserComponent/AddStaff.jsx";
+import Product from "./AdminComponent/ProductComponent/Product.jsx";
 // import Order from "../AdminComponent/Order/Order.jsx";
-import OrderHistory from "../AdminComponent/Order/OrderHistory.jsx";
-import AddProduct from "../AdminComponent/ProductComponent/AddProduct.jsx";
+import OrderHistory from "./AdminComponent/Order/OrderHistory.jsx";
+import AddProduct from "./AdminComponent/ProductComponent/AddProduct.jsx";
 
 // import OrderProduct from "./ProductComponent/OrderProduct.jsx";
 function App() {

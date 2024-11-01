@@ -1,23 +1,16 @@
 import axios from "axios";
-const baseUrl = "https://localhost:7166/api/";
 
-const config = {
-  baseUrl: baseUrl,
-};
+const api = axios.create({
+  baseURL: " https://localhost:7166/api/",
+});
 
-const api = axios.create(config);
-
-api.defaults.baseURL = baseUrl;
-
-// handle before call API
-const handleBefore = (config) => {
-  //handle hanh dong trc khi call API
-  //lay ra cai token va dinh kem theo cai request
-  const token = localStorage.getItem("token")?.replaceAll('"', "");
-  config.headers["Authorization"] = `Bearer ${token}`;
-  return config;
-};
-
-api.interceptors.request.use(handleBefore, null); 
+// // Thêm token vào header cho mỗi yêu cầu
+// api.interceptors.request.use((config) => {
+//   const token = localStorage.getItem("token");
+//   if (token) {
+//     config.headers["Authorization"] = `Bearer ${token}`;
+//   }
+//   return config;
+// });
 
 export default api;
