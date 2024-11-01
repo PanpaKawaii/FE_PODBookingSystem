@@ -145,6 +145,51 @@ const Customer = () => {
   const calculateTotalBookings = (userId) => {
     return bookingData.filter((booking) => booking.userId === userId).length;
   };
+  const renderOrderStatus = (status) => {
+    let color;
+    let backgroundColor;
+
+    switch (status) {
+      case "Chưa diễn ra":
+        color = "white";
+        backgroundColor = "#ffc107"; // Màu nền vàng
+        break;
+      case "Đang diễn ra":
+        color = "white";
+        backgroundColor = "#28a745"; // Màu nền xanh lá
+        break;
+      case "Đã kết thúc":
+        color = "white";
+        backgroundColor = "#0dcaf0"; // Màu nền xanh dương
+        break;
+      case "Đã huỷ":
+        color = "white";
+        backgroundColor = "#dc3545"; // Màu nền đỏ
+        break;
+      case "Đã hoàn tiền":
+        color = "white";
+        backgroundColor = "#fb8b24"; // Màu nền cam
+        break;
+      default:
+        color = "black"; // Màu chữ mặc định
+        backgroundColor = "transparent"; // Màu nền mặc định
+    }
+
+    return (
+      <h4
+        style={{
+          backgroundColor: backgroundColor,
+          color: color,
+          textAlign: "center",
+          borderRadius: "10px",
+          fontSize: "17px",
+          padding: "5px 10px",
+        }}
+      >
+        <b>{status}</b>
+      </h4>
+    );
+  };
   const columns = [
     {
       title: "ID",
@@ -349,11 +394,7 @@ const Customer = () => {
                 title: "Trạng thái",
                 dataIndex: "status",
                 key: "status",
-                render: (status) => (
-                  <Tag color={status === "Đã xác nhận" ? "#64A587" : "#227C9D"}>
-                    {status}
-                  </Tag>
-                ),
+                render: (status) => renderOrderStatus(status),
               },
               {
                 title: "Phản hồi",

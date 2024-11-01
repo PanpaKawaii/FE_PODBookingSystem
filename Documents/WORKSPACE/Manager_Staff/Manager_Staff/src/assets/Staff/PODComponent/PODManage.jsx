@@ -343,8 +343,12 @@ export default function PODManage() {
             rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
           >
             <Select>
-              <Select.Option value="Còn trống">Còn trống</Select.Option>
-              <Select.Option value="Đang sử dụng">Đang sử dụng</Select.Option>
+              <Select.Option value="Dừng hoạt động">
+                Dừng hoạt động
+              </Select.Option>
+              <Select.Option value="Đang hoạt động">
+                Đang hoạt động
+              </Select.Option>
             </Select>
           </Form.Item>
           <Form.Item

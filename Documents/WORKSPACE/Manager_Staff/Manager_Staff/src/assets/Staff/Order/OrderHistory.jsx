@@ -246,6 +246,8 @@ const OrderHistory = () => {
           color: color,
           textAlign: "center",
           borderRadius: "10px",
+          fontSize: "17px",
+          padding: "5px 10px",
         }}
       >
         <b>{status}</b>
@@ -504,7 +506,18 @@ const OrderHistory = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status) => renderOrderStatus(status),
+      render: (status) => (
+        <span
+          style={{
+            color: status === "Đã thanh toán" ? "seagreen" : "red",
+            fontSize: "15px",
+            fontStyle: "italic",
+            fontWeight: "500",
+          }}
+        >
+          {status}
+        </span>
+      ),
     },
   ];
 
@@ -563,19 +576,11 @@ const OrderHistory = () => {
               align: "center",
               render: (_, record) => (
                 <Space>
-                  <span
-                    style={{
-                      color: renderOrderStatus(record.status),
-                      fontSize: "15px",
-                      fontStyle: "italic",
-                      fontWeight: "500",
-                    }}
-                  >
-                    {record.status}
-                  </span>
+                  {renderOrderStatus(record.status)}{" "}
+                  {/* Gọi hàm renderOrderStatus */}
                   <Select
                     defaultValue={record.status}
-                    style={{ width: 150 }}
+                    style={{ width: 150, padding: "5px 5px" }}
                     onChange={(value) =>
                       handleUpdateBookingStatus(record.id, value)
                     }

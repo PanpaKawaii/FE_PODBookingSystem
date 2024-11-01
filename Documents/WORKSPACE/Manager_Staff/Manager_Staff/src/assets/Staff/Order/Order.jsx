@@ -116,7 +116,7 @@ const Order = () => {
     try {
       const updatedBooking = {
         ...booking,
-        status: "Đã xác nhận",
+        status: "Chưa diễn ra",
         feedback: booking.feedback || "",
       };
 
@@ -145,6 +145,48 @@ const Order = () => {
       message.error("Duyệt đơn thất bại");
     }
   };
+  const renderOrderStatus = (status) => {
+    let color;
+    let backgroundColor;
+
+    switch (status) {
+      case "Đã xác nhận":
+        color = "white";
+        backgroundColor = "green"; // Màu nền xanh
+        break;
+      case "Chờ xác nhận":
+        color = "white";
+        backgroundColor = "#fb8b24"; // Màu nền cam
+        break;
+      case "Chưa diễn ra":
+        color = "white";
+        backgroundColor = "#ffc107"; // Màu nền vàng
+        break;
+      case "Đã huỷ":
+        color = "white";
+        backgroundColor = "#dc3545"; // Màu nền đỏ
+        break;
+      default:
+        color = "black"; // Màu chữ mặc định
+        backgroundColor = "transparent"; // Màu nền mặc định
+    }
+
+    return (
+      <span
+        style={{
+          backgroundColor: backgroundColor,
+          color: color,
+          padding: "5px 10px",
+          borderRadius: "5px",
+          fontSize: "15px",
+          fontStyle: "italic",
+          fontWeight: "500",
+        }}
+      >
+        {status}
+      </span>
+    );
+  };
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -172,7 +214,7 @@ const Order = () => {
   };
 
   const pendingBookings = bookingData
-    .filter((booking) => booking.status === "Chờ xác nhận")
+    .filter((booking) => booking.status === "Chưa diễn ra")
     .map((booking) => {
       const user = userData.find((u) => u.id === booking.userId);
       const pod = podData.find((p) => p.id === booking.podId);
@@ -234,37 +276,14 @@ const Order = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status) => {
-        let color;
-        switch (status) {
-          case "Đã xác nhận":
-            color = "green";
-            break;
-          case "Chờ xác nhận":
-            color = "#fb8b24";
-            break;
-          default:
-            color = "default";
-        }
-        return (
-          <span
-            style={{
-              color: color,
-              fontSize: "15px",
-              fontStyle: "italic",
-              fontWeight: "500",
-            }}
-          >
-            {status}
-          </span>
-        );
-      },
+      render: (status) => renderOrderStatus(status), // Sử dụng hàm renderOrderStatus
     },
     {
       title: "Đánh giá",
       dataIndex: "feedback",
       key: "feedback",
       render: (feedback) => feedback || "Chưa có feedback",
+      hidden: "true",
     },
     {
       title: "Chi tiết",
