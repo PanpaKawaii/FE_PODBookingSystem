@@ -24,7 +24,10 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons"; // Nhập biểu tượng ngôi sao
+
 import {
   faFloppyDisk,
   faMoneyBill,
@@ -208,51 +211,47 @@ const OrderHistory = () => {
 
   const renderOrderStatus = (status) => {
     let color;
+    let backgroundColor;
+
     switch (status) {
-      case "Đã xác nhận":
-        color = "seagreen";
-        break;
-      case "Chờ xác nhận":
-        color = "cornflowerblue";
-        break;
-      case "Đã thanh toán":
-        color = "seagreen";
-        break;
-      case "Chưa thanh toán":
-        color = "orange";
-        break;
-      case "Đã đặt":
-        color = "cornflowerblue";
-        break;
       case "Chưa diễn ra":
-        color = "#faad14";
+        color = "white";
+        backgroundColor = "#ffc107"; // Màu nền vàng
+        break;
+      case "Đang diễn ra":
+        color = "white";
+        backgroundColor = "#28a745"; // Màu nền xanh lá
+        break;
+      case "Đã kết thúc":
+        color = "white";
+        backgroundColor = "#0dcaf0"; // Màu nền xanh dương
         break;
       case "Đã huỷ":
-        color = "red";
+        color = "white";
+        backgroundColor = "#dc3545"; // Màu nền đỏ
         break;
-      case "Đã checkin":
-        color = "seagreen";
-        break;
-      case "Không checkin":
-        color = "#ff4d4f";
+      case "Đã hoàn tiền":
+        color = "white";
+        backgroundColor = "#fb8b24"; // Màu nền cam
         break;
       default:
-        color = "cornflowerblue";
+        color = "black"; // Màu chữ mặc định
+        backgroundColor = "transparent"; // Màu nền mặc định
     }
+
     return (
-      <span
+      <h4
         style={{
+          backgroundColor: backgroundColor,
           color: color,
-          fontSize: "15px",
-          fontStyle: "italic",
-          fontWeight: "500",
+          textAlign: "center",
+          borderRadius: "10px",
         }}
       >
-        {status}
-      </span>
+        <b>{status}</b>
+      </h4>
     );
   };
-
   // Filtering and handlers
   const filteredUsers = userData.filter((user) =>
     user.phoneNumber.includes(searchTerm)
@@ -403,18 +402,25 @@ const OrderHistory = () => {
       },
     },
     {
-      title: "Slot",
-      key: "slot",
-      hidden: true,
+      title: "Đánh giá", // Cột mới cho rating
+      key: "rating",
+      align: "center",
       render: (_, record) => {
-        const slot = slotData.find((slot) =>
-          slot.bookings.some((booking) => booking.id === record.id)
+        return record.rating > 0 ? (
+          <span>
+            {record.rating}
+
+            <FontAwesomeIcon
+              icon={solidStar}
+              style={{ color: "gold", marginLeft: 5 }}
+            />
+          </span>
+        ) : (
+          "Chưa có đánh giá"
         );
-        return slot
-          ? `${slot.name} (${slot.startTime}:00 - ${slot.endTime}:00)`
-          : "Không có thông tin";
       },
     },
+
     {
       title: "Trạng thái",
       dataIndex: "status",
@@ -574,14 +580,18 @@ const OrderHistory = () => {
                       handleUpdateBookingStatus(record.id, value)
                     }
                   >
-                    <Select.Option value="Đã đặt">Đã đặt</Select.Option>
                     <Select.Option value="Chưa diễn ra">
                       Chưa diễn ra
                     </Select.Option>
+                    <Select.Option value="Đang diễn ra">
+                      Đang diễn ra
+                    </Select.Option>
+                    <Select.Option value="Đã kết thúc">
+                      Đã kết thúc
+                    </Select.Option>
                     <Select.Option value="Đã huỷ">Đã huỷ</Select.Option>
-                    <Select.Option value="Đã checkin">Đã checkin</Select.Option>
-                    <Select.Option value="Không checkin">
-                      Không checkin
+                    <Select.Option value="Đã hoàn tiền">
+                      Đã hoàn tiền
                     </Select.Option>
                   </Select>
                 </Space>
@@ -725,7 +735,7 @@ const OrderHistory = () => {
 
     // Lọc các booking đã xác nhận
     const confirmedBookings = bookingData.filter(
-      (booking) => booking.status === "Đã xác nhận"
+      (booking) => booking.status === "Đã kết thúc"
     );
 
     const dailyRevenue = {};
