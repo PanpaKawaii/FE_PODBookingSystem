@@ -107,38 +107,7 @@ const Order = () => {
     );
   }
 
-  const handleAcceptBooking = async (booking) => {
-    try {
-      const updatedBooking = {
-        ...booking,
-        status: "Đã xác nhận",
-        feedback: booking.feedback || "",
-      };
-
-      await axios.put(`${apiBooking}/${booking.id}`, updatedBooking);
-
-      const user = userData.find((user) => user.id === booking.userId);
-      if (!user) {
-        console.error("User not found");
-        return;
-      }
-
-      const updatedUser = {
-        ...user,
-        point: user.point + 100,
-      };
-
-      await axios.put(`${apiUser}/${updatedUser.id}`, updatedUser);
-
-      fetchUserData();
-      fetchBookingData();
-      message.success("Duyệt đơn thành công");
-      setModalVisible(false);
-    } catch (error) {
-      console.error("Failed to accept booking:", error);
-      message.error("Duyệt đơn thất bại");
-    }
-  };
+  
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -302,14 +271,7 @@ const Order = () => {
           : "N/A";
       },
     },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag color={status === "Xác nhận" ? "green" : "blue"}>{status}</Tag>
-      ),
-    },
+    
     {
       title: "Phương thức thanh toán",
       dataIndex: "paymentMethod",

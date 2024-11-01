@@ -1,13 +1,12 @@
 import React from "react";
-import { CDBInput } from "cdbreact"; // Nhập CDBInput từ cdbreact
 import "./Header.css"; // Nhập file CSS
-import Avatar from "../Admin_image/avt.jpg"; // Nhập file CSS
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 
 export default function Header() {
   const [adminName, setAdminName] = useState("");
   const [adminRole, setAdminRole] = useState("");
+  const [image, setImage] = useState("");
   useEffect(() => {
     // Fetch users from API
     api
@@ -18,6 +17,7 @@ export default function Header() {
         if (adminUser) {
           setAdminName(adminUser.name);
           setAdminRole(adminUser.role);
+          setImage(adminUser.image);
         } else {
           console.error("No admin user found");
         }
@@ -42,7 +42,7 @@ export default function Header() {
         <div className="admin-avatar">
           {" "}
           {/* Thêm khoảng cách bên phải */}
-          <img src={Avatar} alt="Admin Avatar" /> {/* Hình đại diện */}
+          <img src={image} alt="Admin Avatar" /> {/* Hình đại diện */}
         </div>
         <div className="user-info">
           {" "}

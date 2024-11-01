@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Table,
   message,
-  Popconfirm,
   Button,
   Modal,
   Form,
@@ -13,8 +12,8 @@ import {
 } from "antd";
 import api from "../../AdminComponent/api/axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faStar, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { ReloadOutlined, LoadingOutlined } from "@ant-design/icons";
+import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import "./PODManage.css";
 import { Link } from "react-router-dom";
 
@@ -26,6 +25,7 @@ export default function POD() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [types, setTypes] = useState([]);
+  const [podSelected, setPodSelected] = useState(false); // Trạng thái để theo dõi việc chọn POD
 
   const fetchPODData = async () => {
     try {
@@ -36,6 +36,7 @@ export default function POD() {
       message.error("Không thể tải dữ liệu POD");
     }
   };
+
   const fetchStoreData = async () => {
     try {
       const response = await api.get("Store");
@@ -45,6 +46,7 @@ export default function POD() {
       message.error("Không thể tải dữ liệu Store");
     }
   };
+
   const fetchUtilityData = async () => {
     try {
       const response = await api.get("Utility");
@@ -54,23 +56,18 @@ export default function POD() {
       message.error("Không thể tải dữ liệu Utility");
     }
   };
-  const handleDelete = async (podId) => {
-    try {
-      await api.delete(`${apiPod}/${podId}`);
-      message.success("Xoá thành công");
-      fetchPODData();
-    } catch (error) {
-      console.error("Error deleting POD:", error);
-      message.error("Xoá không thành công");
-    }
-  };
 
   const handleEdit = async (values) => {
     try {
       setLoading(true);
-      const podId = form.getFieldValue("id");
+      const podId = form.getFieldValue("id"); // Lấy ID từ form
+      const isNewPod = !podId; // Kiểm tra xem có phải là POD mới không
+
+      // Nếu là POD mới, tìm maxId và gán ID mới
+      const newPodId = isNewPod ? Math.max(...podData.map(pod => pod.id), 0) + 1 : podId;
+
       const podData = {
-        id: podId,
+        id: newPodId, // Sử dụng ID mới
         name: values.name,
         image: values.image || "string",
         description: values.description,
@@ -80,8 +77,16 @@ export default function POD() {
         storeId: values.storeId,
         utilityId: values.utilityId ? [values.utilityId] : [0],
       };
-      const response = await axios.put(`${apiPod}/${podId}`, podData);
-      message.success("Thông tin POD được cập nhật thành công");
+
+      // Gọi API để thêm hoặc cập nhật POD
+      if (isNewPod) {
+        await api.post("Pod", podData); // Sử dụng POST để thêm POD mới
+        message.success("Thông tin POD được thêm thành công");
+      } else {
+        await api.put(`Pod/${podId}`, podData); // Sử dụng PUT để cập nhật POD
+        message.success("Thông tin POD được cập nhật thành công");
+      }
+
       fetchPODData();
       setIsModalVisible(false);
     } catch (error) {
@@ -116,17 +121,14 @@ export default function POD() {
     return type ? type.name : "Không có dữ liệu";
   };
 
-  if (
-    podData.length === 0 &&
-    storeData.length === 0 &&
-    utilityData.length === 0
-  ) {
+  if (podData.length === 0 && storeData.length === 0 && utilityData.length === 0) {
     return (
       <p>
         Loading... <LoadingOutlined />
       </p>
     );
   }
+
   const columns = [
     {
       title: "Hình ảnh",
@@ -175,8 +177,7 @@ export default function POD() {
       align: "center",
       render: (rating) => (
         <>
-          {rating}{" "}
-          <FontAwesomeIcon icon={faStar} style={{ color: "#F2D338" }} />
+          {rating} <FontAwesomeIcon icon={faStar} style={{ color: "#F2D338" }} />
         </>
       ),
       sorter: (a, b) => a.rating - b.rating,
@@ -207,19 +208,24 @@ export default function POD() {
       dataIndex: "status",
       key: "status",
       align: "center",
-      filters: [
-        { text: "Còn trống", value: "Còn trống" },
-        { text: "Đang sử dụng", value: "Đang sử dụng" },
-      ],
-      onFilter: (value, record) => record.status.includes(value),
-      render: (status) => (
-        <Tag
-          color={status === "Còn trống" ? "#17C3B2" : "#FE6D73"}
-          style={{ fontSize: "15px" }}
-        >
-          {status}
-        </Tag>
-      ),
+      render: (status) => {
+        let color;
+        switch (status) {
+          case "Đang hoạt động":
+            color = "green";
+            break;
+          case "Dừng hoạt động":
+            color = "red";
+            break;
+          default:
+            color = "default"; // You can set a default color if needed
+        }
+        return (
+          <Tag color={color} >
+            {status}
+          </Tag>
+        );
+      },
     },
     {
       title: "Điều chỉnh",
@@ -246,19 +252,13 @@ export default function POD() {
     <>
       <div>
         <div className="title-store">
-        <h1
-        
-        >
-          Quản lí POD
-          </h1>
+          <h1>Quản lí POD</h1>
           <Button
-          type="primary"
-        style={{
-          marginRight: "10px",
-        }}
-        >
-          <Link to="/addpod">Thêm POD</Link>
-        </Button>
+            type="primary"
+            style={{ marginRight: "10px" }}
+          >
+            <Link to="/addpod">Thêm POD</Link>
+          </Button>
         </div>
         <div style={{ overflowX: "auto" }}>
           <Table
@@ -328,10 +328,11 @@ export default function POD() {
               rules={[{ required: true, message: "Vui lòng chọn loại POD" }]}
             >
               <Select>
-                <Select.Option value={1}>Loại 1</Select.Option>
-                <Select.Option value={2}>Loại 2</Select.Option>
-                <Select.Option value={3}>Loại 3</Select.Option>
-                <Select.Option value={4}>Loại 4</Select.Option>
+                {types.map((type) => (
+                  <Select.Option key={type.id} value={type.id}>
+                    {type.name}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item

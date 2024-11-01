@@ -103,6 +103,8 @@ export default function AddPod() {
       return; // Dừng lại nếu có trường thiếu
     }
 
+    
+
     const newPod = {
       id: maxId + 1,
       name: name,
@@ -138,6 +140,7 @@ export default function AddPod() {
         message.error("Có lỗi xảy ra. Vui lòng thử lại."); // Thông báo lỗi chung
       }
     }
+    
   };
 
   return (

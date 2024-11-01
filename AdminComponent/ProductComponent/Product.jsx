@@ -8,6 +8,7 @@ import {
   Table,
   Modal,
   Select,
+  Tag,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import {
@@ -222,14 +223,11 @@ function Product() {
       key: "categoryStatus",
       align: "center",
       render: (status, record) => (
-        <span
-          style={{
-            color: record.stock === 0 ? "red" : "green",
-            fontWeight: "bold",
-          }}
+        <Tag
+          color={record.stock === 0 ? "red" : "green"}
         >
           {status}
-        </span>
+        </Tag>
       ),
       filters: [
         { text: "Vẫn còn", value: "Vẫn còn" },

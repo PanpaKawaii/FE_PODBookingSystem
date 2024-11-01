@@ -15,7 +15,6 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import api from "../api/axios";
-import avatar from "../Admin_image/avt.jpg";
 import { Link } from "react-router-dom";
 
 const Staff = () => {

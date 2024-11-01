@@ -8,12 +8,12 @@ import Report from "../AdminComponent/ManageReportComponent/ReportManage.jsx";
 import Store from "../AdminComponent/StoreManage/Store.jsx";
 import AddStore from "../AdminComponent/StoreManage/AddStore.jsx";
 import Staff from "../AdminComponent/ManageUserComponent/Staff.jsx";
-import Manager from "../AdminComponent/ManageUserComponent/Manager.jsx";
+// import Manager from "../AdminComponent/ManageUserComponent/Manager.jsx";
 import Customer from "../AdminComponent/ManageUserComponent/Customer.jsx";
 import AddPOD from "../AdminComponent/ManagePODComponent/AddPOD.jsx";
 import AddStaff from "../AdminComponent/ManageUserComponent/AddStaff.jsx";
 import Product from "../AdminComponent/ProductComponent/Product.jsx";
-import Order from "../AdminComponent/Order/Order.jsx";
+// import Order from "../AdminComponent/Order/Order.jsx";
 import OrderHistory from "../AdminComponent/Order/OrderHistory.jsx";
 import AddProduct from "../AdminComponent/ProductComponent/AddProduct.jsx";
 
@@ -33,13 +33,13 @@ function App() {
             <Route path="/store" element={<Store />}></Route>
             <Route path="/addstore" element={<AddStore />}></Route>
             <Route path="/staff" element={<Staff />}></Route>
-            <Route path="/manager" element={<Manager />}></Route>
+            {/* <Route path="/manager" element={<Manager />}></Route> */}
             <Route path="/customer" element={<Customer />}></Route>
             <Route path="/addpod" element={<AddPOD />}></Route>
             <Route path="/addstaff" element={<AddStaff />}></Route>
             <Route path="/product" element={<Product />}></Route>
             <Route path="/history" element={<OrderHistory />}></Route>
-            <Route path="/order" element={<Order />}></Route>
+            {/* <Route path="/order" element={<Order />}></Route> */}
             <Route path="/addproduct" element={<AddProduct />}></Route>
             {/* <Route path="/booking-order" element={<OrderProduct />}></Route> */}
           </Routes>

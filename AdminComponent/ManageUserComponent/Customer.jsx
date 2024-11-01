@@ -13,7 +13,6 @@ import {
   UserOutlined,
   EyeTwoTone,
 } from "@ant-design/icons";
-import avatar from "../Admin_image/avt.jpg";
 
 const { Search } = Input;
 

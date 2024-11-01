@@ -211,12 +211,7 @@ const OrderHistory = () => {
     user.phoneNumber.includes(searchTerm)
   );
 
-  const filteredBookings = bookingData.filter((booking) => {
-    return (
-      filteredUsers.some((user) => user.id === booking.userId) &&
-      booking.status === "Đã xác nhận"
-    );
-  });
+
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -284,12 +279,21 @@ const OrderHistory = () => {
   const renderOrderStatus = (status) => {
     let color;
     switch (status) {
-      case "Đã xác nhận":
-      case "Đã thanh toán":
-        color = "seagreen";
+      
+      case "Chưa diễn ra":
+        color = "gold";
         break;
-      case "Chờ xác nhận":
-        color = "cornflowerblue";
+      case "Đang diễn ra":
+        color = "lime";
+        break;
+      case "Đã kết thúc":
+        color = "red";
+        break;
+      case "Đã hủy":
+        color = "orange";
+        break;
+      case "Đã hoàn tiền":
+        color = "gray";
         break;
       default:
         color = "cornflowerblue";
@@ -401,12 +405,12 @@ const OrderHistory = () => {
       key: "amount",
       render: (amount) => formatCurrency(amount),
     },
-    {
-      title: "Trạng thái đơn hàng",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => renderOrderStatus(status),
-    },
+    // {
+    //   title: "Trạng thái đơn hàng",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   render: (status) => renderOrderStatus(status),
+    // },
     // {
     //   title: "Chỉnh sửa",
     //   key: "actions",
@@ -546,6 +550,10 @@ const OrderHistory = () => {
               ) || 0)
           )}
         </p>
+        <p>
+          <strong>Trạng thái đơn hàng:</strong>{" "}
+          {renderOrderStatus(selectedBooking.bookingOrders[0]?.status)}
+        </p>
         {/* <Button type="primary" onClick={handleUpdatePayment}>
           Cập nhật thanh toán
         </Button> */}
@@ -565,10 +573,7 @@ const OrderHistory = () => {
       return;
     }
 
-    // Lọc các booking có trạng thái "Xác nhận"
-    const confirmedBookings = bookingData.filter(
-      (booking) => booking.status === "Xác nhận"
-    );
+
 
     const dailyRevenue = {};
 
@@ -715,7 +720,7 @@ const OrderHistory = () => {
         prefix={<SearchOutlined />}
       />
       <Table
-        dataSource={filteredBookings}
+        dataSource={bookingData}
         columns={userColumns}
         rowKey="id"
         pagination={{ pageSize: 5 }}

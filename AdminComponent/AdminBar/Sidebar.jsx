@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./Sidebar.css";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretDown } from "@fortawesome/free-solid-svg-icons"; // Import icon
+
 import {
   faSquare,
   faUser,
@@ -46,7 +48,7 @@ const Sidebar = () => {
             </h2>
           </Link>
         </div>
-        <Link
+        {/* <Link
           to="/order"
           style={{
             display: "flex",
@@ -57,7 +59,7 @@ const Sidebar = () => {
             <FontAwesomeIcon className="icon" icon={faFileClipboard} /> Đơn đang chờ
           </span>
          
-        </Link>
+        </Link> */}
         {/* <Link
           to="/booking-order"
           style={{
@@ -93,6 +95,7 @@ const Sidebar = () => {
         <Link to="/history">
           <FontAwesomeIcon className="icon" icon={faFileInvoiceDollar} /> Quán
           lý đơn hàng
+          
         </Link>
         <button
           className={`dropdown-btn ${isResourceDropdownOpen ? "open" : ""}`}
@@ -100,11 +103,10 @@ const Sidebar = () => {
         >
           <FontAwesomeIcon className="icon" icon={faSquare} />
           Quản lí tài nguyên
-          <i
-            className={`fa fa-caret-down ${
-              isResourceDropdownOpen ? "active" : ""
-            }`}
-          ></i>
+          <FontAwesomeIcon 
+      icon={faCaretDown} // Sử dụng icon từ Font Awesome
+            className={isResourceDropdownOpen ? "active" : ""}
+          />
         </button>
         <div
           className={`dropdown-container ${
@@ -129,11 +131,10 @@ const Sidebar = () => {
         >
           <FontAwesomeIcon className="icon" icon={faUser} />
           Quản lí tài khoản
-          <i
-            className={`fa fa-caret-down ${
-              isAccountDropdownOpen ? "active" : ""
-            }`}
-          ></i>
+          <FontAwesomeIcon 
+      icon={faCaretDown} // Sử dụng icon từ Font Awesome
+            className={isResourceDropdownOpen ? "active" : ""}
+          />
         </button>
         <div
           className={`dropdown-container ${
