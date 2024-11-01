@@ -1,0 +1,55 @@
+/* Header.css */
+div.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  background-color: #f4f4f4; /* Màu nền tương ứng với bg-light */
+  flex-wrap: wrap; /* Hỗ trợ responsive */
+}
+
+.search-bar {
+  flex-grow: 1;
+  position: relative; /* Đặt vị trí tương đối cho div chứa thanh tìm kiếm */
+}
+
+.admin-avatar {
+  margin-right: 0.5rem; /* Khoảng cách bên phải */
+}
+
+.admin-avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Hình tròn */
+}
+
+.user-info {
+  text-align: end; /* Căn chỉnh văn bản bên phải */
+}
+
+.user-info .username {
+  font-weight: bold; /* Tên người dùng đậm */
+}
+
+.user-info .role {
+  color: #6c757d; /* Màu cho chức vụ */
+}
+
+.inno {
+  margin-right: 30rem;
+  font-weight: bold;
+  font-size: 40px;
+  background: linear-gradient(90deg,#746C6B,#C49A68, #FFD66D);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientText 3s infinite;
+}
+
+@keyframes gradientText {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 100%;
+  }
+}

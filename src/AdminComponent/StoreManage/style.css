@@ -1,0 +1,76 @@
+/* src/ManageStoreComponent/style.css */
+.store-img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover; /* Cắt ảnh để phù hợp với kích thước */
+    object-position: center;
+    display: block;
+}
+
+.store-card{
+padding:20px;
+height: 99%;
+}
+
+/* Thêm quy tắc cho responsive */
+@media screen and (max-width: 768px) {
+    .card-img-top {
+        height: auto; /* Chiều cao tự động cho màn hình nhỏ */
+    }
+}
+
+
+
+/*style for add store*/
+/* src/ManageStoreComponent/AddStore.css */
+
+form {
+    max-width: 400px; /* Set a maximum width for the form */
+    margin: 15px auto; /* Center the form horizontally */
+    padding: 20px; /* Add padding inside the form */
+    border: 1px solid #ccc; /* Add a border around the form */
+    border-radius: 5px; /* Round the corners of the form */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    background-color: #f9f9f9; /* Light background color */
+}
+
+
+
+label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space between label and input */
+    font-weight: bold; /* Make labels bold */
+}
+
+input {
+    width: 100%; /* Make inputs take full width */
+    padding: 8px; /* Add padding inside inputs */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 4px; /* Round corners of inputs */
+}
+
+
+
+.add-link:hover {
+    background-color: #d1ddea; /* Darker shade on hover */
+}
+
+a{
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+
+div.card-body{
+    padding: 10px 0 0 0;
+}
+
+.title-store{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Arial;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 5px;
+}
+

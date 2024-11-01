@@ -1,0 +1,103 @@
+body {
+    font-family: "Lato", sans-serif;
+}
+
+.sidenav {
+    height: 100%;
+    width:0 ;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    transition: 0.2s;
+    padding-top: 25px;
+    transition: width 0.3s ease; /* Thay đổi hiệu ứng chuyển tiếp */
+}
+
+.nav{
+    background-color: #f4f4f4;
+    border-right: 1px solid grey;
+}
+
+.sidenav.open {
+    width: 250px;
+}
+
+/* Định dạng liên kết */
+.sidenav a {
+    padding: 10px 8px 20px 15px;
+    text-decoration: none;
+    color: #000000;
+    display: block;
+    transition: 0.3s;
+}
+.sidenav a:hover {
+    color: #cdcaca;
+   
+}
+
+/* quản lý tài khoản */
+.fa-caret-down {
+    float: right;
+    padding-right: 8px;
+  }
+  .dropdown-btn {
+    padding: 10px 8px 20px 15px;
+    
+    border: none;
+    background: none;
+    
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    color: #000000;
+    display: block;
+    transition: 0.3s;
+  }
+
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+#main.shifted {
+    margin-left: 250px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+.sidebar-header {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.icon {
+    padding-right: 10px;
+}
+
+
+.dropdown-container {
+    display: none; /* Ẩn dropdown mặc định */
+    padding-left: 30px; /* Thêm khoảng cách cho các liên kết */
+  }
+  
+  .dropdown-container.open {
+    display: block; /* Hiển thị dropdown khi mở */
+  color:#cdcaca;
+}
+
+  
+  .dropdown-btn {
+    
+    color: #000000; /* Thay đổi màu sắc của nút khi dropdown mở */
+  }
+
+ 

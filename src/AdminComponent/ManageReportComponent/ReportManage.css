@@ -1,0 +1,129 @@
+/* ReportManage.css */
+
+/* General styling for the report manage container */
+.report-manage {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+/* Styling for the control group */
+.report-controls {
+  margin-bottom: 20px;
+}
+
+
+.control-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+}
+
+.control-group label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  color: #333;
+}
+
+.control-group input[type="date"],
+.control-group select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+/* Styling for the search button */
+.search-report {
+  padding: 10px 20px;
+  background-color: cornflowerblue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+
+
+/* Styling for the report overview section */
+.report-overview {
+  margin-bottom: 20px;
+}
+
+ h3 {
+  margin-bottom: 10px;
+}
+
+.report-overview p {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Styling for the report detail table */
+.report-detail {
+  margin-top: 20px;
+}
+
+
+
+.report-detail table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-detail th,
+.report-detail td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.report-detail th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.report-detail tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.report-overview .overview-content {
+  display: flex;
+  align-items: center;
+  gap: 20px ;
+
+}
+
+.report-overview .overview-text {
+  flex: 1;
+}
+
+.report-overview .overview-chart {
+  flex: 0 0 300px;
+  margin-left: 20px;
+}
+
+.inno-banner {
+  margin-right: 30rem;
+  font-weight: bold;
+  font-size: 40px;
+  background: linear-gradient(90deg,#746C6B,#C49A68, #FFD66D);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientText 3s infinite;
+  text-align: center;
+}
+
+@keyframes gradientText {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 100%;
+  }
+}
